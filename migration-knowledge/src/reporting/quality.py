@@ -97,6 +97,24 @@ def section_openalex() -> str:
                      "symmetry_failures": int((c.loc[both, "symmetric_ok"].astype(str).isin(["False", "0", "0.0"])).sum()),
                      "share_full_in_mega_works": float(1 - c["full_nomega"].sum() / c["full"].sum()) if c["full"].sum() else np.nan})
     out.append("Pair counts by window. Symmetry check: the count for (X, Y) from X's query must equal the count from Y's query.\n\n" + _md(pd.DataFrame(rows)))
+    sc_rows = []
+    for jf in sorted(PATHS.tables.glob("openalex_sum_check_*.json")):
+        info = json.loads(jf.read_text())
+        csvf = jf.with_suffix(".csv")
+        worst = ""
+        if csvf.exists():
+            sc = _csv(csvf)
+            sc["dev"] = (sc["sum_check"] - 1).abs()
+            w = sc.sort_values("dev", ascending=False).head(3)
+            worst = "; ".join(f"{r.focal} k={r.k}: {r.sum_check:.3f}" for r in w.itertuples())
+        sc_rows.append({"window": jf.stem.replace("openalex_sum_check_", ""),
+                        "weighted_mean_abs_deviation": info["weighted_mean_abs_deviation"],
+                        "fractional_counts_valid": info["fractional_counts_valid"], "worst_cells": worst})
+    if sc_rows:
+        out.append("k-bin sum check: Σ_Y n_k(X,Y) / (k·N_k(X)) should equal 1. A deviation means "
+                   "`countries_distinct_count` and `authorships.countries` disagree, or counts are approximate. "
+                   "If the works-weighted mean absolute deviation exceeds 1%, fractional-count results (R1) are "
+                   "not reported:\n\n" + _md(pd.DataFrame(sc_rows)))
     cov = _csv(PATHS.raw / "openalex" / "coverage_by_year.csv")
     if cov is not None:
         tot = cov[cov["k"] == -1].set_index("year")["works"]

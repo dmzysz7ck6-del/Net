@@ -326,9 +326,14 @@ def run_window(name: str, *, robustness: bool = True) -> dict:
     summary["topology"] = run_topology(wd)
     if robustness:
         rob = {}
-        if "frac" in wd.dyads:
+        cy = wd.window["collab_years"]
+        scj = PATHS.tables / f"openalex_sum_check_{cy[0]}_{cy[1]}.json"
+        frac_ok = json.loads(scj.read_text())["fractional_counts_valid"] if scj.exists() else True
+        if "frac" in wd.dyads and frac_ok:
             rob["R1_alignment_frac"] = run_alignment(wd, "frac", "frac")
             rob["R1_gravity_frac"] = run_gravity(wd, "frac", "frac", cv=False)["summary"]
+        elif not frac_ok:
+            rob["R1"] = "not run: k-bin sum check failed, so fractional weights are unreliable (see data-quality report)"
         if "full_nomega" in wd.dyads:
             rob["R2_gravity_nomega"] = run_gravity(wd, "full_nomega", "nomega", cv=False)["summary"]
         base3 = ["ln_dist", "contig", "comlang_ethno", "colony", "comcol"]
