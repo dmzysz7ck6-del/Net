@@ -258,6 +258,7 @@ def run_topology(wd: WindowData, tag: str = "") -> dict:
     part = {n: cw.loc[n, "subregion"] for n in wd.nodes}
     tables = []
     alpha_full = None
+    full_layer = layers(wd, "full")["collaboration"]
     for col in ["full", "frac"]:
         L = layers(wd, col)
         named = {"migration": L["migration"], "scholars": L["scholars"], f"collab_{col}": L["collaboration"]}
@@ -270,10 +271,11 @@ def run_topology(wd: WindowData, tag: str = "") -> dict:
                 alpha_full = layer_alpha(sym.W, expected(sym.W, False), False)
                 a = alpha_full
             elif lname == "collab_frac":
-                a = alpha_full  # fractional weights: dispersion taken from the full-count layer
-            pz = T.participation_z(layer, part, draws=cfg["null_draws"], seed=cfg_seed(), alpha=a)
+                a = alpha_full  # fractional layer: nulls drawn in whole papers (full layer), then converted
+            fl = full_layer if lname == "collab_frac" else None
+            pz = T.participation_z(layer, part, draws=cfg["null_draws"], seed=cfg_seed(), alpha=a, full=fl)
             bb = T.backbone_betweenness(layer, cfg["backbone_alpha"], null_draws=cfg.get("betweenness_null_draws", 100),
-                                        seed=cfg_seed(), alpha=a)
+                                        seed=cfg_seed(), alpha=a, full=fl)
             tables.append(pz.merge(bb.drop(columns=["layer", "null_alpha"], errors="ignore"), on="iso3"))
     topo = pd.concat(tables, ignore_index=True)
     suffix = f"_{tag}" if tag else ""

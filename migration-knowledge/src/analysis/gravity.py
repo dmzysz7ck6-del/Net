@@ -274,11 +274,12 @@ def jackknife(dyads: pd.DataFrame, y: str, covariates: list[str], terms: list[st
         sub = dyads[(dyads["a"] != c) & (dyads["b"] != c)]
         try:
             r = fit_ppml(sub, y, covariates, name=name, start_params=None)
-        except Exception as exc:  # pragma: no cover - record and continue
+            row = {"dropped": c, **{t: float(r.params[t]) for t in terms},
+                   **{f"delta_{t}": float(r.params[t] - full.params[t]) for t in terms}}
+        except Exception as exc:  # record the failure; summaries count failed refits
             rows.append({"dropped": c, "error": repr(exc)})
             continue
-        rows.append({"dropped": c, **{t: float(r.params[t]) for t in terms},
-                     **{f"delta_{t}": float(r.params[t] - full.params[t]) for t in terms}})
+        rows.append(row)
     return pd.DataFrame(rows)
 
 

@@ -92,7 +92,8 @@ class CachedClient:
                 resp = self.session.get(url, params=params, timeout=self.timeout, stream=stream)
             except requests.exceptions.ProxyError as exc:  # CONNECT refused by policy
                 if "403" in str(exc):
-                    raise AccessDenied(f"host blocked by network policy: {url}") from exc
+                    # 'from None': the chained ProxyError text could contain secret query values
+                    raise AccessDenied(f"host blocked by network policy: {url}") from None
                 last_exc = exc
             except requests.exceptions.RequestException as exc:
                 last_exc = exc

@@ -107,7 +107,8 @@ def interactive(res: pd.DataFrame, al: pd.DataFrame) -> list[Path]:
     a["country"] = a["origin"].map(C.name)
     jcol = "jsd_rarefied" if "jsd_rarefied" in a else "jsd_raw"
     fig2 = px.scatter(a, x="log_output", y=jcol, color="ssa", hover_name="country",
-                      hover_data={"spearman_raw": ":.2f", "spearman_resid": ":.2f", "top10_overlap": ":.1f",
+                      hover_data={"spearman_raw": ":.2f", "spearman_resid": ":.2f", "rho_excess": ":.2f",
+                                  "q_sim_resid": ":.3f", "top10_overlap": ":.1f",
                                   "emigrants": ":,.0f", "intl_collab": ":,.0f"},
                       labels={"log_output": "ln research output (articles, capacity window)",
                               jcol: "Jensen–Shannon divergence, migrants vs co-authorship (rarefied to 50 incidences)",

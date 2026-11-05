@@ -85,3 +85,46 @@ Newest entries at the bottom. Planned work is never described as completed.
    NB2 unit-free topology nulls with calibrated betweenness and a corrected bridge rule;
    and the corrected FWL dyadic variance. Details are in `research/analysis_plan.md`
    (Amendment v1.2). SHA-256 of plan v1.2: `98187b0bfd82174605c190d3eaff8cc5e108dc9ae4d0fb73337a6c0792c41330`.
+
+### Adversarial code review (8-agent workflow, completed)
+- Four dimension reviewers (statistics, data semantics, networks, orchestration) each
+  reported findings. Each finding was then checked independently by a verifier that
+  tried to refute it, using the committed code and its own scripts.
+- **Result:** 28 findings. 24 were confirmed against the code as reviewed. 3 network
+  findings were already resolved by fixes made during the review (the verifier checked
+  them against the newer code). 1 was confirmed in a narrower form. All are now fixed:
+  - **Statistics:**
+    - FWL dyadic variance (the full-matrix version was indefinite with fixed effects).
+    - Rarefied JSD for H2, because the plug-in bias tracks capacity.
+    - Paper-level fractional sampling.
+    - Bias-corrected JSD intervals.
+    - Article-based eligibility.
+  - **Data semantics:**
+    - WDI-absent micro-territories excluded.
+    - Scholarly column detection that raises on ambiguity.
+    - Duplicate flow files de-duplicated.
+    - k-bin sum check reported, with R1 gated on it.
+    - GeoDist split-diagonal pairs removed.
+    - xlsx 'NA' (Namibia) preserved.
+    - Regex UN sex headers.
+    - Correct group_by completeness check.
+  - **Networks:**
+    - NB2 unit-free nulls.
+    - Null-calibrated betweenness.
+    - Corrected bridge rule.
+    - Degenerate AMI nulls excluded.
+    - Fractional topology nulls drawn in whole papers.
+  - **Orchestration:**
+    - Figure 2 colour key corrected.
+    - Quality-report crash fixed.
+    - R4 keeps all origins.
+    - Missing links shown in Figure 3.
+    - Figure 5 shows `ρ_excess`.
+    - Unqueried countries excluded, and pilot data refused as a full network.
+    - `make verify` detects stale numbers.
+    - Gravity coefficients exported to JSON.
+    - R3 labels corrected.
+    - R5 jackknifes M2 and M3.
+    - Secrets redacted from logs.
+- The analysis-relevant changes are recorded as plan amendment v1.2, still before any
+  data. Tests went from 51 to 64.

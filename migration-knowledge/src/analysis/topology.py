@@ -18,23 +18,34 @@ from ..networks.build import Layer
 from ..networks.nulls import expected, layer_alpha, nb_draw, poisson_draw
 
 
-def _null_draws(layer: Layer, alpha: float | None, draws: int, seed: int):
+def _null_draws(layer: Layer, alpha: float | None, draws: int, seed: int, full: Layer | None = None):
+    """NB2 null networks. For a fractional layer pass ``full`` (the full-count
+    layer): draws are made in whole papers around the full layer's expectation
+    with its dispersion, then converted with each pair's observed frac/full
+    ratio, so no NB draw is ever made around a fractional mean."""
     L = layer.symmetrized()
-    E = expected(L.W, directed=False)
-    a = alpha if alpha is not None else layer_alpha(L.W, E, False)
     rng = np.random.default_rng(seed)
-    return L, E, a, (Layer(L.name, L.nodes, nb_draw(E, a, False, rng), False, L.unit) for _ in range(draws))
+    if full is None:
+        E = expected(L.W, directed=False)
+        a = alpha if alpha is not None else layer_alpha(L.W, E, False)
+        return L, E, a, (Layer(L.name, L.nodes, nb_draw(E, a, False, rng), False, L.unit) for _ in range(draws))
+    F = full.symmetrized()
+    Ef = expected(F.W, directed=False)
+    a = alpha if alpha is not None else layer_alpha(F.W, Ef, False)
+    glob = L.W.sum() / F.W.sum() if F.W.sum() > 0 else 1.0
+    ratio = np.where(F.W > 0, np.divide(L.W, F.W, out=np.zeros_like(L.W), where=F.W > 0), glob)
+    return L, Ef, a, (Layer(L.name, L.nodes, nb_draw(Ef, a, False, rng) * ratio, False, L.unit) for _ in range(draws))
 
 
 def participation_z(layer: Layer, partition: dict[str, str], *, draws: int, seed: int,
-                    alpha: float | None = None) -> pd.DataFrame:
+                    alpha: float | None = None, full: Layer | None = None) -> pd.DataFrame:
     """Participation coefficient (UN subregion partition) versus an NB2
     strength-preserving null with the layer's own dispersion.
 
     Primary (unit-free): ``participation_dev = P_obs - mean(P_null)``. A Poisson
     null would make z-scores scale with the layer's unit (persons vs papers),
     so the null uses NB2 noise whose relative size is estimated from the layer."""
-    L, E, a, sims_iter = _null_draws(layer, alpha, draws, seed)
+    L, E, a, sims_iter = _null_draws(layer, alpha, draws, seed, full)
     obs = metrics.participation(L, partition, "out").set_index("iso3")
     sims = [metrics.participation(D, partition, "out").set_index("iso3")["participation_out"] for D in sims_iter]
     S = pd.concat(sims, axis=1)
@@ -48,7 +59,7 @@ def participation_z(layer: Layer, partition: dict[str, str], *, draws: int, seed
 
 
 def backbone_betweenness(layer: Layer, alphas: list[float], *, null_draws: int = 0, seed: int = 0,
-                         alpha: float | None = None) -> pd.DataFrame:
+                         alpha: float | None = None, full: Layer | None = None) -> pd.DataFrame:
     """Betweenness on disparity backbones, with a null-calibrated score per
     country: the mid-rank percentile of the observed value within its
     betweenness on NB2 strength-preserving null networks
@@ -63,7 +74,7 @@ def backbone_betweenness(layer: Layer, alphas: list[float], *, null_draws: int =
         frames.append(b)
     out = pd.concat(frames, axis=1)
     if null_draws:
-        _, _, na, sims_iter = _null_draws(layer, alpha, null_draws, seed)
+        _, _, na, sims_iter = _null_draws(layer, alpha, null_draws, seed, full)
         sims = {a: [] for a in alphas}
         for D in sims_iter:
             for a in alphas:
