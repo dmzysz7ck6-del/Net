@@ -88,7 +88,9 @@ fail loudly, not silently, if the detail turns out to be different.
   - *Symmetry:* `n_k(X, Y)` from X's query must equal `n_k(Y, X)` from Y's query.
   - *Sum check:* Σ_Y n_k(X, Y), including Y = X, must equal k · N_k(X). This detects
     approximate counts or a mismatch between the country definition used by
-    `countries_distinct_count` and the one used by `authorships.countries`.
+    `countries_distinct_count` and the one used by `authorships.countries`. The result
+    is reported in the data-quality report. If the works-weighted mean absolute
+    deviation exceeds 1%, the fractional weights are unreliable and R1 is not run.
   - *Truncation check:* the number of groups returned must equal `meta.groups_count`.
   - *Work-level check:* for the ten focus origins, work-level records are downloaded
     and the aggregate counts are recomputed exactly. The share of pairs that survive
