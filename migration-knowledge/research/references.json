@@ -1,0 +1,1400 @@
+[
+ {
+  "title": "Quantifying the negative impact of brain drain on the integration of European science",
+  "authors": "Doria Arrieta (O. A.); Fabio Pammolli; Alexander M. Petersen",
+  "year": 2017,
+  "venue": "Science Advances 3(4): e1602232",
+  "doi": null,
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5389781",
+  "research_question": "Did EU enlargement (2004/2007) and the resulting high-skilled migration imbalance affect cross-border scientific collaboration and integration in Europe?",
+  "data": "Millions of publications for 32 European countries, 1996-2012, across 14 subject areas, plus official intra-European high-skilled mobility statistics.",
+  "methods": "Synthetic control method for the counterfactual level of cross-border collaboration, and difference-in-differences panel regressions relating collaboration to migration imbalance.",
+  "findings": "Abstract-level: European cross-border collaboration would have been higher absent the 2004/2007 enlargement. Migration imbalance, mostly from newer to older member states, is a major factor. The authors argue that this hampers convergence in scientific competitiveness and recommend home-return incentives.",
+  "relevance_to_project": "A quasi-causal, country-level study linking official (non-bibliometric) high-skilled migration to co-authorship. It shows that migration can coincide with weaker, not stronger, collaboration with the origin (brain drain rather than bridge), which our residual analysis for SSA origins can test.",
+  "verification_source": "DOI not confirmed (a search for the expected Science Advances DOI string returned nothing). Title, venue, volume, issue and article number e1602232 were seen in WebSearch results (PMC5389781, eScholarship, polimi repository).",
+  "topics": [
+   "migration-coauthorship-direct"
+  ],
+  "level": "U"
+ },
+ {
+  "title": "Bilateral international migration flow estimates for 200 countries",
+  "authors": "Guy J. Abel, Joel E. Cohen",
+  "year": 2019,
+  "venue": "Scientific Data 6:82",
+  "doi": "10.1038/s41597-019-0089-3",
+  "url": "https://doi.org/10.1038/s41597-019-0089-3",
+  "research_question": "How can bilateral migration flows be estimated for all country pairs from bilateral stock data, and which estimation method performs best?",
+  "data": "UN bilateral migrant stock data; estimates for 200 countries over five-year periods 1990-2015, checked against reported flow data where available. Code and estimates on Figshare.",
+  "methods": "Six methods for deriving flows from changes in bilateral stocks, including closed demographic accounting approaches. Validation by correlation with reported flows.",
+  "findings": "Abstract-level: the two closed demographic accounting methods performed better than the other four. The paper gives open, reproducible bilateral flow estimates for countries that do not publish flow data.",
+  "relevance_to_project": "Makes clear that UN DESA data are stocks (accumulated history), not flows, and gives an option for robustness checks with estimated flows. A stock-vs-flow mismatch is one possible explanation if migration and knowledge layers diverge, since scholarly mobility is closer to a flow.",
+  "verification_source": "WebSearch results (Crossref blocked): the search returned DOI 10.1038/s41597-019-0089-3 although the query did not contain it; PMC6572777 (pmc.ncbi.nlm.nih.gov); IIASA PURE record 15962; Figshare collection 4470464.",
+  "topics": [
+   "methods-multilayer-gravity"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "International collaboration clusters in Africa",
+  "authors": "Jonathan Adams; Karen Gurney; Daniel Hook; Loet Leydesdorff",
+  "year": 2014,
+  "venue": "Scientometrics 98(1): 547-556",
+  "doi": "10.1007/s11192-013-1060-2",
+  "url": "https://arxiv.org/abs/1301.5159",
+  "research_question": "Is African international research collaboration organized in a uniform global pattern, or in regional clusters shaped by geography, history, culture and language?",
+  "data": "African country co-authorship data (about 2011 publications, as described in the preprint). The data details were not verified from the full text.",
+  "methods": "Co-authorship network mapping and clustering (VOSviewer maps).",
+  "findings": "Abstract-level only. African collaboration is far from universal. It shows layers of internal clusters and external links, explained by regional geography and, more strongly, by history, culture and language rather than global influences. The authors call for analysis of bottom-up human factors to inform policy.",
+  "relevance_to_project": "Directly about the focus region. It predicts that co-authorship clusters for East African (Kenya, Uganda, Tanzania, Rwanda), West African (Ghana, Nigeria, Senegal) and Southern African origins follow linguistic and historical lines. These same factors also shape migration, so they are confounders to control when testing whether migration predicts collaboration.",
+  "verification_source": "WebSearch results: Springer page link.springer.com/doi/10.1007/s11192-013-1060-2 and the arXiv preprint 1301.5159 listing the Scientometrics 98, 547-556 (2014) publication.",
+  "topics": [
+   "coauthorship-gravity-africa"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Gone but not forgotten: knowledge flows, labor mobility, and enduring social relationships",
+  "authors": "Ajay Agrawal, Iain Cockburn, John McHale",
+  "year": 2006,
+  "venue": "Journal of Economic Geography 6(5):571-591",
+  "doi": "10.1093/jeg/lbl016",
+  "url": "https://doi.org/10.1093/jeg/lbl016",
+  "research_question": "After an inventor moves away, do the social relationships they built while co-located keep sending knowledge flows (patent citations) back to their former location?",
+  "data": "Patent citation data on mobile inventors and the locations they lived in before (abstract-level; an earlier version is NBER WP 9950, 2003).",
+  "methods": "Compares citations flowing to an inventor's former location with a counterfactual in which the inventor never lived there. Separates flows within technology fields from flows across them.",
+  "findings": "Abstract-level. Knowledge flows to a mobile inventor's former location are about 50% larger than if the inventor had never lived there. The authors attribute this to personal relationships formed during co-location in an institutional setting, which last across time, space and organizational boundaries. The effect is nearly twice as large across technology fields as within them.",
+  "relevance_to_project": "Gives the mechanism for why bibliometric scholarly mobility, meaning researchers who were once co-located, should predict co-authorship better than general migrant stocks. Supports entering mobility and migrant stocks as separate regressors in the PPML gravity model, and reading co-authorship residuals as traces of past researcher mobility.",
+  "verification_source": "WebSearch results: Scilit record and University of Galway research portal list JEG 6(5) 571-591 with DOI 10.1093/jeg/lbl016. api.crossref.org and academic.oup.com could not be reached from this session.",
+  "topics": [
+   "diaspora-knowledge-diffusion"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Brain drain or brain bank? The impact of skilled emigration on poor-country innovation",
+  "authors": "Ajay Agrawal, Devesh Kapur, John McHale, Alexander Oettl",
+  "year": 2011,
+  "venue": "Journal of Urban Economics 69(1):43-55",
+  "doi": "10.1016/j.jue.2010.06.003",
+  "url": "https://econpapers.repec.org/RePEc:eee:juecon:v:69:y:2011:i:1:p:43-55",
+  "research_question": "Does the emigration of skilled innovators reduce or increase the access that innovators left at home have to knowledge?",
+  "data": "Indian patent citation data (abstract-level). Earlier version: NBER WP 14592, 2008.",
+  "methods": "Builds a model in which the optimal size of a diaspora depends on co-location effects versus diaspora effects in accessing knowledge, then estimates both using citation patterns of Indian inventors.",
+  "findings": "Abstract-level. On average, innovator emigration has a net harmful effect on domestic knowledge access. However, knowledge reached through the diaspora is especially valuable for India's most important inventions, measured by citations received.",
+  "relevance_to_project": "Sets out the brain-drain versus brain-bank tradeoff for a poor origin country. Suggests alignment between diaspora destinations and knowledge partners may be strongest for high-impact output, which argues for stratifying SSA co-authorship by citation impact.",
+  "verification_source": "EconPapers record (RePEc:eee:juecon:v:69:y:2011:i:1:p:43-55) confirms title, authors, volume and pages. The DOI 10.1016/j.jue.2010.06.003 was confirmed only through a third-party bibliographic page (data.zhenzhi.com) returned by WebSearch, not through Crossref or ScienceDirect, which were unreachable.",
+  "topics": [
+   "diaspora-knowledge-diffusion"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Bilateral flows and rates of international migration of scholars for 210 countries for the period 1998-2020",
+  "authors": "Aliakbar Akbaritabar, Tom Theile, Emilio Zagheni",
+  "year": 2024,
+  "venue": "Scientific Data 11, article 816",
+  "doi": "10.1038/s41597-024-03655-9",
+  "url": "https://www.nature.com/articles/s41597-024-03655-9",
+  "research_question": "How can publication metadata be used to estimate yearly international migration rates and bilateral flows of publishing scholars for all countries, and how consistent are the estimates across Scopus and OpenAlex?",
+  "data": "Bibliometric metadata from Scopus and OpenAlex. One summary says more than 36 million articles and reviews were used, but that figure may refer to the Scopus base used in the authors' related work. Country-level aggregated yearly rates and bilateral origin-to-destination flows for 210 countries and areas, 1998-2020. Earlier version: MPIDR Working Paper WP-2023-018, 'Global flows and rates of international migration of scholars'.",
+  "methods": "Scholars are tracked over time through the countries of their publication affiliations. A slide deck from the group says a scholar's yearly country of residence is the modal country of their affiliations that year; I could not confirm this wording in the paper itself. Changes in that country count as migration events. The authors set out pre-processing steps and best practices for identifying migration, then aggregate to yearly rates and bilateral flows, and cross-validate scholar counts between Scopus and OpenAlex.",
+  "findings": "Abstract-level only. Scholar counts in Scopus and OpenAlex are highly correlated for most countries. OpenAlex covers non-Western countries more extensively, but agreement with Scopus is highest in Western countries. A secondary source (OpenAlex blog) adds two points: migration events are less correlated between the two sources than scholar counts, although trends for the top country pairs are consistent, and flow magnitudes are much larger in OpenAlex than in Scopus. A later version (SMD 2.0, WP-2026-029) extends coverage to 1998-2024 with gender, field and subnational breakdowns.",
+  "relevance_to_project": "This is layer (2) of the project, the scholarly mobility flows. Limitations to plan around: (a) it covers only scholars who publish and are indexed, and inferred moves depend on affiliation strings and author disambiguation; (b) it is a flow measure, while UN DESA gives stocks; (c) the Scopus and OpenAlex versions disagree more for non-Western, including Sub-Saharan African, countries, and absolute flow levels are much higher in OpenAlex, so robustness checks should use both sources; (d) small origins such as Somalia and Rwanda will have sparse rows and many zeros, which suits PPML but makes rank and divergence metrics noisy. A further caution: co-authorship and mobility are both built from the same affiliation metadata (OpenAlex), so some alignment between layers (2) and (3) could be mechanical, especially where affiliation changes and multiple affiliations are confused.",
+  "verification_source": "WebSearch result list showed the nature.com URL /articles/s41597-024-03655-9 with this exact title, plus PMC11269605 and PubMed 39048586 entries with the same title. Volume 11, article 816 confirmed via the bibbase and MPIDR listings. Crossref and nature.com could not be fetched directly (network-blocked).",
+  "topics": [
+   "scholarly-mobility"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "A GDP-driven model for the binary and weighted structure of the International Trade Network",
+  "authors": "Assaf Almog, Tiziano Squartini, Diego Garlaschelli",
+  "year": 2015,
+  "venue": "New Journal of Physics 17:013009",
+  "doi": "10.1088/1367-2630/17/1/013009",
+  "url": "https://doi.org/10.1088/1367-2630/17/1/013009",
+  "research_question": "Can country GDP drive a maximum-entropy model that reproduces both the binary and weighted structure of the trade network?",
+  "data": "International Trade Network and country GDP.",
+  "methods": "Maximum-entropy model preserving degrees and strengths (enhanced configuration model), with the model's hidden variables linked nonlinearly to GDP.",
+  "findings": "Abstract-level: GDP relates nonlinearly to the model parameters. There is an asymmetry: binary properties can be inferred without knowing weighted ones, but the weighted structure cannot be recovered without binary information.",
+  "relevance_to_project": "Connects gravity-style mass variables (GDP, research output) to maximum-entropy network nulls. It suggests a 'fitness' null for co-authorship based on country research size, against which migration-driven excess links can be judged.",
+  "verification_source": "WebSearch results (Crossref blocked): the search returned DOI 10.1088/1367-2630/17/1/013009 although the query did not contain it; arXiv 1409.6649; Leiden and IMT Lucca repository records; EconBiz record.",
+  "topics": [
+   "methods-multilayer-gravity"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Coverage and metadata availability of African publications in OpenAlex: A comparative analysis (PDF title: 'Coverage and metadata completeness and accuracy of African research publications in OpenAlex: A comparative analysis')",
+  "authors": "Patricia Alonso-Álvarez; Nees Jan van Eck",
+  "year": 2024,
+  "venue": "arXiv preprint arXiv:2409.01120 (cs.DL); no journal version found as of search",
+  "doi": null,
+  "url": "https://arxiv.org/abs/2409.01120",
+  "research_question": "How do OpenAlex, Scopus, Web of Science and African Journals Online (AJOL) compare in their coverage and metadata for publications in African-based journals?",
+  "data": "Publications in African-based academic journals, 1996-2022, matched across OpenAlex, Scopus, WoS and AJOL by exact DOI match.",
+  "methods": "Coverage overlap comparison and metadata-availability comparison (authors, affiliations, references, funders) across databases.",
+  "findings": "Abstract-level only. OpenAlex has the most extensive coverage of these African publications. It has high coverage of publication and author metadata but performs worse on affiliations, references and funder information. Metadata availability is better for publications also indexed in Scopus or WoS.",
+  "relevance_to_project": "The most directly relevant evidence on OpenAlex quality for African research. Broad coverage helps the co-authorship layer, but weak affiliation metadata can drop or misassign country links for SSA origins. Caveat: the sample is African-based journals, not all African-authored work.",
+  "verification_source": "Title, authors, year and arXiv ID confirmed from arXiv listing results (arxiv.org/abs/2409.01120, submitted 2 Sep 2024). No DOI was seen in any source, so doi is null. The title differs between the arXiv abstract page and the PDF.",
+  "topics": [
+   "coauthorship-gravity-africa"
+  ],
+  "level": "U"
+ },
+ {
+  "title": "An analysis of the suitability of OpenAlex for bibliometric analyses",
+  "authors": "Juan Pablo Alperin; Jason Portenoy; Kyle Demes; Vincent Larivière; Stefanie Haustein",
+  "year": 2024,
+  "venue": "arXiv preprint arXiv:2404.17663 (cs.DL); no journal version found as of search",
+  "doi": "10.48550/arXiv.2404.17663",
+  "url": "https://arxiv.org/abs/2404.17663",
+  "research_question": "Can OpenAlex replace Scopus for bibliometric analyses, and how do coverage and metadata compare?",
+  "data": "OpenAlex and Scopus records (secondary summaries mention a late-2023 OpenAlex snapshot). The study was done in collaboration with the OpenAlex team.",
+  "methods": "Comparison of coverage and metadata between OpenAlex and Scopus across several dimensions, including country-level rank correlations.",
+  "findings": "Abstract-level only. OpenAlex is a superset of Scopus and can be a reliable alternative for some analyses, particularly at the country level, but metadata accuracy and completeness issues remain. A substantial share of OpenAlex works lack affiliation/country information or references (from secondary summaries).",
+  "relevance_to_project": "Supports country-level OpenAlex co-authorship networks while flagging missing affiliations. Missing affiliations would bias co-authorship edges for origins with weaker metadata (likely including several SSA countries). The project should report the share of works with missing country codes per origin.",
+  "verification_source": "WebSearch results: arXiv listing arxiv.org/abs/2404.17663 (submitted 26 Apr 2024), with the search result reporting arXiv DOI 10.48550/arXiv.2404.17663. No journal DOI found.",
+  "topics": [
+   "coauthorship-gravity-africa"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Which factors influence the international mobility of research scientists?",
+  "authors": "Silvia Appelt; Brigitte van Beuzekom; Fernando Galindo-Rueda; Roberto de Pinho",
+  "year": 2015,
+  "venue": "OECD Science, Technology and Industry Working Papers 2015/02. Also a chapter in Geuna (ed.), Global Mobility of Research Scientists (Academic Press, 2015), pp. 177-213",
+  "doi": null,
+  "url": "https://ideas.repec.org/p/oec/stiaaa/2015-2-en.html",
+  "research_question": "What bilateral factors explain international flows of research scientists between countries?",
+  "data": "Bilateral scientist mobility measured from changes in affiliations reported by publishing scientists in a major global index of scholarly publications, 1996-2011.",
+  "methods": "Gravity model of bilateral scientist flows, with geographic, socioeconomic and scientific distance, co-authorship (collaboration) intensity, tertiary student flows, R&D resources and visa restrictions as regressors.",
+  "findings": "Abstract-level: geographic, socioeconomic and scientific distance correlate negatively with scientist mobility between two countries. Scientific collaboration is a major factor associated with mobility. Scientist mobility relies heavily on tertiary student flows in the opposite direction (destination to origin). Mobility is positively related to economic convergence and R&D resources, and negatively to visa restrictions.",
+  "relevance_to_project": "The reverse-direction counterpart to our component (b). It shows that bibliometric scholarly mobility and co-authorship are tightly coupled at the dyad level, so mobility is partly endogenous to collaboration. This supports lagged specifications and comparing the explanatory power of general migration (more exogenous to science) with scholarly mobility.",
+  "verification_source": "No DOI seen. Title, authors and the OECD STI WP 2015/2 series were confirmed via WebSearch (IDEAS/RePEc, EconBiz and OECD iLibrary pages).",
+  "topics": [
+   "migration-coauthorship-direct"
+  ],
+  "level": "U"
+ },
+ {
+  "title": "Which factors influence the international mobility of research scientists?",
+  "authors": "Silvia Appelt, Brigitte van Beuzekom, Fernando Galindo-Rueda, Roberto de Pinho",
+  "year": 2015,
+  "venue": "OECD Science, Technology and Industry Working Papers, No. 2015/02, OECD Publishing",
+  "doi": "10.1787/5js1tmrr2233-en",
+  "url": "https://www.oecd.org/en/publications/which-factors-influence-the-international-mobility-of-research-scientists_5js1tmrr2233-en.html",
+  "research_question": "What economic, geographic, scientific and policy factors explain bilateral flows of research scientists between countries?",
+  "data": "A new mobility measure from changes in affiliations reported by publishing scientists in a major global index of scholarly publications (Scopus), 1996-2011, bilateral country pairs.",
+  "methods": "Gravity-model estimation of bilateral scientist mobility flows, with distance terms (geographic, socioeconomic, scientific), economic and R&D conditions, visa restrictions, collaboration intensity and reverse-direction student flows.",
+  "findings": "Abstract-level. Geographic, socioeconomic and scientific distance are negatively associated with scientist mobility between two countries. Scientific collaboration appears to be a major factor linked to mobility. Mobility increases with converging economic conditions and R&D resources, and is lower with visa restrictions. Scientist mobility is strongly associated with tertiary student flows in the opposite direction, which the authors read as multi-directional brain circulation.",
+  "relevance_to_project": "The closest gravity-model precedent. It shows collaboration and mobility are linked dyadically, which raises endogeneity concerns for the project's PPML specification (co-authorship regressed on mobility). It also shows that direction matters: the reverse student-flow result suggests including both directions of mobility and migrant stocks in dyadic models.",
+  "verification_source": "WebSearch result list showed www.doi.org/10.1787/5JS1TMRR2233-EN (OECD STI Working Papers) and the OECD iLibrary URL '..._5js1tmrr2233-en' with this exact title; EconPapers record RePEc:oec:stiaaa:2015/2-en.",
+  "topics": [
+   "scholarly-mobility"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "The demography of the peripatetic researcher: Evidence on highly mobile scholars from the Web of Science",
+  "authors": "Samin Aref, Emilio Zagheni, Jevin West",
+  "year": 2019,
+  "venue": "Social Informatics (SocInfo 2019), Lecture Notes in Computer Science 11864, Springer, pp. 50-65",
+  "doi": "10.1007/978-3-030-34971-4_4",
+  "url": "https://link.springer.com/chapter/10.1007/978-3-030-34971-4_4",
+  "research_question": "Who are the highly mobile ('peripatetic') researchers who publish from three or more countries, and what global structure do their moves form?",
+  "data": "Main affiliation addresses on more than 62 million Web of Science publications, 1956-2016 (arXiv 1907.13414).",
+  "methods": "Tracking researchers' affiliation countries over time; defining super-movers as those with publications from at least three distinct countries; demographic and network description.",
+  "findings": "Abstract-level. More than 90% of researchers show no international mobility. Peripatetic researchers form a global system with the USA and China as two large hubs and England and Germany as two smaller hubs. The paper frames the policy debate as shifting from brain drain to brain circulation.",
+  "relevance_to_project": "Methodological precursor to the MPIDR scholarly migration database. It shows that bibliometric mobility is rare and hub-concentrated, which supports degree- and strength-preserving nulls in the topology comparison.",
+  "verification_source": "WebSearch result list showed link.springer.com/chapter/10.1007/978-3-030-34971-4_4 titled 'The Demography of the Peripatetic Researcher: Evidence on Highly Mobile Scholars from the Web of Science'; Altmetric and Unpaywall entries gave the same DOI. Note the DOI suffix is _4, not _3.",
+  "topics": [
+   "scholarly-mobility"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Cluster-Robust Variance Estimation for Dyadic Data",
+  "authors": "Peter M. Aronow, Cyrus Samii, Valentina A. Assenova",
+  "year": 2015,
+  "venue": "Political Analysis 23(4):564-577",
+  "doi": "10.1093/pan/mpv018",
+  "url": "https://doi.org/10.1093/pan/mpv018",
+  "research_question": "How should standard errors be computed in dyadic regressions, where any two dyads that share a member may have correlated errors?",
+  "data": "Simulations and an empirical application to interstate disputes.",
+  "methods": "Non-parametric sandwich-type dyadic-robust variance estimator for linear regression that allows dependence between all dyads sharing a unit, with consistency conditions. Extensions to directed and repeated dyads, weights, and GLMs such as logistic regression.",
+  "findings": "Abstract-level: the estimator is consistent under stated conditions, and ignoring dyadic dependence understates uncertainty in dyadic regressions.",
+  "relevance_to_project": "Country-pair co-authorship, migration and mobility are dyadic. Dyad-robust standard errors (stricter than two-way origin/destination clustering, since i-j and j-k dyads share j) should be used, or at least reported as a robustness check, for the PPML and alignment regressions.",
+  "verification_source": "WebSearch results (Crossref blocked): EconPapers RePEc:cup:polals:v:23:y:2015:i:04:p:564-577_01; ISPS Yale records (first published online 29 July 2015); Cambridge Core article page; arXiv 1312.3398. A second search without the DOI in the query returned 10.1093/pan/mpv018.",
+  "topics": [
+   "methods-multilayer-gravity"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Migration, Knowledge Diffusion and the Comparative Advantage of Nations",
+  "authors": "Dany Bahar, Hillel Rapoport",
+  "year": 2018,
+  "venue": "The Economic Journal 128(612):F273-F305",
+  "doi": "10.1111/ecoj.12450",
+  "url": "https://doi.org/10.1111/ecoj.12450",
+  "research_question": "Does international migration spread tacit productive knowledge, shown by countries starting to export new products?",
+  "data": "Bilateral migration stocks and product-level export data across countries (abstract-level). Earlier versions: IZA DP 9788 and CESifo WP 5769.",
+  "methods": "Relates migrant stocks from a product's exporters to the probability that the host country starts exporting that product within ten years. Migration is instrumented in a gravity framework.",
+  "findings": "Abstract-level. A 10% increase in immigrants from countries that export a product is associated with roughly a 2% higher probability that the host country starts exporting it within a decade. Effects are stronger for highly skilled migrants, qualitatively similar for emigrants, and robust to gravity-based instrumentation.",
+  "relevance_to_project": "Evidence that generic bilateral migrant stocks carry knowledge in the productive or trade domain. That makes it a direct contrast for testing whether the same stocks carry scientific knowledge. The gravity-predicted migration instrument could be reused to address endogeneity in co-authorship PPML.",
+  "verification_source": "WebSearch results: EconPapers record (RePEc:wly:econjl:v:128:y:2018:i:612:p:f273-f305) lists EJ 128(612) F273-F305 with DOI 10.1111/ecoj.12450.",
+  "topics": [
+   "diaspora-knowledge-diffusion"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Structural measures for multiplex networks",
+  "authors": "Federico Battiston, Vincenzo Nicosia, Vito Latora",
+  "year": 2014,
+  "venue": "Physical Review E 89(3):032804",
+  "doi": "10.1103/PhysRevE.89.032804",
+  "url": "https://doi.org/10.1103/PhysRevE.89.032804",
+  "research_question": "Which node-, edge-, local- and global-level measures capture the 'multiplexicity' of a network whose nodes are linked by several types of relation?",
+  "data": "Real social multiplex: 78 individuals linked by mutual trust, common operations, exchanged communications and business relationships (the Noordin Top terrorist network).",
+  "methods": "Defines multiplex measures: multi-degree and degree distributions across layers, edge overlap (pairwise o_ij = number of layers in which i and j are linked, plus a multiplex-level average), interlayer clustering and transitivity, multiplex spectral centrality, and shortest paths across layers.",
+  "findings": "Abstract-level plus secondary descriptions: the proposed measures show structure that per-layer or aggregated analysis misses. The multiplex-level edge overlap equals 1/M when no edge appears in more than one of M layers and 1 when all layers are identical. Exact normalization (average over connected pairs or over all pairs) not confirmed from the full text.",
+  "relevance_to_project": "Edge overlap and degree/strength correlations across layers are direct, interpretable statistics for whether a migration edge (origin->destination) co-occurs with a scholarly-mobility or co-authorship edge. Observed overlap can be compared with overlap under degree/strength-preserving nulls.",
+  "verification_source": "WebSearch results (Crossref blocked): NASA ADS record 2014PhRvE..89c2804B; the search result reported DOI 10.1103/PhysRevE.89.032804 and PMID 24730896 without my query giving the DOI; the CEU research portal record and arXiv 1308.3182 (original title 'Metrics for the analysis of multiplex networks') were also seen.",
+  "topics": [
+   "methods-multilayer-gravity"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Neo-colonialism and research collaboration in Central Africa",
+  "authors": "Nelius Boshoff",
+  "year": 2009,
+  "venue": "Scientometrics 81(2): 413-434",
+  "doi": "10.1007/s11192-008-2211-8",
+  "url": "https://link.springer.com/doi/10.1007/s11192-008-2211-8",
+  "research_question": "Do Central African research collaborations show neo-colonial ties (dominance of former colonial powers), and what roles do local researchers play?",
+  "data": "Research papers from Central African countries (bibliometric data), plus a survey of reprint authors of Cameroonian papers.",
+  "methods": "Bibliometric partner-share analysis combined with an author survey.",
+  "findings": "Abstract-level only. About 80% of the region's papers involve a partner outside Central Africa, and about 35% include a former colonial power. France, the USA, the UK and Germany are the leading partners. Local researchers contribute intellectually, but their most common role is fieldwork.",
+  "relevance_to_project": "Evidence that colonial history structures African co-authorship partners. It motivates a colonial-tie covariate in the PPML model and a test of whether migrant-destination and collaboration-partner alignment is driven by shared colonial links (as with Francophone Senegal versus Anglophone East and West Africa).",
+  "verification_source": "WebSearch results: Springer article page (link.springer.com/doi/10.1007/s11192-008-2211-8) citing Scientometrics 81, 413-434 (2009), and the matching IDEAS/RePEc record.",
+  "topics": [
+   "coauthorship-gravity-africa"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Foreign-origin inventors in the USA: testing for diaspora and brain gain effects",
+  "authors": "Stefano Breschi, Francesco Lissoni, Ernest Miguelez",
+  "year": 2017,
+  "venue": "Journal of Economic Geography 17(5):1009-1038",
+  "doi": "10.1093/jeg/lbw044",
+  "url": "https://doi.org/10.1093/jeg/lbw044",
+  "research_question": "Are patents by foreign-origin inventors in the US cited disproportionately by co-ethnic inventors in the US (diaspora effect) or by inventors in the home country (brain gain effect)?",
+  "data": "EP-INV database of uniquely identified inventors on EPO patent applications, combined with IBM-GNR name analysis. Ten Asian and European origin countries.",
+  "methods": "Citation-based tests separating co-ethnic diaspora effects inside the destination from knowledge flows back to the origin country, benchmarked against other channels such as co-invention networks and multinationals.",
+  "findings": "Abstract/preprint-level. A diaspora effect does not necessarily become a brain gain for the origin. Most notably, no brain gain is found for India, where the diaspora effect exists but does not benefit the home country. Diaspora and brain gain effects matter less than other channels of knowledge transmission, especially co-invention networks and multinational companies.",
+  "relevance_to_project": "The closest conceptual match to the thesis that the migration network is not the knowledge network: a migrant presence at a destination need not create origin-destination knowledge ties, and collaboration networks themselves dominate. This motivates testing whether migrant stocks add explanatory power for co-authorship once collaboration or mobility structure is controlled.",
+  "verification_source": "WebSearch results: EconPapers (RePEc:oup:jecgeo:v:17:y:2017:i:5:p:1009-1038) and the Bordeaux OSKAR repository preprint cite JEG 17(5) 1009-1038 with DOI 10.1093/jeg/lbw044.",
+  "topics": [
+   "diaspora-knowledge-diffusion"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Robust Inference With Multiway Clustering",
+  "authors": "A. Colin Cameron, Jonah B. Gelbach, Douglas L. Miller",
+  "year": 2011,
+  "venue": "Journal of Business & Economic Statistics 29(2):238-249",
+  "doi": "10.1198/jbes.2010.07136",
+  "url": "https://doi.org/10.1198/jbes.2010.07136",
+  "research_question": "How can cluster-robust inference be done when errors are correlated along two or more non-nested dimensions?",
+  "data": "Monte Carlo simulations (two-way random effects, placebo-law experiment) and re-analysis of empirical studies with two-way clustering.",
+  "methods": "Multiway cluster-robust sandwich variance estimator (inclusion-exclusion combination of one-way cluster variances) for OLS and nonlinear estimators (logit, probit, GMM).",
+  "findings": "Abstract-level: the estimator allows valid inference under non-nested multiway clustering, performs well in Monte Carlo, and is easy to implement in packages that already offer one-way clustering.",
+  "relevance_to_project": "Justifies two-way clustering by origin and destination country for gravity and dyadic regressions, since errors of all dyads sharing an origin (or destination) are correlated. ppmlhdfe and fixest support multiway clustering.",
+  "verification_source": "WebSearch results (Crossref blocked): EconPapers RePEc:taf:jnlbes:v:29:y:2011:i:2:p:238-249 lists DOI 10.1198/jbes.2010.07136 (second search without the DOI in the query returned it); NBER technical WP t0327 for the earlier version.",
+  "topics": [
+   "methods-multilayer-gravity"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Travel bans and scientific mobility: utility of asymmetry and affinity indexes to inform science policy",
+  "authors": "Zaida Chinchilla-Rodríguez; Yi Bu; Nicolás Robinson-García; Rodrigo Costas; Cassidy R. Sugimoto",
+  "year": 2018,
+  "venue": "Scientometrics 116(1): 569-590",
+  "doi": "10.1007/s11192-018-2738-2",
+  "url": "https://link.springer.com/doi/10.1007/s11192-018-2738-2",
+  "research_question": "Can asymmetry and affinity indexes computed separately for scientific collaboration and scientific mobility reveal the strength of, and discrepancies between, bilateral research relationships, using the countries named in the 2017 US travel bans as a test case?",
+  "data": "Bibliometric collaboration and author-mobility data for the countries in the 2017 US executive-order travel bans (Iran, Iraq, Libya, Somalia, Sudan, Syria, Yemen) and their partner countries.",
+  "methods": "Affinity Index (AFI) and Probabilistic Affinity Index (PAI, also called the Proximity Index) computed for collaboration and for mobility links, plus asymmetry indexes, with the two layers compared for each country.",
+  "findings": "Abstract-level: comparing collaboration and mobility from an affinity perspective can identify discrepancies between levels of collaboration and levels of mobility. The probabilistic affinity index is highly sensitive to country size. The authors argue that the approach can inform immigration policy and identify potential partnerships.",
+  "relevance_to_project": "The closest precedent for component (a). For each origin (including Somalia, a focus origin) it compares the partner profile of one network layer (bibliometric mobility) against another (co-authorship) and flags mismatches. Our project extends this with UN DESA general migrant stocks as a third layer and with formal divergence metrics (JSD, rank correlation, top-k overlap) and null models instead of affinity indexes alone. Its finding on size sensitivity motivates our degree- and strength-preserving nulls.",
+  "verification_source": "WebSearch: the Springer DOI URL link.springer.com/doi/10.1007/s11192-018-2738-2 is listed with the matching title, along with the IDEAS record (v116y2018i1d10.1007_s11192-018-2738-2), IU ScholarWorks, and the open-access Leiden repository PDF.",
+  "topics": [
+   "migration-coauthorship-direct",
+   "scholarly-mobility",
+   "coauthorship-gravity-africa"
+  ],
+  "level": "V2",
+  "independent_check": "https://ideas.repec.org/a/spr/scient/v116y2018i1d10.1007_s11192-018-2738-2.html"
+ },
+ {
+  "title": "A Global Comparison of Scientific Mobility and Collaboration According to National Scientific Capacities",
+  "authors": "Zaida Chinchilla-Rodríguez; Lili Miao; Dakota Murray; Nicolás Robinson-García; Rodrigo Costas; Cassidy R. Sugimoto",
+  "year": 2018,
+  "venue": "Frontiers in Research Metrics and Analytics 3: 17",
+  "doi": "10.3389/frma.2018.00017",
+  "url": "https://www.frontiersin.org/journals/research-metrics-and-analytics/articles/10.3389/frma.2018.00017/pdf",
+  "research_question": "How do country-level networks of scientific mobility and international collaboration relate to each other, and how does this vary with national scientific capacity?",
+  "data": "Bibliometric affiliation data, 2008-2015. Countries are linked when an individual is affiliated with both. National capacity comes from the Scientific and Technological Capacity Index (150 countries: 22 Advanced, 24 Proficient, 22 Developing, 80 Lagging).",
+  "methods": "Construction and comparison of country mobility and collaboration networks, stratified by capacity group, using network positions and centrality.",
+  "findings": "Abstract-level: there is a significant relationship between the flow of mobile researchers and co-publication with foreign partners in the more prolific countries, but mobility is always lower than collaboration. Relationships are size- and resource-dependent. Advanced and Proficient countries hold most mobile authors and international papers, and mobility is extremely low in Developing and Lagging countries. Country positions are not consistent across the two networks, which shows distinct roles for mobility and collaboration, with particular instability for lower-income countries.",
+  "relevance_to_project": "The closest global, multilayer topology comparison of a mobility network and a collaboration network (our multilayer and topology component). Its finding that the layers diverge most for lower-income countries directly anticipates our SSA focus. It does not include general (UN DESA) migration and does not use null models, which are our additions.",
+  "verification_source": "WebSearch: the Frontiers PDF URL and doi.org/10.3389/frma.2018.00017 are listed with the matching title, and the summary gives the authors, volume 3, article 17, and publication on 23 May 2018.",
+  "topics": [
+   "migration-coauthorship-direct",
+   "scholarly-mobility"
+  ],
+  "level": "V2",
+  "independent_check": "https://www.doi.org/10.3389/frma.2018.00017"
+ },
+ {
+  "title": "Fast Poisson estimation with high-dimensional fixed effects",
+  "authors": "Sergio Correia, Paulo Guimarães, Thomas Zylkin",
+  "year": 2020,
+  "venue": "The Stata Journal 20(1):95-115",
+  "doi": "10.1177/1536867X20909691",
+  "url": "https://doi.org/10.1177/1536867X20909691",
+  "research_question": "How can PPML models with several high-dimensional fixed effects be estimated quickly and reliably, including checking whether the (pseudo-)ML estimates exist?",
+  "data": "Software and methods paper (no substantive dataset; abstract-level).",
+  "methods": "The ppmlhdfe Stata command, built on reghdfe: a modified iteratively reweighted least squares algorithm with accelerated HDFE demeaning and a new procedure to detect separation (non-existence of estimates).",
+  "findings": "Abstract-level: ppmlhdfe estimates PPML with multiple HDFEs quickly, shares reghdfe syntax and features, and gives a more robust check for the existence of (pseudo-)ML estimates.",
+  "relevance_to_project": "The reference implementation for PPML with origin and destination (and possibly year) fixed effects. Its separation detection matters because many SSA dyads have zero co-authorship, and some fixed effects may perfectly predict zeros. Python/R ports (e.g. pyfixest, fixest) follow the same logic.",
+  "verification_source": "WebSearch results (Crossref blocked): IDEAS ideas.repec.org/a/tsj/stataj/v20y2020i1p95-115.html and EconPapers RePEc:tsj:stataj:v:20:y:2020:i:1:p:95-115; the arXiv 1903.01690 preprint reportedly links the same DOI.",
+  "topics": [
+   "methods-multilayer-gravity"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "The globalisation of scientific mobility, 1970-2014",
+  "authors": "Mathias Czaika, Sultan Orazbayev",
+  "year": 2018,
+  "venue": "Applied Geography 96, 1-10 (the task brief's attribution to Research Policy appears to be wrong)",
+  "doi": null,
+  "url": "https://www.sciencedirect.com/science/article/abs/pii/S0143622817305428",
+  "research_question": "How has global scientific mobility changed over four decades, in geographic range, centre of gravity and distance, and what are its bilateral determinants, including visa restrictions?",
+  "data": "Bibliometric data on scientists' affiliation changes, 1970-2014; citing work describes it as Scopus. Also IMI Working Paper 146 (2018).",
+  "methods": "Descriptive network and geography analysis of bilateral scientific mobility; citing work reports gravity-type regressions including visa restrictions.",
+  "findings": "Abstract-level (Growth Lab and IMI pages). The range of origin and destination countries has widened. The centre of gravity of scientific production and migration destinations has shifted eastward. Average migration distances have grown as peripheral regions join the global science system. Visa restrictions are a statistically significant barrier to scientists' mobility. A citing source says scientists were found to be about three times as internationally mobile as non-scientists; this is not confirmed from the abstract.",
+  "relevance_to_project": "Supports including visa and policy-barrier covariates and long-run trends. The finding that scientists are far more mobile than the general population, if confirmed, implies scholarly mobility flows and UN DESA migrant stocks should differ in scale and probably in geography.",
+  "verification_source": "Title, authors and venue (Applied Geography 96, July 2018, pp. 1-10) confirmed via the Harvard Growth Lab listing, the ScienceDirect PII S0143622817305428 URL in search results, and Scinapse. One search summary reported DOI 10.1016/j.apgeog.2018.04.017, but my query already contained that string and a follow-up search did not confirm it, so doi is left null. Check before citing.",
+  "topics": [
+   "scholarly-mobility"
+  ],
+  "level": "U"
+ },
+ {
+  "title": "Globalization, Brain Drain, and Development",
+  "authors": "Frederic Docquier, Hillel Rapoport",
+  "year": 2012,
+  "venue": "Journal of Economic Literature 50(3):681-730",
+  "doi": "10.1257/jel.50.3.681",
+  "url": "https://doi.org/10.1257/jel.50.3.681",
+  "research_question": "What do four decades of research say about the size, causes and development consequences of high-skill emigration?",
+  "data": "Literature survey drawing on bilateral and skill-specific migration datasets and case studies (abstract-level). Working paper: IZA DP 5590.",
+  "methods": "Review of theory and empirical work, plus three case studies.",
+  "findings": "Abstract-level. High-skill emigration need not deplete the sending country's human capital stock and can generate positive network externalities. Case studies cover the African medical brain drain, European scientists moving to the US, and the Indian diaspora's role in India's IT sector. Concludes with implications for education, immigration and international taxation policy.",
+  "relevance_to_project": "Standard framing of brain drain versus diaspora externalities for SSA origins. Highlights that skill composition matters, while UN DESA stocks are not broken down by skill, which is a key limitation to discuss when comparing them with scholarly mobility.",
+  "verification_source": "WebSearch results: EconPapers record (RePEc:aea:jeclit:v:50:y:2012:i:3:p:681-730) and EconBiz give JEL 50(3) 681-730 with DOI 10.1257/jel.50.3.681.",
+  "topics": [
+   "diaspora-knowledge-diffusion"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Structural reducibility of multilayer networks",
+  "authors": "Manlio De Domenico, Vincenzo Nicosia, Alexandre Arenas, Vito Latora",
+  "year": 2015,
+  "venue": "Nature Communications 6:6864",
+  "doi": "10.1038/ncomms7864",
+  "url": "https://doi.org/10.1038/ncomms7864",
+  "research_question": "How many layers of a multilayer network are informative? Can layers be aggregated without losing structural information?",
+  "data": "Synthetic benchmark multilayers and real multilayer systems (protein-genetic, social, economic and transportation networks).",
+  "methods": "Information-theoretic method that borrows from quantum theory: von Neumann entropy of layer Laplacians and Jensen-Shannon distances between layers, with hierarchical clustering of layers. It merges layers to maximize how distinguishable the multilayer is from its fully aggregated graph.",
+  "findings": "Abstract-level: the number of informative layers in some real systems can be cut by up to 75% while keeping the multilayer distinguishable from its aggregate. Some layers are redundant, others are not.",
+  "relevance_to_project": "Gives a formal test of the title claim. If the migration and knowledge layers are structurally redundant, reducibility would merge them; if the knowledge layers stay distinct, that supports 'not the same network'. It also uses Jensen-Shannon distance between layers, which matches the project's per-origin JSD.",
+  "verification_source": "WebSearch results (Crossref blocked): nature.com/articles/ncomms7864 and IDEAS record ideas.repec.org/a/nat/natcom/v6y2015i1d10.1038_ncomms7864.html (both URLs contain the DOI suffix); arXiv 1405.0425 gives journal ref Nat. Commun. 6, 6864 (2015).",
+  "topics": [
+   "methods-multilayer-gravity"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Modeling the International-Trade Network: a gravity approach",
+  "authors": "Marco Dueñas, Giorgio Fagiolo",
+  "year": 2013,
+  "venue": "Journal of Economic Interaction and Coordination 8(1):155-178",
+  "doi": "10.1007/s11403-013-0108-y",
+  "url": "https://doi.org/10.1007/s11403-013-0108-y",
+  "research_question": "Can a gravity model reproduce the binary and weighted topological structure of the international trade network?",
+  "data": "International trade network (bilateral trade flows).",
+  "methods": "Fit gravity models and compare predicted with observed network statistics (link presence, weights, degree/strength, clustering), with and without fixing the observed binary structure.",
+  "findings": "Abstract-level: the gravity model reproduces the weighted structure only when the binary architecture is fixed to the observed one. It performs very badly at predicting link presence, or flow levels when links must be estimated too, and it fails to capture clustering-type patterns.",
+  "relevance_to_project": "Warns that a PPML gravity model of co-authorship may fit intensities well while mispredicting which country pairs collaborate at all. This argues for reporting binary (link) and weighted (intensity) fit separately and for comparing gravity-implied topology with observed topology.",
+  "verification_source": "WebSearch results (Crossref blocked): Springer PDF URL .../content/pdf/10.1007/s11403-013-0108-y.pdf and EconPapers RePEc:spr:jeicoo:v:8:y:2013:i:1:p:155-178; arXiv 1112.2867 / LEM WP 2011/25.",
+  "topics": [
+   "methods-multilayer-gravity"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "The international-trade network: gravity equations and topological properties",
+  "authors": "Giorgio Fagiolo",
+  "year": 2010,
+  "venue": "Journal of Economic Interaction and Coordination 5(1):1-25",
+  "doi": "10.1007/s11403-010-0061-y",
+  "url": "https://doi.org/10.1007/s11403-010-0061-y",
+  "research_question": "Once bilateral trade is purged of what a gravity equation explains, what does the topology of the remaining ('residual') trade network look like?",
+  "data": "Bilateral international trade flows among countries (exact years not confirmed in this pass).",
+  "methods": "Estimate a standard gravity equation (size, distance, borders, trade agreements), use the residuals as edge weights of a residual network, and compare its topological statistics with those of the original network.",
+  "findings": "Abstract-level: the residual network's structure is very different from the original and more complex. The original is geographically clustered around a few large hubs, while the residual network features many small, trade-oriented countries acting as local hubs or attracting large, rich partners whatever their location.",
+  "relevance_to_project": "The closest methodological precedent for the planned residual (observed vs expected) analysis: build a residual co-authorship network after a gravity model with or without migrant stocks and mobility, then study its topology. It shows that residual networks can expose structure hidden by size and distance, for example SSA origins over- or under-connected relative to diaspora size.",
+  "verification_source": "WebSearch results (Crossref blocked): EconPapers RePEc:spr:jeicoo:v:5:y:2010:i:1:p:1-25 and the search result returned DOI 10.1007/s11403-010-0061-y although the query did not contain it; the ProQuest record and arXiv 0908.2086 / LEM WP 2009/08 were also seen.",
+  "topics": [
+   "methods-multilayer-gravity"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "The International-Migration Network",
+  "authors": "Giorgio Fagiolo, Marina Mastrorillo",
+  "year": 2012,
+  "venue": "arXiv:1212.3852 / LEM Working Paper 2012/23. The published version appears to be Physical Review E 88:012812 (2013), but the journal title wording was not confirmed.",
+  "doi": null,
+  "url": "https://arxiv.org/abs/1212.3852",
+  "research_question": "What is the binary and weighted topology of the international migration network, how did it change between 1960 and 2000, and can a gravity model account for it?",
+  "data": "Bilateral migrant stocks from origin to destination countries, 1960-2000, treated as a weighted directed graph (abstract-level).",
+  "methods": "Network statistics on the weighted directed migrant-stock network, compared against a parsimonious gravity model of migration.",
+  "findings": "Abstract-level. The network is modular, with a small-world pattern, disassortative mixing, high clustering and power-law distributed weighted statistics. A parsimonious gravity model accounts for most of the observed topology, and socio-economic, geographical and political factors matter more than local network properties.",
+  "relevance_to_project": "Baseline topology of a migrant-stock layer of the same type as UN DESA. Shows that gravity models reproduce much of the migration topology, which supports using gravity-based expectations alongside degree- or strength-preserving nulls in the multilayer comparison.",
+  "verification_source": "The arXiv 1212.3852 and LEM WP 2012/23 records were seen via WebSearch. A link.aps.org result for 10.1103/PhysRevE.88.012812 (2013) appeared for this author pair, but its title match was not confirmed, so the DOI field is left null. The candidate DOI should be checked before citing.",
+  "topics": [
+   "diaspora-knowledge-diffusion"
+  ],
+  "level": "U"
+ },
+ {
+  "title": "Does Human Migration Affect International Trade? A Complex-Network Perspective",
+  "authors": "Giorgio Fagiolo, Marina Mastrorillo",
+  "year": 2014,
+  "venue": "PLoS ONE 9(5):e97331",
+  "doi": "10.1371/journal.pone.0097331",
+  "url": "https://doi.org/10.1371/journal.pone.0097331",
+  "research_question": "How are the international migration network and the international trade network related, and does a country's position in the migration network affect bilateral trade?",
+  "data": "Worldwide bilateral migration stocks and bilateral trade, 1960-2000 (abstract-level).",
+  "methods": "Complex-network comparison of the two layers (correlation and centralities), plus gravity regressions augmented with migration-network centrality measures.",
+  "findings": "Abstract-level. The migration and trade networks are strongly correlated, largely because of country size and geographic distance. Countries that are more central in the migration network trade more bilaterally, and intensive forms of centrality boost trade more than extensive ones. Note: a 2015 correction notice (DOI 10.1371/journal.pone.0126879) republished the revised version.",
+  "relevance_to_project": "A direct template for the multilayer comparison. Its key warning is that raw cross-layer correlation is mostly driven by gravity (size and distance), so migration-co-authorship alignment must be judged against gravity-based or strength-preserving nulls, not raw correlations.",
+  "verification_source": "WebSearch results: PMC4020834 article page and EconPapers (RePEc:plo:pone00:0097331) give PLoS ONE 9(5) e97331 with DOI 10.1371/journal.pone.0097331.",
+  "topics": [
+   "diaspora-knowledge-diffusion"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Proximity dimensions and scientific collaboration among academic institutions in Europe: The closer, the better?",
+  "authors": "Ana Fernández; Esther Ferrándiz; María Dolores León",
+  "year": 2016,
+  "venue": "Scientometrics 106(3): 1073-1092",
+  "doi": "10.1007/s11192-015-1819-8",
+  "url": "https://ideas.repec.org/a/spr/scient/v106y2016i3d10.1007_s11192-015-1819-8.html",
+  "research_question": "Which proximity dimensions (geographical, cognitive, institutional, organizational, social, economic) explain co-authorship between European universities?",
+  "data": "240,495 co-authored articles from 690 universities in the EU-15, 2006-2010. Results are reported for all disciplines and separately for Chemistry & Chemical Engineering, Life Sciences, and Physics & Astronomy.",
+  "methods": "Gravity-equation econometric models of institution-pair co-authorship counts with multiple proximity measures.",
+  "findings": "Abstract-level only. Geographical, cognitive, institutional, social and economic proximity matter substantially, while organizational proximity is weaker. Effects differ across disciplines.",
+  "relevance_to_project": "A gravity precedent with several proximities. It supports including social proximity (which migrant stocks and scholarly mobility can be read as proxying) next to geographic and economic distance in the PPML specification, and it warns about field heterogeneity.",
+  "verification_source": "WebSearch results: IDEAS/RePEc URL encoding 10.1007/s11192-015-1819-8 and the University of Cadiz RODIN repository record (hdl 10498/18396). Note: the DOI ends -8, not -9.",
+  "topics": [
+   "coauthorship-gravity-africa"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Foreign-born scientists: mobility patterns for 16 countries",
+  "authors": "Chiara Franzoni, Giuseppe Scellato, Paula Stephan",
+  "year": 2012,
+  "venue": "Nature Biotechnology 30(12), 1250-1253",
+  "doi": "10.1038/nbt.2449",
+  "url": "https://www.nber.org/papers/w18067",
+  "research_question": "What shares of scientists are foreign-born across 16 core research countries, and what are their mobility patterns and reasons for moving?",
+  "data": "GlobSci survey: corresponding authors of 2009 articles in four fields (including biology, chemistry, earth and environmental sciences, and materials) working in 16 countries; 17,182 respondents in 2011. NBER WP 18067.",
+  "methods": "Cross-national survey of migration history, country of origin and reasons for mobility.",
+  "findings": "Abstract and summary level. Switzerland had the highest share of immigrant scientists; India had the lowest, closely followed by Italy and Japan. There was wide cross-country variation in foreign-born shares and in emigration patterns.",
+  "relevance_to_project": "The main survey benchmark (GlobSci) against which bibliometric mobility estimates can be compared. It covers 16 mostly high-income countries and no Sub-Saharan origins as host countries, so it shows a coverage gap the bibliometric data partly fill.",
+  "verification_source": "WebSearch result list contained dx.doi.org/10.1038/nbt.2449, and the search summary matched it to this title in Nature Biotechnology 30(12):1250-1253 (published 7 Dec 2012). A Scilit entry and NBER w18067 share the title. Not cross-checked on Crossref (blocked).",
+  "topics": [
+   "scholarly-mobility"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Collaborating with People Like Me: Ethnic Coauthorship within the United States",
+  "authors": "Richard B. Freeman; Wei Huang",
+  "year": 2015,
+  "venue": "Journal of Labor Economics 33(S1): S289-S318",
+  "doi": "10.1086/678973",
+  "url": "https://econpapers.repec.org/RePEc:ucp:jlabec:doi:10.1086/678973",
+  "research_question": "Do US-based scientists of the same ethnicity coauthor more than expected, and how does ethnic homophily relate to research impact?",
+  "data": "Authorship of scientific papers by US-based authors, with ethnicity inferred from names (IZA DP 8432 is an earlier version).",
+  "methods": "Comparison of observed ethnic co-authorship against the expectation from the ethnic composition of authors, and regressions of journal impact and citations on homophily.",
+  "findings": "Abstract-level: persons of similar ethnicity coauthor together more frequently than predicted by their share among authors. Greater homophily is associated with publication in lower-impact journals and with fewer citations.",
+  "relevance_to_project": "Evidence that shared ethnic or national origin structures co-authorship beyond chance, which is the mechanism behind expecting diaspora stocks to predict collaboration. Its observed-versus-expected logic is analogous to our residual and null-model approach. It is within-country, not cross-border, so it does not show that migrants link destination and origin.",
+  "verification_source": "WebSearch: the EconPapers URL encodes DOI 10.1086/678973 (RePEc:ucp:jlabec:doi:10.1086/678973) with the matching title, and the summary gives JOLE 33(S1): S289-S318.",
+  "topics": [
+   "migration-coauthorship-direct"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Bridging the Gap: Evidence from the Return Migration of African Scientists",
+  "authors": "Caroline Viola Fry",
+  "year": 2023,
+  "venue": "Organization Science 34(1): 404-432",
+  "doi": "10.1287/orsc.2022.1580",
+  "url": "https://ideas.repec.org/a/inm/ororsc/v34y2023i1p404-432.html",
+  "research_question": "Does the return migration of internationally trained African scientists raise the productivity and connections of non-migrant colleagues at the receiving African institutions?",
+  "data": "Return of US-trained African HIV/AIDS researchers supported by the NIH Fogarty program, with publication records of non-migrant scientists at the receiving African institutions.",
+  "methods": "Quasi-experimental design exploiting the timing of returnee arrivals at African institutions (difference-in-differences style comparison of exposed and unexposed non-migrants).",
+  "findings": "Abstract-level: non-migrant scientists at the receiving African institutions publish more after a returnee arrives, especially those without prior ties to top global institutions. Returnees act as brokers connecting peripheral colleagues to central knowledge and networks.",
+  "relevance_to_project": "The strongest causal evidence found for SSA that migration (via return) builds collaboration links between Africa and destination science systems. It suggests the migrant-collaboration link runs through a narrow, science-specific channel (trained researchers) rather than general diaspora size, which is the distinction our general-migration-versus-scholarly-mobility comparison tests.",
+  "verification_source": "WebSearch: the pubsonline.informs.org URL encodes DOI 10.1287/orsc.2022.1580 with the matching title, and the EconPapers/IDEAS records give Organization Science 34(1): 404-432 (2023).",
+  "topics": [
+   "migration-coauthorship-direct"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Migration and Global Network Formation: Evidence from Female Scientists in Developing Countries",
+  "authors": "Caroline Fry; Jeffrey L. Furman",
+  "year": 2025,
+  "venue": "Organization Science 36(3): 1047-1071 (published online May 2023)",
+  "doi": "10.1287/orsc.2023.1683",
+  "url": "https://pubsonline.informs.org/doi/full/10.1287/orsc.2023.1683",
+  "research_question": "When do migrant scientists from developing countries broker international connections for non-migrant scientists at home, and how does institutional context (gender parity) shape this?",
+  "data": "PhD fellowship program of the Organization for Women in Science for the Developing World (OWSD), 1996-2016: female scientists from developing countries doing PhDs in another developing country. Panel of 3,179 non-migrant scientists in the published version.",
+  "methods": "Panel analysis of whether non-migrants gain international co-authorship connections through migrant colleagues, interacted with home- and host-country gender parity.",
+  "findings": "Abstract-level: female migrant scientists are more likely to share international connections with non-migrants at home when their home and host countries have high levels of gender parity. Institutional support is critical for migrant brokerage and the globalization of knowledge production.",
+  "relevance_to_project": "Developing-country evidence (including South-South migration) that migration translates into origin-country collaboration only under supportive institutional conditions. This gives a mechanism for heterogeneity across SSA origins in how well migrant destinations align with collaboration partners.",
+  "verification_source": "WebSearch: the pubsonline.informs.org URL encodes DOI 10.1287/orsc.2023.1683 with the matching title, and the RePEc record gives v36 i3 pp. 1047-1071 (2025).",
+  "topics": [
+   "migration-coauthorship-direct"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "The relation between migration and FDI in the OECD from a complex network perspective",
+  "authors": "Antonios Garas, Athanasios Lapatinas, Konstantinos Poulios",
+  "year": 2016,
+  "venue": "Advances in Complex Systems 19:1650009",
+  "doi": "10.1142/S0219525916500090",
+  "url": "https://doi.org/10.1142/S0219525916500090",
+  "research_question": "How are bilateral migration and FDI networks among OECD countries related, and does migration-network centrality affect FDI?",
+  "data": "OECD bilateral migration and FDI data (abstract-level). Preprints: arXiv:1701.07729 and MPRA 75134.",
+  "methods": "Network comparison and a gravity equation augmented with network variables.",
+  "findings": "Abstract-level. Strong positive correlation between the migration and FDI networks, largely explained by country size and distance. Country pairs that are more central in the migration network show a stronger positive FDI relationship. An earlier 2015 MPRA version described a weaker relationship, so the versions differ on this point.",
+  "relevance_to_project": "A second multilayer migration-economy comparison with the same lesson: cross-layer overlap is largely gravity-driven, and migration-network centrality adds explanatory power. Provides a design and specification to adapt for the migration and co-authorship layers.",
+  "verification_source": "WebSearch results: the arXiv 1701.07729 and MPRA 75134 listings cite Advances in Complex Systems 19, 1650009 (2016) with DOI 10.1142/S0219525916500090.",
+  "topics": [
+   "diaspora-knowledge-diffusion"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "National characteristics in international scientific co-authorship relations",
+  "authors": "Wolfgang Glänzel",
+  "year": 2001,
+  "venue": "Scientometrics 51(1): 69-115",
+  "doi": "10.1023/A:1010512628145",
+  "url": "https://ideas.repec.org/a/spr/scient/v51y2001i1d10.1023_a1010512628145.html",
+  "research_question": "What national characteristics shape international co-authorship? Are bilateral co-publication links symmetric, and how does international collaboration relate to national research profiles and citation impact?",
+  "data": "International co-authored publications by country (ISI databases, 1990s). Abstract-level only.",
+  "methods": "Bibliometric indicators of bilateral co-authorship strength, with symmetry/asymmetry tests of country-pair links and field-level citation analysis.",
+  "findings": "Abstract-level only. Not all bilateral links are symmetric. Internationally co-authored papers are cited more on average than domestic ones, but the citation gain from international collaboration varies a lot between countries and, within countries, between fields.",
+  "relevance_to_project": "The asymmetry of country-pair links matters directly when comparing directed migration stocks and directed scholarly mobility flows with undirected co-authorship. It supports normalizing per origin (each origin's partner distribution) rather than using raw symmetric counts.",
+  "verification_source": "WebSearch results: IDEAS/RePEc record whose URL encodes DOI 10.1023/A:1010512628145 (Scientometrics v51 i1, pp. 69-115) and a doi.org link to the same DOI.",
+  "topics": [
+   "coauthorship-gravity-africa"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Globalization of science and international scientific collaboration: A network perspective",
+  "authors": "Qinchang Gui; Chengliang Liu; Debin Du",
+  "year": 2019,
+  "venue": "Geoforum 105: 1-12",
+  "doi": "10.1016/j.geoforum.2019.06.017",
+  "url": "https://pure.ecnu.edu.cn/en/publications/globalization-of-science-and-international-scientific-collaborati/",
+  "research_question": "How did the global international scientific collaboration network evolve from 2000 to 2015, and which proximities and linkages explain country-pair collaboration?",
+  "data": "Web of Science country co-authorship data, 2000-2015.",
+  "methods": "Social network analysis (core-periphery structure, centrality) and Quadratic Assignment Procedure (QAP) regression on country-pair matrices.",
+  "findings": "Abstract-level only, read on the ECNU repository and a mirror, not the publisher page. The network grew in nodes and ties and shows a core-periphery structure with a more competitive multi-centric core, with the USA as a top-level hub. In the QAP analysis, post-colonial links, a shared English language, economic and science-capability proximity, social proximity and international students are associated with more collaboration. Geographic distance has a negative but statistically insignificant effect.",
+  "relevance_to_project": "The closest network-plus-dyadic-regression analogue in this topic. It already enters a human-mobility dyadic variable (international students) and colonial ties as predictors of country-pair co-authorship. QAP is an alternative or complement to the planned permutation nulls.",
+  "verification_source": "WebSearch results: East China Normal University Pure publication record giving DOI 10.1016/j.geoforum.2019.06.017 and Geoforum vol. 105, pp. 1-12.",
+  "topics": [
+   "coauthorship-gravity-africa"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "International Scientific Migration and Collaboration Patterns Following a Bibliometrics Line of Investigation",
+  "authors": "Gali Halevi; Henk F. Moed",
+  "year": 2012,
+  "venue": "arXiv preprint (CoRR abs/1212.5194). A related peer-reviewed paper is Moed & Halevi (2014), 'A bibliometric approach to tracking international scientific migration', Scientometrics 101(3): 1987-2001, DOI 10.1007/s11192-014-1307-6",
+  "doi": null,
+  "url": "https://arxiv.org/pdf/1212.5194",
+  "research_question": "Can Scopus affiliation data track international scientific migration, and do migration patterns differ from co-authorship (collaboration) patterns between countries?",
+  "data": "Scopus affiliation countries of publishing authors for 17 countries (10 fast-growing and 7 established science systems).",
+  "methods": "Synchronous and asynchronous bibliometric migration indicators compared with country-level co-authorship patterns, with error-rate estimation.",
+  "findings": "Abstract-level and secondary coverage (Inside Higher Ed, Research Trends): international scientific migration patterns are different from collaboration patterns. Shared language and geographic proximity affect migration more strongly than co-authorship, and political tensions affect co-authorship more than migration. Results should be interpreted cautiously and combined with CV or survey data.",
+  "relevance_to_project": "The most direct early statement of our headline claim that the migration network is not the collaboration network, though here 'migration' means bibliometric scholarly mobility, not general population migrant stocks. We should cite it as a precursor and show that the divergence also holds, and is larger, when general migration (UN DESA) is the comparison layer.",
+  "verification_source": "Not verified: arXiv preprint with no DOI. Title, authors and arXiv ID were confirmed via WebSearch (arxiv.org/pdf/1212.5194 and the dblp record abs-1212-5194). The DOI 10.1007/s11192-014-1307-6 for the related 2014 Scientometrics paper was seen in Springer/Unpaywall/dblp search results.",
+  "topics": [
+   "migration-coauthorship-direct"
+  ],
+  "level": "U"
+ },
+ {
+  "title": "Gravity Equations: Workhorse, Toolkit, and Cookbook",
+  "authors": "Keith Head, Thierry Mayer",
+  "year": 2014,
+  "venue": "Handbook of International Economics, Vol. 4 (Gopinath, Helpman, Rogoff eds.), Elsevier, Ch. 3, pp. 131-195",
+  "doi": "10.1016/B978-0-444-54314-1.00003-3",
+  "url": "https://doi.org/10.1016/B978-0-444-54314-1.00003-3",
+  "research_question": "How should gravity equations for bilateral flows be estimated and interpreted in a way consistent with theory?",
+  "data": "Survey chapter. Draws on bilateral trade data and the gravity literature; specific datasets not verified in this pass.",
+  "methods": "Review of structural gravity theory and estimators (fixed effects, PPML and related methods) in a step-by-step cookbook format; earlier versions are CEPR DP 9322 and CEPII WP 2013-27.",
+  "findings": "Abstract-level: naive estimation gives biased and often misinterpreted results. The authors recommend a toolkit of several theory-consistent estimators, not sole reliance on any one method.",
+  "relevance_to_project": "Standard reference for specifying origin/destination fixed effects (multilateral resistance) and for checking robustness across estimators (PPML vs alternatives) in the co-authorship gravity models.",
+  "verification_source": "WebSearch results (Crossref blocked): EconPapers/IDEAS chapter record RePEc:eee:intchp:4-131; the O'Reilly copy URL contains Elsevier PII B9780444543141000033, consistent with DOI 10.1016/B978-0-444-54314-1.00003-3; CEPII WP 2013-27 and CEPR DP 9322 records.",
+  "topics": [
+   "methods-multilayer-gravity"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Research collaboration at a distance: Changing spatial patterns of scientific collaboration within Europe",
+  "authors": "Jarno Hoekman; Koen Frenken; Robert J. W. Tijssen",
+  "year": 2010,
+  "venue": "Research Policy 39(5): 662-673",
+  "doi": "10.1016/j.respol.2010.01.012",
+  "url": "https://econpapers.repec.org/RePEc:eee:respol:v:39:y:2010:i:5:p:662-673",
+  "research_question": "How do physical distance and territorial borders (regional, national, linguistic) affect research collaboration between European regions, and has their effect changed over time?",
+  "data": "All co-publications between 313 regions in 33 European countries, 2000-2007 (Web of Science).",
+  "methods": "Gravity equation of co-publication counts between regions, with distance and border/language dummies, estimated over time.",
+  "findings": "Abstract-level only. European integration is weakening the effect of territorial borders, but sensitivity to physical distance has not fallen, so the preference for nearby partners persists. Collaboration propensity varies a lot between regions and countries, which the authors relate to size, quality and accessibility.",
+  "relevance_to_project": "A key methodological precedent for count-based gravity models of co-publication with distance, language and border terms. It provides baseline covariates and expected signs for the PPML co-authorship model before migrant stocks and scholarly mobility are added.",
+  "verification_source": "WebSearch results: EconPapers RePEc record (Research Policy 39(5):662-673) and the Utrecht repository and CAS catalogue records giving DOI 10.1016/j.respol.2010.01.012.",
+  "topics": [
+   "coauthorship-gravity-africa"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Impact of scientific, economic, geopolitical, and cultural factors on international research collaboration",
+  "authors": "Lei Hou; Yueling Pan; Jonathan J. H. Zhu",
+  "year": 2021,
+  "venue": "Journal of Informetrics 15(3): 101194",
+  "doi": "10.1016/j.joi.2021.101194",
+  "url": "https://ideas.repec.org/a/eee/infome/v15y2021i3s1751157721000651.html",
+  "research_question": "How do scientific size, economic size, geopolitical ties (shared intergovernmental organization memberships) and cultural links (language, religion) shape close collaboration between countries?",
+  "data": "Country-pair international collaboration data. The data source and years were not confirmed, since only abstract-level material was seen.",
+  "methods": "Dyadic country-pair analysis of collaboration intensity on scientific, economic, geopolitical and cultural covariates. The exact estimator was not confirmed.",
+  "findings": "Abstract-level only. Countries with large and similar scientific and economic sizes are more likely to collaborate closely. Shared memberships in intergovernmental organizations strongly promote close collaboration. Shared language and religion also help.",
+  "relevance_to_project": "A recent country-pair determinants study that gives a covariate set for the PPML co-authorship baseline (mass terms, size similarity, shared IGOs, language, religion). Migrant stocks and scholarly mobility should be tested as additions to these predictors.",
+  "verification_source": "WebSearch results: IDEAS/RePEc record (infome v15 i3, article 101194), and a reference list and Peeref/OUCI records giving https://doi.org/10.1016/j.joi.2021.101194.",
+  "topics": [
+   "coauthorship-gravity-africa"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "From drains to bridges: The role of internationally mobile PhD students in linking non-mobile with foreign scientists",
+  "authors": "Rodrigo Ito; Diego Chavarro; Tommaso Ciarli; Robin Cowan; Fabiana Visentin",
+  "year": 2025,
+  "venue": "Journal of Development Economics 177: 103577",
+  "doi": "10.1016/j.jdeveco.2025.103577",
+  "url": "https://ideas.repec.org/a/eee/deveco/v177y2025ics0304387825001282.html",
+  "research_question": "Do internationally mobile PhD students and scientists from a developing country link non-mobile domestic scientists to foreign collaborators, and how durable are these links?",
+  "data": "CVs, scholarship program records and OpenAlex publications reconstructing the mobility paths and co-authorship networks of 19,158 Colombian scientists, 1990-2021. UNU-MERIT WP 2024-009 is an earlier version.",
+  "methods": "Individual-level panel and network analysis of co-authorship formation (triadic closure through mobile co-authors), comparing diaspora, returnee and intermittently mobile scientists.",
+  "findings": "Abstract-level: co-authoring with mobile scientists makes non-mobile scientists more likely to collaborate with foreign researchers. These foreign collaborations tend to be short-lived and are sustained only through the mediation of a mobile scientist. Diaspora and intermittently mobile scientists also act as international bridges.",
+  "relevance_to_project": "A recent OpenAlex-based developing-country study tying scholarly mobility to the origin's foreign co-authorship partners. It supports scholarly mobility (not general migration) as the operative channel and warns that diaspora-mediated ties are fragile, which matters when interpreting cross-sectional alignment.",
+  "verification_source": "WebSearch: the summary of the EconPapers (RePEc:hal:journl:hal-05301762), IDEAS and Maastricht CRIS records gives DOI 10.1016/j.jdeveco.2025.103577 with the matching title, volume 177 and article 103577. The IDEAS URL shows the matching PII S0304387825001282. The Crossref API was blocked.",
+  "topics": [
+   "migration-coauthorship-direct"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Research upon return: The effect of international mobility on scientific ties, production and impact",
+  "authors": "Koen Jonkers; Laura Cruz-Castro",
+  "year": 2013,
+  "venue": "Research Policy 42(8): 1366-1377",
+  "doi": "10.1016/j.respol.2013.05.005",
+  "url": "https://ideas.repec.org/a/eee/respol/v42y2013i8p1366-1377.html",
+  "research_question": "How do ties formed during a stay in a foreign research system affect returnee scientists' international collaboration patterns, output and impact after return?",
+  "data": "Argentinean researchers who returned after working abroad, compared with non-mobile peers (bibliometric and CV data).",
+  "methods": "Econometric comparison of returnees' collaboration with former host countries and of their productivity and impact.",
+  "findings": "Abstract-level: highly skilled return migrants contribute to establishing ties between home and host research systems. Ties formed abroad shape returnees' collaboration patterns and research output upon return.",
+  "relevance_to_project": "Classic evidence that a country's collaboration partners mirror where its scientists went (former host countries), so scholarly mobility should predict collaboration better than general migrant destinations. This is a direct prior for our hypothesis on component (b).",
+  "verification_source": "WebSearch: a search-result snippet quotes 'Research Policy 42(8): 1366-1377. http://dx.doi.org/10.1016/j.respol.2013.05.005' with the matching title, and the IDEAS and EconPapers records confirm the volume, issue and pages.",
+  "topics": [
+   "migration-coauthorship-direct"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "National ties of international scientific collaboration and researcher mobility found in Nature and Science",
+  "authors": "Maki Kato; Asao Ando",
+  "year": 2017,
+  "venue": "Scientometrics 110(2): 673-694",
+  "doi": "10.1007/s11192-016-2183-z",
+  "url": "https://ideas.repec.org/a/spr/scient/v110y2017i2d10.1007_s11192-016-2183-z.html",
+  "research_question": "Is country-level international scientific collaboration explained by researchers' international migration as well as by their motivation, and which way does causality run between mobility and collaboration?",
+  "data": "Metadata of papers published in Nature and Science, 1989-2009 (country-pair counts).",
+  "methods": "Count-data estimation on bilateral (country-pair) collaboration, with migration (mobility) variables and 'synergy' and 'difference' effects between countries. The direction of the mobility-collaboration relationship is tested.",
+  "findings": "Abstract-level: international collaboration is explained by both researchers' international migration and their motivation (synergy and difference effects between countries). Researchers move to countries with better research environments, but networks created through collaboration are not a factor in migration. The relationship runs in one direction, from mobility to collaboration. The paper also notes a mechanical issue: when a researcher moves from A to B, a former A-B collaboration becomes domestic and a tie to A becomes international.",
+  "relevance_to_project": "The closest country-pair econometric precedent for using scholarly mobility to predict co-authorship (our component b). The mechanical reclassification point is directly relevant to our design, because Akbaritabar et al. mobility flows and OpenAlex co-authorship come from the same affiliation records, so the gravity models need lagging or disjoint author sets.",
+  "verification_source": "WebSearch: the IDEAS/RePEc record URL encodes DOI 10.1007/s11192-016-2183-z with the matching title, and a library catalogue record gives Scientometrics 2017, 110(2), pp. 673-694.",
+  "topics": [
+   "migration-coauthorship-direct"
+  ],
+  "level": "V2",
+  "independent_check": "https://ideas.repec.org/a/spr/scient/v110y2017i2d10.1007_s11192-016-2183-z.html"
+ },
+ {
+  "title": "Ethnic Scientific Communities and International Technology Diffusion",
+  "authors": "William R. Kerr",
+  "year": 2008,
+  "venue": "Review of Economics and Statistics 90(3):518-537",
+  "doi": "10.1162/rest.90.3.518",
+  "url": "https://doi.org/10.1162/rest.90.3.518",
+  "research_question": "Do US ethnic scientific and entrepreneurial communities transfer technology back to their home countries?",
+  "data": "US individual patent records with an ethnic-name database used to identify the ethnicity of researchers. International patent citations (abstract-level).",
+  "methods": "Name-based ethnic classification of inventors, then analysis of ethnic knowledge diffusion to home countries using citation patterns (abstract-level; full text not read).",
+  "findings": "Abstract-level. US ethnic research communities serve as channels for technology transfer to their home countries. The transfers are particularly strong in high-tech industries and for Chinese economies. The related thesis and working paper report that international patent citations confirm knowledge diffusion through ethnic networks.",
+  "relevance_to_project": "The standard name-based approach to diaspora knowledge flows. It is an analogue for identifying SSA-origin scholars in OpenAlex and a warning about how reliable name-based ethnicity is for African origins. The evidence is concentrated on large Asian diasporas.",
+  "verification_source": "WebSearch results: EconPapers (RePEc:tpr:restat:v:90:y:2008:i:3:p:518-537) and Scilit record give REStat 90(3) 518-537 and DOI 10.1162/rest.90.3.518.",
+  "topics": [
+   "diaspora-knowledge-diffusion"
+  ],
+  "level": "V2",
+  "independent_check": "https://econpapers.repec.org/RePEc:tpr:restat:v:90:y:2008:i:3:p:518-537"
+ },
+ {
+  "title": "Multilayer networks",
+  "authors": "Mikko Kivelä, Alex Arenas, Marc Barthelemy, James P. Gleeson, Yamir Moreno, Mason A. Porter",
+  "year": 2014,
+  "venue": "Journal of Complex Networks 2(3):203-271",
+  "doi": "10.1093/comnet/cnu016",
+  "url": "https://doi.org/10.1093/comnet/cnu016",
+  "research_question": "How can the many ad hoc notions of multiplex, interdependent and multilayer networks be unified in one general framework and terminology, and how do single-layer network diagnostics carry over to multilayer settings?",
+  "data": "Review article, no new data. Surveys existing empirical datasets that can be represented as multilayer networks.",
+  "methods": "Conceptual and mathematical framework (tensor-style multilayer representation, node-layer tuples, intra- and inter-layer edges), a terminology dictionary, and a review of multilayer generalizations of network diagnostics.",
+  "findings": "Abstract-level: proposes a general multilayer formalism and dictionary of terms, shows how many existing multiplex and interdependent network types fit in it, and reviews attempts to generalize single-layer measures (degree, clustering, paths, centrality, communities) to multilayer networks.",
+  "relevance_to_project": "Gives the formal vocabulary for treating migration stocks, scholarly mobility and co-authorship as three layers on a shared country node set (a node-aligned, edge-colored multiplex). It is the standard citation for framing the topology-comparison part of the project.",
+  "verification_source": "WebSearch results (api.crossref.org and WebFetch were blocked in this session). The arXiv 1309.7233 listing gives journal ref J. Complex Netw. 2(3):203-271 (2014), and the OUP article-lookup link academic.oup.com/comnet/article-lookup/doi/10.1093/comnet/cnu016 surfaced in search; pure.ul.ie record also seen.",
+  "topics": [
+   "methods-multilayer-gravity"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Divergence measures based on the Shannon entropy",
+  "authors": "Jianhua Lin",
+  "year": 1991,
+  "venue": "IEEE Transactions on Information Theory 37(1):145-151",
+  "doi": "10.1109/18.61115",
+  "url": "https://doi.org/10.1109/18.61115",
+  "research_question": "Can divergence measures between probability distributions be defined from Shannon entropy so that they avoid the absolute-continuity requirement of Kullback-Leibler-type divergences?",
+  "data": "Theoretical paper, no data.",
+  "methods": "Defines a family of entropy-based divergences, including the Jensen-Shannon divergence (and its generalized, weighted form), and derives bounds relating them to variational distance and Bayes misclassification error.",
+  "findings": "Abstract-level: the proposed divergences do not need absolute continuity between distributions, are bounded, and are tied by derived bounds to variational distance and the probability of misclassification.",
+  "relevance_to_project": "The canonical citation for using JSD to compare an origin's migrant-destination distribution with its co-authorship-partner distribution. JSD stays finite when one distribution puts zero mass on destinations the other uses, which is common for SSA origins. Its boundedness (at most log 2) makes values comparable across origins.",
+  "verification_source": "WebSearch results (Crossref blocked): IEEE Xplore document 61115 (ieeexplore.ieee.org/document/61115), consistent with DOI 10.1109/18.61115; Scilit record; scanned first page header 'IEEE Transactions on Information Theory, Vol. 37, No. 1, January 1991, p. 145'.",
+  "topics": [
+   "methods-multilayer-gravity"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Enhanced reconstruction of weighted networks from strengths and degrees",
+  "authors": "Rossana Mastrandrea, Tiziano Squartini, Giorgio Fagiolo, Diego Garlaschelli",
+  "year": 2014,
+  "venue": "New Journal of Physics 16:043022",
+  "doi": "10.1088/1367-2630/16/4/043022",
+  "url": "https://doi.org/10.1088/1367-2630/16/4/043022",
+  "research_question": "Is the strength sequence enough to reconstruct or null-model a weighted network, or do degrees carry extra information?",
+  "data": "Several real-world weighted networks (abstract-level).",
+  "methods": "Analytical maximum-entropy 'enhanced configuration model' (ECM) that constrains both degrees and strengths, with information-theoretic model selection against strength-only models.",
+  "findings": "Abstract-level: strength-only reconstruction can perform poorly. A non-trivial degree sequence cannot be reduced to the strength sequence, and constraining both gives much better reconstruction of higher-order patterns. Expected values come out analytically, with no sampling.",
+  "relevance_to_project": "Backs the plan to use degree- and strength-preserving nulls, not strength-only ones, when testing cross-layer overlap and topology. This matters because co-authorship layers are dense with many small weights, while migration layers are concentrated.",
+  "verification_source": "WebSearch results (Crossref blocked): the search returned DOI 10.1088/1367-2630/16/4/043022 although the query did not contain it; arXiv 1307.2104; Leiden repository and University of Turin IRIS records.",
+  "topics": [
+   "methods-multilayer-gravity"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Notes on CEPII's distances measures: The GeoDist database",
+  "authors": "Thierry Mayer, Soledad Zignago",
+  "year": 2011,
+  "venue": "CEPII Working Paper No. 2011-25",
+  "doi": null,
+  "url": "https://www.cepii.fr/CEPII/en/publications/wp/abstract.asp?NoDoc=3877",
+  "research_question": "How are CEPII's bilateral distance and geography variables built, and what do they contain?",
+  "data": "Country-level geographic data (geo_cepii) for 225 countries, and a dyadic file (dist_cepii) with distances and pair dummies such as contiguity, common language and colonial links; city-level population data.",
+  "methods": "Computes several bilateral distance measures, including population-weighted distances based on inter-city distances among the largest cities of each country (following Head and Mayer 2002), plus capital-to-capital and most-populated-city distances.",
+  "findings": "Documentation paper: describes the construction and coverage of the GeoDist variables used throughout the gravity literature.",
+  "relevance_to_project": "Source of the distance, contiguity, common-language and colonial-tie covariates for the PPML gravity models of co-authorship. It should be cited as the data source and its weighted-distance definition used consistently.",
+  "verification_source": "Bibliographic details confirmed via WebSearch (CEPII abstract page NoDoc=3877, CEPII PDF wp2011-25.pdf, EconPapers RePEc:cii:cepidt:2011-25, MPRA 36347). No DOI was found from a source I saw, so doi is null and verified is false.",
+  "topics": [
+   "methods-multilayer-gravity"
+  ],
+  "level": "U"
+ },
+ {
+  "title": "Scientific diasporas: a new approach to the brain drain",
+  "authors": "Jean-Baptiste Meyer, Mercy Brown",
+  "year": 1999,
+  "venue": "UNESCO MOST Discussion Paper Series No. 41 (SHS.99/WS/12), prepared for the World Conference on Science, UNESCO-ICSU, Budapest, 26 June-1 July 1999",
+  "doi": null,
+  "url": "https://unesdoc.unesco.org/ark:/48223/pf0000116330",
+  "research_question": "How are countries organizing their expatriate scientists and engineers into networks for development at home, and what lessons follow?",
+  "data": "Inventory or review of existing science and technology diaspora networks. Later work cites it as an early list of such networks (record-level; full text not read).",
+  "methods": "Descriptive survey and policy analysis.",
+  "findings": "Record/introduction-level only. Although national experiences differ, the diaspora initiatives share the goal of systematically using expatriate experts, scientists and engineers for development at home. The authors draw early lessons and policy implications for more efficient use of S&T diasporas. Later studies use it as a baseline list of science diaspora networks. The specific counts and findings were not verified.",
+  "relevance_to_project": "The founding statement of the scientific diaspora option, useful for framing SSA scientific diasporas as policy objects that differ from total migrant stocks.",
+  "verification_source": "No DOI exists (grey literature). Bibliographic details come from the UNESDOC record (ark:/48223/pf0000116330) returned by WebSearch.",
+  "topics": [
+   "diaspora-knowledge-diffusion"
+  ],
+  "level": "U"
+ },
+ {
+  "title": "Network Approach versus Brain Drain: Lessons from the Diaspora",
+  "authors": "Jean-Baptiste Meyer",
+  "year": 2001,
+  "venue": "International Migration 39(5):91-110",
+  "doi": "10.1111/1468-2435.00173",
+  "url": "https://doi.org/10.1111/1468-2435.00173",
+  "research_question": "Can networks of highly skilled expatriates turn the brain drain into a brain gain for origin countries?",
+  "data": "Case studies of intellectual and scientific diaspora networks (abstract-level).",
+  "methods": "Conceptual analysis using a connectionist or network approach, drawing on case-study evidence.",
+  "findings": "Abstract-level. Highly skilled expatriate networks that connect diaspora members to their origin countries can turn brain drain into brain gain. Proposes an expanded concept of the network that includes actors and intermediaries, not only kinship or co-national ties.",
+  "relevance_to_project": "Defines the diaspora knowledge network as an organized, selective subset of the diaspora, separate from the migrant population as a whole. This supports the hypothesis that knowledge partners will not simply mirror migrant destinations.",
+  "verification_source": "WebSearch results: IRD documentation catalogue (fdi:010071777) and HAL deposit (ird-01730582) give International Migration 39(5) 91-110 with DOI 10.1111/1468-2435.00173.",
+  "topics": [
+   "diaspora-knowledge-diffusion"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Inventor migration and knowledge flows: A two-way communication channel?",
+  "authors": "Ernest Miguelez, Claudia Noumedem Temgoua",
+  "year": 2020,
+  "venue": "Research Policy 49(9):103914",
+  "doi": "10.1016/j.respol.2019.103914",
+  "url": "https://doi.org/10.1016/j.respol.2019.103914",
+  "research_question": "Does inventor migration raise knowledge flows in both directions, back to home countries and into host countries?",
+  "data": "Country-pair data for 1990-2010 on inventor migration and international patent citations (abstract-level).",
+  "methods": "Country-pair gravity model of cross-country patent citations, with instrumental variables and country-pair fixed effects.",
+  "findings": "Abstract-level. Inventor migration robustly increases knowledge flows to home countries under IV and pair fixed effects. The effect on flows into host countries does not hold up. The effects matter mainly when sending countries are developing countries and for knowledge diffusion within multinationals.",
+  "relevance_to_project": "Shows that the knowledge payoff of migration is directional and concentrated in developing origins, which is relevant to SSA. Supports keeping direction (origin to destination) in the mobility and migrant-stock layers even though co-authorship is undirected, and testing for asymmetry in residuals.",
+  "verification_source": "WebSearch results: University of Barcelona repository (hdl 2445/219164) and HAL (hal-03097427) give Research Policy 49(9) article 103914 with DOI 10.1016/j.respol.2019.103914.",
+  "topics": [
+   "diaspora-knowledge-diffusion"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Inventor Diasporas and the Internationalization of Technology",
+  "authors": "Ernest Miguélez",
+  "year": 2018,
+  "venue": "The World Bank Economic Review 32(1): 41-63",
+  "doi": "10.1093/wber/lhw013",
+  "url": "https://econpapers.repec.org/RePEc:oup:wbecrv:v:32:y:2018:i:1:p:41-63.",
+  "research_question": "Do diasporas of highly skilled (inventor) migrants increase cross-country inventive collaboration (co-patenting) and R&D offshoring between their host and origin countries?",
+  "data": "PCT patent applications. Inventors with a migrant background are used as a proxy for the skilled diaspora in each country pair.",
+  "methods": "Gravity models of bilateral international co-patenting (inventor-inventor co-inventorship and applicant-inventor links). Earlier versions are GREThA WP 2014-12 and World Bank Policy Research WP 7619.",
+  "findings": "Abstract-level: inventor diasporas are strongly and robustly associated with international co-patenting, and the effect shrinks as interactions become more formal (stronger for inventor-inventor co-inventorship than for applicant-inventor offshoring). The Chinese and Indian diasporas do not drive the results. The working-paper version reports that a 10% larger inventor diaspora is associated with 1.5-2.2% more international patent collaborations (not confirmed in the published version).",
+  "relevance_to_project": "The methodological template for including a skilled-diaspora stock in a PPML gravity model of bilateral knowledge collaboration. It is the patent analogue of our co-authorship model, and its contrast between skilled diaspora and general migration parallels our comparison of scholarly mobility with UN DESA migrant stocks.",
+  "verification_source": "WebSearch: the summary of the IDEAS/EconPapers record (RePEc:oup:wbecrv:v:32:y:2018:i:1:p:41-63) gives DOI 10.1093/wber/lhw013 with the matching title. The DOI was not shown in a URL, and the Crossref API was blocked.",
+  "topics": [
+   "migration-coauthorship-direct",
+   "diaspora-knowledge-diffusion",
+   "coauthorship-gravity-africa"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Studying scientific migration in Scopus",
+  "authors": "Henk F. Moed; M'hamed Aisati; Andrew Plume",
+  "year": 2013,
+  "venue": "Scientometrics 94(3): 929-942",
+  "doi": "10.1007/s11192-012-0783-9",
+  "url": "https://ideas.repec.org/a/spr/scient/v94y2013i3d10.1007_s11192-012-0783-9.html",
+  "research_question": "Can Scopus author profiles and affiliation linking be used to measure international scientific migration, and how do migration patterns relate to international co-authorship?",
+  "data": "Scopus author-affiliation histories for five countries (Germany, Italy, Netherlands, UK, USA), 1999-2010.",
+  "methods": "Bibliometric tracking of author affiliation changes, compared with co-authorship patterns between the same countries.",
+  "findings": "Abstract-level: language similarity between countries is a more important factor in international migration than in international co-authorship. Example balances are given (the Netherlands had a positive migration balance with the UK and a negative one with Germany). A secondary search summary attributes to the paper the result that having international co-authors increases the probability of international movement (not confirmed in full text).",
+  "relevance_to_project": "Early direct evidence that migration and co-authorship respond differently to the same dyadic factors (language), which supports treating them as distinct layers and expecting misalignment. Its scholarly-migration measure is the methodological ancestor of the Akbaritabar et al. (2024) flows we use.",
+  "verification_source": "WebSearch: the IDEAS/RePEc URL encodes 10.1007/s11192-012-0783-9 with the matching title, and an api.crossref.org/works/10.1007/S11192-012-0783-9 link and an Unpaywall link appeared in the results. The Crossref API itself was not fetchable.",
+  "topics": [
+   "migration-coauthorship-direct",
+   "scholarly-mobility"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "International collaboration in scientific publishing: the case of West Africa (2001-2010)",
+  "authors": "Eustache Mêgnigbêto",
+  "year": 2013,
+  "venue": "Scientometrics 96(3): 761-783",
+  "doi": "10.1007/s11192-013-0963-2",
+  "url": "https://ideas.repec.org/a/spr/scient/v96y2013i3d10.1007_s11192-013-0963-2.html",
+  "research_question": "Who are West African countries' co-authorship partners, and how much do they collaborate with each other compared with African and non-African countries?",
+  "data": "Web of Science publications with at least one author affiliated in any of the 15 West African countries, 2001-2010.",
+  "methods": "Descriptive bibliometric co-authorship partner analysis.",
+  "findings": "Abstract-level only. The main African partners are South Africa, Cameroon, Kenya and Tanzania. The main non-African partners are France, the USA and the UK, which together account for over 63% of papers with a non-West-African address. West African countries collaborate less with each other and with other African and developing countries than with developed countries.",
+  "relevance_to_project": "Gives expected collaboration-partner profiles for Ghana, Nigeria and Senegal (France/US/UK dominance and weak intra-regional ties) to compare with their UN DESA migrant-destination profiles, which are often more regional (ECOWAS corridors). This is a likely source of misalignment.",
+  "verification_source": "WebSearch results: IDEAS/RePEc URL encoding 10.1007/s11192-013-0963-2 (Scientometrics v96 i3), the University of Antwerp repository record, and a doi.org/10.1007/S11192-013-0963-2 result.",
+  "topics": [
+   "coauthorship-gravity-africa"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Knowledge production through collaborative research in sub-Saharan Africa: how much do countries contribute to each other's knowledge output and citation impact?",
+  "authors": "Omwoyo Bosire Onyancha; Jan Resenga Maluleka",
+  "year": 2011,
+  "venue": "Scientometrics 87(2): 315-336",
+  "doi": "10.1007/s11192-010-0330-5",
+  "url": "https://ideas.repec.org/a/spr/scient/v87y2011i2d10.1007_s11192-010-0330-5.html",
+  "research_question": "How much do sub-Saharan African countries co-produce knowledge with each other, compared with partners outside the region, and what is the citation impact?",
+  "data": "Publications and citations of sub-Saharan African countries (bibliometric database). Abstract-level only.",
+  "methods": "Co-authorship (co-production) and citation counts by country pair.",
+  "findings": "Abstract-level only. Collaboration among sub-Saharan African countries is minimal and contributes only a small share compared with collaboration with foreign partners. The authors recommend student and staff exchange, regional conferences and research networks.",
+  "relevance_to_project": "Documents weak intra-SSA co-authorship. Since a large share of SSA migrant stock stays within the region (e.g., Somalia to Kenya/Ethiopia, Uganda to Kenya), this predicts a structural gap between the migration layer and the knowledge layer for the focus origins.",
+  "verification_source": "WebSearch results: IDEAS/RePEc URL encoding 10.1007/s11192-010-0330-5 (Scientometrics v87 i2) and the Unpaywall/Unisa repository records for the same DOI.",
+  "topics": [
+   "coauthorship-gravity-africa"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Analyzing scientific mobility and collaboration in the Middle East and North Africa",
+  "authors": "Jamal El Ouahi; Nicolás Robinson-García; Rodrigo Costas",
+  "year": 2021,
+  "venue": "Quantitative Science Studies 2(3): 1023-1047",
+  "doi": "10.1162/qss_a_00149",
+  "url": "https://www.arxiv.org/pdf/2009.07815",
+  "research_question": "How do scientific mobility and international collaboration networks of MENA countries compare in structure and in partner affinity?",
+  "data": "Bibliometric publication and affiliation data for MENA countries, 2008-2017. A dataset is archived on Zenodo (10.5281/zenodo.5155979). The arXiv preprint is 2009.07815.",
+  "methods": "Country-level mobility and co-authorship networks, degree and affinity indicators, and comparison of the two layers.",
+  "findings": "Abstract-level from search snippets: international co-authorship is more frequent than international mobility. The mobility network is thinner than the collaboration network in terms of affinity between countries. The hubs differ: Saudi Arabia has the highest degree in mobility, while Turkey has the highest in collaboration.",
+  "relevance_to_project": "A regional precedent (including North Africa) for comparing the partner structure of a mobility layer with a collaboration layer and finding non-alignment, methodologically parallel to our per-origin alignment and topology comparison. Like the other CWTS/Sugimoto studies, it uses only scholarly mobility and no general migrant stocks.",
+  "verification_source": "WebSearch: the summary of the Leiden University repository, TU Delft repository and University of Granada records gives DOI 10.1162/qss_a_00149 for this title in QSS 2(3): 1023-1047. The DOI was not shown in a URL, and Crossref could not be queried because api.crossref.org is blocked.",
+  "topics": [
+   "migration-coauthorship-direct"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Migrant Networks and Trade: The Vietnamese Boat People as a Natural Experiment",
+  "authors": "Christopher Parsons, Pierre-Louis Vezina",
+  "year": 2018,
+  "venue": "The Economic Journal 128(612):F210-F234",
+  "doi": "10.1111/ecoj.12457",
+  "url": "https://doi.org/10.1111/ecoj.12457",
+  "research_question": "Do migrant networks causally increase trade with their origin country?",
+  "data": "Distribution of Vietnamese refugees across US states and US state-level exports to Vietnam after the trade embargo was lifted in 1994 (abstract-level). Working paper: IZA DP 10112.",
+  "methods": "Natural experiment: refugee dispersal across US states during a trade embargo, followed by embargo removal.",
+  "findings": "Abstract-level. After trade restrictions were lifted in 1994, US exports to Vietnam grew most in states with larger Vietnamese populations, which themselves resulted from larger refugee inflows about 20 years earlier.",
+  "relevance_to_project": "A causal benchmark showing that refugee-origin diasporas can create economic ties. That bears on whether refugee-driven stocks such as the Somali and Ethiopian diasporas translate into scientific ties, and it provides an identification template.",
+  "verification_source": "WebSearch results: EconPapers record (RePEc:wly:econjl:v:128:y:2018:i:612:p:f210-f234) and the IZA working paper listing give EJ 128(612) F210-F234 with DOI 10.1111/ecoj.12457.",
+  "topics": [
+   "diaspora-knowledge-diffusion"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Co-evolution of international scientific mobility and international collaboration: a Scopus-based analysis",
+  "authors": "Ruimin Pei, Langqiu Li, Yiying Yang, Quan Zhou",
+  "year": 2024,
+  "venue": "Scientometrics 129(7), 4353-4378",
+  "doi": "10.1007/s11192-024-05081-5",
+  "url": "https://link.springer.com/article/10.1007/s11192-024-05081-5",
+  "research_question": "How have international scientific mobility networks and international collaboration networks co-evolved, and how closely aligned are they across countries?",
+  "data": "Scopus-derived country-level mobility and collaboration networks over a long period; one summary gives the start year as 1788, possibly a typo, ending in 2020.",
+  "methods": "Network analysis of mobility (talent flow) and collaboration networks over time and their alignment. QAP correlation is not confirmed from what I saw.",
+  "findings": "Abstract-level (fragments). The global flow and collaboration networks are increasingly interconnected. There is a 'Matthew effect': a few dominant countries and many minor participants. Advanced countries show closer alignment between their collaboration and mobility networks than lagging countries. The paper offers policy suggestions on mobility and engaging peripheral countries.",
+  "relevance_to_project": "Direct precedent for comparing the mobility and collaboration layers. Its finding of weaker alignment for lagging countries matches the project's hypothesis for Sub-Saharan origins. It does not appear to include general migrant stocks or origin-specific distributional divergence with nulls.",
+  "verification_source": "WebSearch result list showed link.springer.com/article/10.1007/s11192-024-05081-5 and dl.acm.org/doi/10.1007/s11192-024-05081-5 with this exact title; the IDEAS record v129y2024i7 d10.1007_s11192-024-05081-5 gives vol. 129(7), pp. 4353-4378.",
+  "topics": [
+   "scholarly-mobility"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Multiscale impact of researcher mobility",
+  "authors": "Alexander M. Petersen",
+  "year": 2018,
+  "venue": "Journal of the Royal Society Interface 15(146), 20180580",
+  "doi": "10.1098/rsif.2018.0580",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6170771/",
+  "research_question": "What are the effects of cross-border researcher mobility on citation impact, topic diversity, collaboration and international integration?",
+  "data": "American Physical Society journals 1980-2009; 26,170 disambiguated prominent researcher profiles (dataset on Dryad).",
+  "methods": "Matching mobile researchers to similar non-mobile researchers on pre-move profile attributes, followed by a 10-year window around each move. Outcomes cover individual impact, co-author diversity, collaboration network churn and international integration, across three time periods.",
+  "findings": "Abstract and summary level. Mobile researchers gain up to a 17% citation advantage, attributed to a simultaneous increase in co-author diversity. Researchers completely curtail prior collaborations with their source country in 11% of cross-border moves. Effects appear across scales, from careers to collaboration network churn to international integration, and virtual channels do not appear to replace physical mobility.",
+  "relevance_to_project": "One of the few studies that directly links a move to later co-authorship. Most movers keep ties to the origin country (only 11% fully curtail them), so the mobility layer should predict origin-destination co-authorship in both directions, while collaboration networks also churn after moves. It covers physics only, mostly in high-income systems.",
+  "verification_source": "WebSearch results included PMC6170771 with title 'Multiscale impact of researcher mobility'; the search summary gave J R Soc Interface 15(146):20180580, DOI 10.1098/rsif.2018.0580, sole author A. M. Petersen. My query did not contain the DOI.",
+  "topics": [
+   "scholarly-mobility"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Research emphasis and collaboration in Africa",
+  "authors": "Anastassios Pouris; Yuh-Shan Ho",
+  "year": 2014,
+  "venue": "Scientometrics 98(3): 2169-2184",
+  "doi": "10.1007/s11192-013-1156-8",
+  "url": "https://repository.up.ac.za/handle/2263/58923",
+  "research_question": "Which disciplines does African research emphasize, and what are African collaboration patterns at country and continental level?",
+  "data": "African publications (bibliometric database). Abstract-level only.",
+  "methods": "Co-authorship analysis at country and continental level, plus disciplinary profiling.",
+  "findings": "Abstract-level only. Collaboration rates in Africa are substantially higher than in the rest of the world. Research emphasis leans toward medical and natural-resource disciplines rather than fields supporting knowledge-based economies.",
+  "relevance_to_project": "The very high international co-authorship share of African output means OpenAlex co-authorship edges for focus origins are dense and partner-heavy. This matters for null-model design and for full versus fractional counting. The medical emphasis suggests field-specific partner structures (e.g., global health funders).",
+  "verification_source": "WebSearch results: IDEAS/RePEc URL encoding 10.1007/s11192-013-1156-8 (Scientometrics v98 i3) and the University of Pretoria repository postprint citing doi:10.1007/s11192-013-1156-8.",
+  "topics": [
+   "coauthorship-gravity-africa"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "The many faces of mobility: Using bibliometric data to measure the movement of scientists",
+  "authors": "Nicolas Robinson-Garcia, Cassidy R. Sugimoto, Dakota Murray, Alfredo Yegros-Yegros, Vincent Lariviere, Rodrigo Costas",
+  "year": 2019,
+  "venue": "Journal of Informetrics 13(1), 50-63",
+  "doi": "10.1016/j.joi.2018.11.002",
+  "url": "https://econpapers.repec.org/RePEc:eee:infome:v:13:y:2019:i:1:p:50-63",
+  "research_question": "How can publication affiliation data be used to build a typology and indicators of scientific mobility?",
+  "data": "About 16 million authors in Web of Science, 2008-2015 (arXiv preprint 1803.03449).",
+  "methods": "A typology of mobility based on affiliation sequences. 'Migrants' break ties with their origin country. 'Travelers' add foreign affiliations while keeping origin ties, and are split into directional and non-directional. Country-level incoming and outgoing classifications are also built.",
+  "findings": "Abstract-level. About 3.7% of authors were mobile. Travelers make up most mobile scholars (72.7% per one summary), but migrants have higher scientific impact; impact ranks migrants first, then directional travelers, non-directional travelers and non-mobile researchers.",
+  "relevance_to_project": "Key for interpreting the Akbaritabar flows. Multiple and concurrent affiliations ('travelers') sit on the boundary between mobility and collaboration. A traveler with a home affiliation and a foreign affiliation produces co-authorship-like cross-country links, so the scholarly mobility layer and the co-authorship layer are not independent. The paper's directional typology supports treating origin-to-destination direction explicitly rather than symmetrising.",
+  "verification_source": "EconPapers RePEc record (eee:infome v13 i1 p50-63) surfaced via WebSearch; the search summary reported DOI 10.1016/J.JOI.2018.11.002 with this title. arXiv 1803.03449 also listed with the same title.",
+  "topics": [
+   "scholarly-mobility"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "From Brain Drain to Brain Circulation: Transnational Communities and Regional Upgrading in India and China",
+  "authors": "AnnaLee Saxenian",
+  "year": 2005,
+  "venue": "Studies in Comparative International Development 40(2):35-61",
+  "doi": "10.1007/BF02686293",
+  "url": "https://doi.org/10.1007/BF02686293",
+  "research_question": "How are Indian and Chinese immigrant engineers and entrepreneurs in Silicon Valley influencing economic development in their home regions?",
+  "data": "Qualitative evidence on transnational technical communities, returnees and cross-border venture capital (abstract-level; author's pre-print hosted at Berkeley).",
+  "methods": "Comparative qualitative and case-study analysis.",
+  "findings": "Abstract-level. Transnational communities of Indian and Chinese skilled migrants, including returnees, link Silicon Valley with their home regions and help upgrade them technologically. This shifts the pattern from one-way brain drain to two-way brain circulation.",
+  "relevance_to_project": "The source of the brain circulation concept. It suggests that the relevant knowledge layer is circulation (mobility and return), not static stocks. That supports treating Akbaritabar mobility flows as distinct from UN DESA stocks.",
+  "verification_source": "A WebSearch for the article returned a doi.org/10.1007/BF02686293 result together with the Berkeley iSchool publication record (SCID 40(2), 2005). Springer and Crossref pages were not directly readable, so this is moderately strong confirmation.",
+  "topics": [
+   "diaspora-knowledge-diffusion"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Migrant scientists and international networks",
+  "authors": "Giuseppe Scellato; Chiara Franzoni; Paula Stephan",
+  "year": 2015,
+  "venue": "Research Policy 44(1): 108-120",
+  "doi": "10.1016/j.respol.2014.07.014",
+  "url": "https://econpapers.repec.org/RePEc:eee:respol:v:44:y:2015:i:1:p:108-120",
+  "research_question": "Do foreign-born (migrant) scientists have more international research collaborations than non-migrants and returnees, and do they keep collaborating with their country of origin?",
+  "data": "GlobSci survey (2011) of scientists working in 16 countries, comparing foreign-born, native non-mobile, and returnee scientists. An earlier version is NBER WP 18613 (2012), 'Mobile Scientists and International Networks'.",
+  "methods": "Survey-based econometric comparison of collaboration patterns by migration status and by where the PhD was obtained.",
+  "findings": "Abstract-level: migrants are more likely to collaborate internationally, mainly those who did their PhD abroad and came to the destination for a postdoc or a job. A sizeable share of the foreign-born collaborate with researchers in their country of origin (a 'diaspora effect'). Migrants from a relatively stronger science base have superior networks to those from a weaker one.",
+  "relevance_to_project": "Individual-level micro-foundation for a migrant-to-origin co-authorship link. The result that network benefits depend on the origin's science base implies that for weak-science-base origins (many SSA focus countries) migrant destinations may not translate into collaboration partners, which is the mismatch hypothesis. Useful for interpreting PPML coefficients on migrant stocks by origin capacity.",
+  "verification_source": "WebSearch results showing the iris.polito.it record ('RESEARCH POLICY 44:1 (2015), pp. 108-120 [10.1016/j.respol.2014.07.014]') and the RePEc record RePEc:eee:respol:v:44:y:2015:i:1:p:108-120. A direct Crossref API check was blocked by the network (api.crossref.org not allowlisted).",
+  "topics": [
+   "migration-coauthorship-direct",
+   "scholarly-mobility"
+  ],
+  "level": "V2",
+  "independent_check": "https://econpapers.repec.org/RePEc:eee:respol:v:44:y:2015:i:1:p:108-120"
+ },
+ {
+  "title": "Extracting the multiscale backbone of complex weighted networks",
+  "authors": "M. Ángeles Serrano, Marián Boguñá, Alessandro Vespignani",
+  "year": 2009,
+  "venue": "Proceedings of the National Academy of Sciences 106(16):6483-6488",
+  "doi": "10.1073/pnas.0808904106",
+  "url": "https://doi.org/10.1073/pnas.0808904106",
+  "research_question": "How can the relevant backbone of a large, heterogeneous weighted network be extracted without a global weight threshold that discards small-scale but locally important links?",
+  "data": "Real-world weighted networks, including a food web (abstract-level; full list not checked).",
+  "methods": "Disparity filter: under a local null model, each node's strength is spread uniformly at random over its edges. An edge is kept if its normalized weight is significantly larger than this null at significance level alpha, for at least one endpoint. Compared with global thresholding and other backbone methods.",
+  "findings": "Abstract-level: the filter keeps locally significant edges at all scales of the weight distribution, does not penalize small-scale interactions, and reportedly beats global thresholding at keeping structure while shrinking the network.",
+  "relevance_to_project": "Useful for building comparable backbones of the migration, mobility and co-authorship layers. Weights differ by orders of magnitude between South Africa/Nigeria and Somalia/Rwanda, so a local, strength-normalized filter avoids backbones that only show large origins. Alpha sensitivity should be reported.",
+  "verification_source": "WebSearch results (Crossref blocked): Scilit record lists https://doi.org/10.1073/pnas.0808904106 (query without the DOI string returned it); ISI Foundation-hosted PDF 'pnas-2009-serrano-6483-8'; arXiv 0904.2389.",
+  "topics": [
+   "methods-multilayer-gravity"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "The relation between global migration and trade networks",
+  "authors": "Paolo Sgrignoli, Rodolfo Metulini, Stefano Schiavo, Massimo Riccaboni",
+  "year": 2015,
+  "venue": "Physica A: Statistical Mechanics and its Applications 417:245-260",
+  "doi": "10.1016/j.physa.2014.09.037",
+  "url": "https://doi.org/10.1016/j.physa.2014.09.037",
+  "research_question": "Does global migration increase bilateral trade, and for which product categories?",
+  "data": "Global bilateral migration and trade networks, including product-level trade (abstract-level). Preprint: arXiv:1310.3716; IMT Lucca EIC WP 6/2013.",
+  "methods": "A hypergeometric network filter isolates links where both migration and trade exceed their expected values given node totals, followed by spatial-econometric estimation.",
+  "findings": "Abstract-level. Migration increases trade between countries, and the authors identify product categories where the effect is strongest.",
+  "relevance_to_project": "The hypergeometric filter is a margin-preserving null that applies directly to the planned observed-versus-expected residual analysis. It can identify country pairs over-represented in both the migration layer and the co-authorship layer.",
+  "verification_source": "WebSearch results: EconPapers (RePEc:eee:phsmap:v:417:y:2015:i:c:p:245-260) and the arXiv 1310.3716 listing give Physica A 417 245-260 with DOI 10.1016/j.physa.2014.09.037.",
+  "topics": [
+   "diaspora-knowledge-diffusion"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "The log of gravity",
+  "authors": "J. M. C. Santos Silva, Silvana Tenreyro",
+  "year": 2006,
+  "venue": "Review of Economics and Statistics 88(4):641-658",
+  "doi": "10.1162/rest.88.4.641",
+  "url": "https://doi.org/10.1162/rest.88.4.641",
+  "research_question": "Are elasticities from log-linearized gravity equations estimated by OLS consistent, and if not, what estimator should be used?",
+  "data": "Bilateral trade data, with an Anderson-van Wincoop gravity specification as the application (abstract-level).",
+  "methods": "Shows analytically (via Jensen's inequality) that under heteroskedasticity OLS on log-linearized models is inconsistent for the elasticities, and proposes the Poisson pseudo-maximum-likelihood (PPML) estimator on levels.",
+  "findings": "Abstract-level: log-linearized OLS gives biased elasticities under heteroskedasticity. In the application, OLS overstates the role of geographic distance, with the log-linear distance elasticity almost twice the PPML (levels) estimate.",
+  "relevance_to_project": "The foundational justification for estimating the co-authorship gravity model by PPML on counts, not OLS on log(1+y). This matters given the many zero or small co-authorship counts and heteroskedastic errors for SSA dyads.",
+  "verification_source": "WebSearch results (Crossref blocked): EconPapers RePEc:tpr:restat:v:88:y:2006:i:4:p:641-658; author PDF named rest.88.4.641.pdf; LSE eprints 2510 record.",
+  "topics": [
+   "methods-multilayer-gravity"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Analytical maximum-likelihood method to detect patterns in real networks",
+  "authors": "Tiziano Squartini, Diego Garlaschelli",
+  "year": 2011,
+  "venue": "New Journal of Physics 13:083001",
+  "doi": "10.1088/1367-2630/13/8/083001",
+  "url": "https://doi.org/10.1088/1367-2630/13/8/083001",
+  "research_question": "How can null-model expectations for network properties be obtained analytically and without bias, instead of by sampling randomized networks?",
+  "data": "Real binary and weighted networks (abstract-level; applications include degree correlations and clustering in binary undirected networks).",
+  "methods": "Maximum-entropy ensembles constrained on chosen local properties (degrees, strengths), with parameters fitted by maximum likelihood. Gives analytical expectations and standard deviations for topological properties in binary/weighted and directed/undirected networks.",
+  "findings": "Abstract-level: gives exact expectations and standard deviations without generating randomized graphs. The authors argue that common quantities such as modularity rest on incorrect null expressions and supply corrected ones.",
+  "relevance_to_project": "The analytical basis for degree- and strength-preserving nulls (for example a weighted configuration model) for each layer. Observed edge overlap, reciprocity, clustering and per-origin partner distributions can then be expressed as z-scores, not compared raw across layers of different density.",
+  "verification_source": "WebSearch results (Crossref blocked): the search returned DOI 10.1088/1367-2630/13/8/083001 although the query did not contain it; arXiv 1103.0701; IMT Lucca IRIS record; EconPapers LEM WP 2011/07 (earlier title 'Exact maximum-likelihood method...').",
+  "topics": [
+   "methods-multilayer-gravity"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Scientists have most impact when they're free to move",
+  "authors": "Cassidy R. Sugimoto, Nicolas Robinson-Garcia, Dakota S. Murray, Alfredo Yegros-Yegros, Rodrigo Costas, Vincent Lariviere",
+  "year": 2017,
+  "venue": "Nature 550(7674), 29-31 (Comment)",
+  "doi": "10.1038/550029a",
+  "url": "https://www.nature.com/news/scientists-have-most-impact-when-they-re-free-to-move-1.22730",
+  "research_question": "How common is international researcher mobility, and how is mobility associated with citation impact across countries and regions?",
+  "data": "Web of Science papers 2008-2015: about 14 million papers and about 16 million authors, with mobility inferred from changes in country of affiliation.",
+  "methods": "Authors are classified as non-mobile or mobile depending on whether their affiliation country changed during the window. Citation impact is compared between mobile and non-mobile authors by country and region.",
+  "findings": "From secondary and press summaries; I did not see the full text. About 96% of authors were non-mobile and about 4% mobile. Mobile scholars had about 40% higher citation rates on average than non-mobile ones, with the advantage varying by region (about 10.8% for North Americans). The authors argue that restricting circulation harms science. Commentators note the result is correlational, since selection into mobility is not ruled out.",
+  "relevance_to_project": "This is the founding paper of the WoS-based mobility indicator programme and the companion to Wagner & Jonkers. It shows that bibliometric mobility covers a small, selective share of researchers, which helps explain why the scholarly mobility layer can diverge from general migrant stocks. It does not model co-authorship partner distributions.",
+  "verification_source": "WebSearch results showed a nature.com PDF path ending '550029a.pdf' and institutional listings (INGENIO-UPV, CIRST) with this title and author list; the search summary gave DOI 10.1038/550029a and Nature 550(7674):29-31. Crossref was not reachable.",
+  "topics": [
+   "scholarly-mobility"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Highly skilled migration and the internationalization of knowledge",
+  "authors": "Claudia Noumedem Temgoua",
+  "year": 2018,
+  "venue": "Cahiers du GREThA (Université de Bordeaux) Working Paper n° 2018-16",
+  "doi": null,
+  "url": "https://econpapers.repec.org/RePEc:grt:wpegrt:2018-16",
+  "research_question": "Do Chinese and Indian highly skilled diasporas foster international knowledge networks (co-authorship and co-inventorship) among OECD destination countries?",
+  "data": "OECD destination-country pairs, with bilateral co-authorship (publications) and co-inventorship (patents) and highly skilled diaspora stocks by origin (China, India; also Vietnam, Pakistan, Iran).",
+  "methods": "Gravity model at the country-pair level. The search summary of the working paper text describes PPML estimation with co-authorship and co-inventorship as dependent variables, controlling for other migration variables.",
+  "findings": "Abstract-level: OECD country pairs hosting sizeable portions of the Indian or Chinese highly skilled diaspora collaborate more on publications and patents, after controlling for other migration variables. Smaller diasporas (Vietnam, Pakistan, Iran) produce similar effects on co-authorship and co-inventorship.",
+  "relevance_to_project": "The closest precedent found for component (b): a PPML gravity model of bilateral co-authorship that separates a skilled-diaspora variable from other migration controls. Its dyads are destination-destination pairs linked by a shared third-country diaspora, whereas ours are origin-destination pairs with SSA origins, and it does not use bibliometric scholarly mobility. Journal publication status is unknown.",
+  "verification_source": "No DOI exists or none was found. Title, author, series and number were seen in WebSearch results (EconPapers RePEc:grt:wpegrt:2018-16 and the cahiersdugretha.u-bordeaux.fr PDF). A direct fetch of the GREThA page was blocked by the network.",
+  "topics": [
+   "migration-coauthorship-direct"
+  ],
+  "level": "U"
+ },
+ {
+  "title": "Africa's contribution to the worldwide research literature: New analytical perspectives, trends, and performance indicators",
+  "authors": "Robert J. W. Tijssen",
+  "year": 2007,
+  "venue": "Scientometrics 71(2): 303-327",
+  "doi": "10.1007/s11192-007-1658-3",
+  "url": "https://ideas.repec.org/a/spr/scient/v71y2007i2d10.1007_s11192-007-1658-3.html",
+  "research_question": "How large is Africa's research output and how has it changed (1980-2004) in international and national/regional journals, and what do co-publication patterns show?",
+  "data": "Research publications by Africa-based authors, 1980-2004, in international journals (Web of Science) and in national and regional journals.",
+  "methods": "Descriptive scientometric trend and performance indicators, including international co-publication shares.",
+  "findings": "Abstract-level only. Africa's share of worldwide science in international journals declined steadily over the period, while international co-publication grew considerably.",
+  "relevance_to_project": "Historical baseline showing African science becoming more internationally co-authored while its global share shrank. This makes partner choice (former colonial powers, the US, South Africa) central to comparing collaboration partners with migrant destinations.",
+  "verification_source": "WebSearch results: IDEAS/RePEc page whose URL encodes 10.1007/s11192-007-1658-3 (Scientometrics v71 i2, pp. 303-327) and a link.springer.com/doi/10.1007/s11192-007-1658-3 result. An exact-DOI-string search found no direct hit at first, but the IDEAS and Springer URLs confirm it.",
+  "topics": [
+   "coauthorship-gravity-africa"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Talent goes to global cities: The world network of scientists' mobility",
+  "authors": "Luca Verginer, Massimo Riccaboni",
+  "year": 2021,
+  "venue": "Research Policy 50(1), 104127",
+  "doi": "10.1016/j.respol.2020.104127",
+  "url": "https://ideas.repec.org/a/eee/respol/v50y2021i1s004873332030202x.html",
+  "research_question": "How is the world network of scientists' mobility structured at city level, and do global cities attract and retain the most productive scientists?",
+  "data": "Disambiguated author publication histories at city level. The full-text PDF describes 3.7 million authors and 7,159 cities; another summary says about 2 million researchers and more than 2,000 cities over a decade. The source database is not confirmed from what I saw.",
+  "methods": "Construction of a city-level mobility network and analysis of the centrality of global cities, plus the productivity of scientists they attract and retain.",
+  "findings": "Abstract and full-text fragments. Global cities attract and retain the most productive scientists, benefiting from their central position in the international mobility network by attracting and retaining prolific scientists early in their careers.",
+  "relevance_to_project": "Shows that scholarly mobility concentrates on a few hubs, which matters for the multilayer topology comparison and for strength-preserving nulls, since hub concentration may differ from the more diffuse geography of general migrant stocks. City-level work also warns that country aggregation hides within-country concentration.",
+  "verification_source": "WebSearch results showed the ETH research-collection record and the IDEAS record (eee/respol v50y2021i1 s004873332030202x) with this title; the search summary gave DOI 10.1016/j.respol.2020.104127 and Research Policy 50(1) 104127. The PDF filename (S004873332030202X) matches the PII.",
+  "topics": [
+   "scholarly-mobility"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Network structure, self-organization, and the growth of international collaboration in science",
+  "authors": "Caroline S. Wagner; Loet Leydesdorff",
+  "year": 2005,
+  "venue": "Research Policy 34(10): 1608-1618",
+  "doi": "10.1016/j.respol.2005.08.002",
+  "url": "https://econpapers.repec.org/RePEc:eee:respol:v:34:y:2005:i:10:p:1608-1618",
+  "research_question": "Why has international co-authorship grown so fast, and is the growth better explained by network self-organization (preferential attachment) than by national policy or funding?",
+  "data": "International co-authorship links between countries, built from bibliometric (ISI/Web of Science) records. Abstract-level only; the exact years were not checked.",
+  "methods": "Network analysis of the country co-authorship network, including degree distributions and tests of preferential attachment / self-organization.",
+  "findings": "Abstract-level only. The authors describe international collaboration as a self-organizing network whose growth follows network dynamics (preferential attachment to well-connected countries) more than national or institutional incentives.",
+  "relevance_to_project": "This is the standard framing of the country-level co-authorship layer as a self-organizing network. It explains why the knowledge layer may follow its own core-periphery logic rather than the migration layer, which motivates the degree/strength-preserving null models and the multilayer topology comparison.",
+  "verification_source": "WebSearch results: Scilit record (scilit.net) giving https://doi.org/10.1016/j.respol.2005.08.002 with Research Policy 34(10):1608-1618, and the EconPapers RePEc handle for the same volume, issue and pages.",
+  "topics": [
+   "coauthorship-gravity-africa"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "The continuing growth of global cooperation networks in research: A conundrum for national governments",
+  "authors": "Caroline S. Wagner; Han Woo Park; Loet Leydesdorff",
+  "year": 2015,
+  "venue": "PLoS ONE 10(7): e0131816",
+  "doi": "10.1371/journal.pone.0131816",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4510583",
+  "research_question": "How has the global network of international co-authorship evolved, and what does its growth mean for national science policy?",
+  "data": "Internationally co-authored publications between countries over about two decades (bibliometric database). Abstract-level only.",
+  "methods": "Network analysis of country co-authorship networks over time.",
+  "findings": "Abstract-level only. The share of internationally co-authored papers has more than doubled in 20 years and accounts for the output growth of advanced countries. The network acts as a new organization alongside national systems. Emerging countries, especially China, are participating more. International collaboration does not appear to threaten national science and may improve its quality.",
+  "relevance_to_project": "Background on the growth and densification of the co-authorship layer. Its claim that the network is a supranational structure supports testing whether co-authorship partners diverge from migration corridors.",
+  "verification_source": "WebSearch results: PubMed Central record PMC4510583 and DOAJ/library catalogue records reporting DOI 10.1371/journal.pone.0131816, published 21 July 2015.",
+  "topics": [
+   "coauthorship-gravity-africa"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Open countries have strong science",
+  "authors": "Caroline S. Wagner, Koen Jonkers",
+  "year": 2017,
+  "venue": "Nature 550(7674), 32-33 (Comment)",
+  "doi": "10.1038/550032a",
+  "url": "https://ideas.repec.org/a/nat/nature/v550y2017i7674d10.1038_550032a.html",
+  "research_question": "Is a country's openness to international engagement, through collaboration and researcher mobility, associated with the impact of its science?",
+  "data": "Country-level indicators for a set of leading scientific countries: share of internationally co-authored papers and researcher mobility (inflows and outflows), plus citation impact.",
+  "methods": "Construction of an openness index combining international collaboration and mobility, and correlation of openness with citation impact. A 2018 follow-up ('Openness and Impact of Leading Scientific Countries', arXiv 1810.07812) extends it.",
+  "findings": "From secondary sources and the follow-up. There is a clear correlation between a nation's scientific influence and its links with foreign researchers: more open countries produce higher-impact science. The follow-up warns that the correlation does not imply all countries have equal potential to open up, and that results do not extend to unanalysed countries.",
+  "relevance_to_project": "Treats collaboration and mobility as two parts of one openness construct, a framing the project questions. It covers only leading countries, not Sub-Saharan Africa, so its pooling of mobility and collaboration may not hold for peripheral origins.",
+  "verification_source": "WebSearch result list showed the IDEAS record URL nat/nature v550y2017i7674 d10.1038_550032a; the search summary gave the title 'Open countries have strong science', Nature 550(7674):32-33.",
+  "topics": [
+   "scholarly-mobility"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Field-normalized citation impact indicators and the choice of an appropriate counting method",
+  "authors": "Ludo Waltman; Nees Jan van Eck",
+  "year": 2015,
+  "venue": "Journal of Informetrics 9(4): 872-894",
+  "doi": "10.1016/j.joi.2015.08.001",
+  "url": "https://econpapers.repec.org/RePEc:eee:infome:v:9:y:2015:i:4:p:872-894",
+  "research_question": "Which counting method (full or fractional, and which fractional variant) gives properly field-normalized indicators for countries and organizations?",
+  "data": "Web of Science publications and citations (CWTS); also arXiv:1501.04431. Abstract-level only.",
+  "methods": "Theoretical argument plus empirical comparison of full counting and several fractional counting variants.",
+  "findings": "Abstract-level only. Full counting does not give properly field-normalized results, while fractional counting does. The authors recommend fractional counting for field-normalized studies, especially at country and organization level.",
+  "relevance_to_project": "Shapes how the OpenAlex co-authorship edges are weighted: full counts of papers per dyad versus fractional/author-share weights. The choice changes gravity estimates and partner distributions, especially for small African systems with very high international co-authorship shares. Both should be run as a robustness check.",
+  "verification_source": "WebSearch results: EconPapers RePEc record (J. Informetrics 9(4):872-894) giving DOI 10.1016/j.joi.2015.08.001, and the arXiv preprint 1501.04431.",
+  "topics": [
+   "coauthorship-gravity-africa"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Return migration of German-affiliated researchers: analyzing departure and return by gender, cohort, and discipline using Scopus bibliometric data 1996-2020",
+  "authors": "Xinyi Zhao, Samin Aref, Emilio Zagheni, Guy Stecklov",
+  "year": 2022,
+  "venue": "Scientometrics 127(12), 7707-7729",
+  "doi": "10.1007/s11192-022-04351-4",
+  "url": "https://www.demogr.mpg.de/en/publications_databases_6118/publications_1904/journal_articles/return_migration_of_german_affiliated_researchers_analyzing_departure_and_return_by_gender_cohort_7202/",
+  "research_question": "Who among researchers who leave Germany returns, and how does return vary by gender, cohort, discipline, destination and continued collaboration with German-affiliated researchers?",
+  "data": "Scopus: about 8 million publications by about 1.1 million researchers who published at least once with a German affiliation, 1996-2020 (arXiv 2110.08340).",
+  "methods": "Bibliometric identification of departure and return events from affiliation histories, with descriptive cohort analysis and models of return propensity including collaboration ties to Germany while abroad.",
+  "findings": "Abstract-level. Return migration declines slightly in more recent cohorts, which for most disciplines coincides with fewer German collaboration ties. Women who leave are less likely than men to return. Keeping collaborations with German-affiliated researchers while abroad has a moderate positive association with return. Per a Population Europe digest, those who moved to high R&D-spending countries were less likely to return.",
+  "relevance_to_project": "Evidence that collaboration ties with the origin persist after emigration and predict return, so knowledge links run in both directions along migration corridors. It supports modelling both directions of mobility and treating origin-destination co-authorship as partly a diaspora tie. It is a single-origin case in a high-income country.",
+  "verification_source": "WebSearch results (MPIDR journal-article page, arXiv 2110.08340, Population Europe) showed this title; the search summary gave Scientometrics 127(12):7707-7729 and DOI 10.1007/s11192-022-04351-4. My query did not contain the DOI.",
+  "topics": [
+   "scholarly-mobility"
+  ],
+  "level": "V1"
+ },
+ {
+  "title": "Where on Earth is Everybody? The Evolution of Global Bilateral Migration 1960-2000",
+  "authors": "Çağlar Özden, Christopher R. Parsons, Maurice Schiff, Terrie L. Walmsley",
+  "year": 2011,
+  "venue": "The World Bank Economic Review 25(1):12-56",
+  "doi": "10.1093/wber/lhr024",
+  "url": "https://doi.org/10.1093/wber/lhr024",
+  "research_question": "What do complete global bilateral migrant-stock matrices look like for 1960-2000, and how has global migration evolved?",
+  "data": "More than 1,000 census and population-register records, used to build bilateral migrant-stock matrices for 1960, 1970, 1980, 1990 and 2000, disaggregated by gender, mainly on a foreign-born definition.",
+  "methods": "Harmonization of census and register data, with imputation and estimation to fill missing bilateral cells and reconcile definitions.",
+  "findings": "Abstract-level: the global migrant stock rose from 92 million (1960) to 165 million (2000). Migration between developing countries was about half of all international migration in 2000, and developing-to-developed migration was the fastest-growing component. The US hosted about one fifth of the world's migrants.",
+  "relevance_to_project": "The methodological precursor of current bilateral stock data (the UN DESA estimates build on similar census-based harmonization). It documents that bilateral stocks are destination-census-based and partly imputed, which matters for SSA origins with large intra-African (south-south) migration that knowledge-network layers may not reflect.",
+  "verification_source": "WebSearch results (Crossref blocked): zendy.io/pdf-viewer/10.1093/wber/lhr024 (URL contains the DOI); EconPapers RePEc:oup:wbecrv:v:25:y:2011:i:1:p:12-56; World Bank OKR record (WPS 5709).",
+  "topics": [
+   "methods-multilayer-gravity"
+  ],
+  "level": "V1"
+ }
+]
