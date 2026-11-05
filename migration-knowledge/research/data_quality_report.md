@@ -1,6 +1,6 @@
 # Data quality report
 
-Generated 2026-11-05T01:59:19+00:00 by `make quality` from the processed data and outputs. Every number below is computed. Nothing is hand-entered.
+Generated 2026-11-05T02:28:50+00:00 by `make quality` from the processed data and outputs. Every number below is computed. Nothing is hand-entered.
 
 
 ## 0. Data access (latest check)

@@ -46,7 +46,7 @@ data/raw|interim|processed, outputs/, figures/, blog/   (filled by the pipeline)
 ```sh
 pip install -e .[test]
 cp .env.example .env          # optional: OPENALEX_MAILTO / OPENALEX_API_KEY (never committed)
-make test                     # 51 tests, synthetic fixtures only
+make test                     # 64 tests, synthetic fixtures only
 make check-access             # every host must say "ok"
 make pilot                    # four-origin pilot: Somalia, Ethiopia, Kenya, Ghana
 make research                 # acquire -> clean -> analyze -> quality -> figures -> verify
