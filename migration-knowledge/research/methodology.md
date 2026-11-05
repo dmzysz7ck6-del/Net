@@ -312,3 +312,19 @@ make verify-refs                    # check bibliography DOIs against Crossref
 - Random seeds come from `config/pipeline.yaml` (`project.seed`).
 - Acquisition is cached and resumable at request granularity, so re-running after an
   interruption continues where it stopped.
+
+### Expected runtime of the analysis stage
+Benchmarked on synthetic data of the real dimensions (200 countries, 19,900 dyads,
+200 fixed effects; 4 CPUs):
+
+| Step | Time |
+|---|---|
+| One PPML fit with dyadic-robust variance | about 10 s |
+| NB predictive simulation, 500 draws | about 4 s |
+| 10-fold CV for two models | about 26 s |
+| Country jackknife of M3 (200 fits, primary window only) | about 35 min |
+| All other models, CV and robustness fits per window | about 15 min |
+
+The OpenAlex extraction runs at 5 requests/s. Its duration depends on how many
+distinct k values each country has, which is not known before acquisition. The request
+log section of the data-quality report records it.
