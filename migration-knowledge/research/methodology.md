@@ -147,7 +147,8 @@ fail loudly, not silently, if the detail turns out to be different.
   the following hold.
   1. It maps unambiguously in UN DESA, OpenAlex and CEPII.
   2. Its WDI population in the covariate year is at least 500,000. Entities absent from
-     WDI are kept and flagged.
+     WDI are excluded (reason `no_population_data`) unless allowlisted with a documented
+     reason. Only Taiwan is allowlisted (plan v1.2).
   3. It has at least one international co-authored article in the window.
 - **Designs:** primary 2015 / 2010–14 / 2015–19; earlier 2010 / 2005–09 / 2010–14;
   later 2020 / 2015–19 / 2020–24; contemporaneous 2015 / 2015–19 / 2015–19
@@ -199,13 +200,27 @@ For each origin o:
   - Sensitivity: rank-partial ρ controlling for `ln E^M` and `ln E^C`.
 - **Size-only divergence:** the JSD between the two layers' null expectations for o
   (what size alone implies), reported as `jsd_excess = JSD_obs − JSD_size`.
-- **Uncertainty:** collaboration counts are resampled as independent Poisson draws
-  (1,000 replicates). Migrant stocks are published estimates without sampling
-  distributions and are treated as fixed. A ±25% log-normal perturbation is available
-  as a sensitivity option.
-- **H2:** Spearman correlation across origins between `JSD_o` and ln(output), plus a
-  partial version controlling for the share of emigrants living in high-income
-  destinations.
+- **Uncertainty:**
+  - Collaboration rows are resampled at the paper level: Poisson draws of full counts,
+    converted with each pair's fractional/full ratio for fractional counting
+    (1,000 replicates).
+  - The raw JSD is reported bias-corrected (`2ĵ − mean ĵ*`) with a basic-bootstrap
+    interval. A percentile interval of the biased plug-in statistic would sit above the
+    truth.
+  - Migrant stocks are published estimates without sampling distributions and are
+    treated as fixed. A ±25% log-normal perturbation is available as a sensitivity
+    option.
+- **Eligibility:** at least 50 distinct international articles in the window (from the
+  per-k totals) and at least 10,000 emigrants. The set is the same for both counting
+  methods.
+- **H2 (plan v1.2):**
+  - Statistic: Spearman correlation across origins between the **rarefied** JSD and
+    ln(output), plus a partial version controlling for the share of emigrants living in
+    high-income destinations.
+  - Rarefied JSD: each origin's row is subsampled without replacement to 50 paper-pair
+    incidences, and the JSD is averaged over 200 draws.
+  - Why: the plug-in JSD's upward small-sample bias shrinks with paper count, and so
+    with capacity. That would produce H2's predicted sign by itself.
 
 ### 5.2 Gravity models (Analyses B–C, H3–H4)
 - **Estimator:** PPML on all unordered pairs, `ln μ_ij = α_i + α_j + x_ij′β`, with one
@@ -215,9 +230,20 @@ For each origin o:
   - Constant covariates are dropped and reported.
   - A rank check runs before fitting.
 - **Variance:**
-  - Dyadic-robust: `V = B⁻¹ (Σ_c S_c S_c′ − Σ_d s_d s_d′) B⁻¹ · G/(G−1)`, with negative
-    eigenvalues clipped.
-  - HC1 is reported alongside for comparison.
+  - Dyadic-robust variance for the covariate coefficients:
+    `V_β = B̃⁻¹ (Σ_c S̃_c S̃_c′ − Σ_d s̃_d s̃_d′) B̃⁻¹ · G/(G−1)`.
+    Here `s̃_d = x̃_d e_d` and `B̃ = X̃′WX̃`, with X̃ the covariates residualized on the
+    intercept and fixed effects using weights μ (Frisch–Waugh–Lovell).
+  - Why not the full matrix: computed over the full parameter vector, the meat is
+    indefinite, because each country's score sum in the fixed-effect directions is
+    exactly zero by the first-order conditions.
+  - A brute-force double-sum test verifies the formula. A simulation test shows it
+    tracks the sampling SD under node-level dependence, where HC1 understates it by
+    about half.
+  - If a small sample still yields a non-PSD block, eigenvalues are clipped and
+    variances floored at HC1. This is flagged.
+  - HC1 (full vector) is reported alongside for comparison. It is also used for the
+    parameter-uncertainty draws in §5.3.
 - **Models:**
 
 | Model | Specification |
@@ -253,14 +279,21 @@ For each origin o:
   - A pair is a *missing link* if μ̂ ≥ 10 and C = 0.
 - **Persistence:** the same flag in the earlier design.
 
-### 5.4 Topology (E2)
-- **Normalized measures:** participation coefficient z-scores against 500 null draws;
-  betweenness percentiles on disparity backbones at α ∈ {0.01, 0.05, 0.10}.
+### 5.4 Topology (E2, plan v1.2)
+- **Null model:** NB2 around the strength-preserving expectation, with the layer's own
+  maximum-likelihood dispersion. NB2's relative dispersion is unit-free, so layers
+  measured in persons and in papers get comparable noise; Poisson noise would not.
+- **Participation:** the unit-free deviation `P_obs − mean(P_null)` is primary, from 500
+  draws. The z-score is secondary.
+- **Betweenness:** computed on disparity backbones at α ∈ {0.01, 0.05, 0.10}. Each
+  country's value is calibrated as a mid-rank percentile of observed betweenness within
+  its betweenness on 100 null networks.
+- **"Collaboration-specific bridge":** requires, for every α and both counting methods:
+  1. positive co-authorship betweenness;
+  2. a calibrated co-authorship score above 0.5;
+  3. a higher calibrated score in co-authorship than in migration.
 - **Community agreement:** AMI of Louvain partitions versus AMI between partitions of
-  null draws.
-- **"Collaboration-specific bridge":** a country whose betweenness percentile is higher
-  in co-authorship than in migration under all three α values and both counting
-  methods.
+  null draws. Single-community null partitions are excluded and counted.
 
 ## 6. Figures
 - **Generation:** all figures are generated by `src/visualization/` from
