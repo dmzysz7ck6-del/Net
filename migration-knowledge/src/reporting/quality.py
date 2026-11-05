@@ -123,6 +123,26 @@ def section_openalex() -> str:
     return "\n".join(out)
 
 
+def section_requests() -> str:
+    """Runtime and API usage of the OpenAlex extraction (from the request log)."""
+    log = PATHS.request_log
+    if not log.exists():
+        return "## 4b. OpenAlex request log\n\n_No requests logged._\n"
+    rows = [json.loads(l) for l in log.read_text().splitlines() if l.strip()]
+    df = pd.DataFrame(rows)
+    ts = pd.to_datetime(df["ts"])
+    summ = pd.DataFrame([{
+        "requests_logged": len(df),
+        "status_200": int((df.get("status") == 200).sum()) if "status" in df else 0,
+        "status_429": int((df.get("status") == 429).sum()) if "status" in df else 0,
+        "errors": int(df["error"].notna().sum()) if "error" in df else 0,
+        "first": ts.min().isoformat(), "last": ts.max().isoformat(),
+        "hours": round((ts.max() - ts.min()).total_seconds() / 3600, 2),
+        "median_seconds": float(df["seconds"].median()) if "seconds" in df else float("nan"),
+    }])
+    return "## 4b. OpenAlex request log (runtime and API usage)\n\n" + _md(summ)
+
+
 def section_universe() -> str:
     out = ["## 5. Country universe and exclusions\n"]
     for w in ("primary", "earlier", "later"):
@@ -163,7 +183,7 @@ def write_report() -> Path:
     parts = [f"# Data quality report\n\nGenerated {utcnow()} by `make quality` from the processed data and outputs. "
              "Every number below is computed. Nothing is hand-entered.\n",
              section_access(), section_manifest(), section_migration(), section_scholarly(), section_openalex(),
-             section_universe(), section_biases()]
+             section_requests(), section_universe(), section_biases()]
     path = PATHS.research / "data_quality_report.md"
     path.write_text("\n\n".join(parts), encoding="utf-8")
     return path

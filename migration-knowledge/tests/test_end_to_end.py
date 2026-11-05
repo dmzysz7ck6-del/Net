@@ -92,3 +92,29 @@ def test_run_window_and_figures(fixture_root):
     assert {"M1", "M2", "M3"} <= set(g["model"])
     paths = make.make_figures(windows=["primary"])
     assert len(paths) >= 10 and all(p.exists() and p.stat().st_size > 0 for p in paths)
+
+
+def test_comparators_rule_is_outcome_blind_and_non_african(fixture_root):
+    from src.analysis import run
+    from src.cleaning import countries as C
+    wd = run.load_window("primary")
+    comp = run.comparison_origins(wd, ["KEN", "ETH"], 2)
+    assert len(comp) == 4
+    cont = C.crosswalk().set_index("iso3")["continent"]
+    assert all(cont[c] != "Africa" for c in comp["comparator"])
+    # depends only on WDI covariates: changing collaboration data must not change it
+    import pandas as pd
+    col = pd.read_csv(PATHS.processed / "collab_2015_2019.csv")
+    col["full"] = col["full"][::-1].to_numpy()
+    col["frac"], col["full_nomega"], col["frac_nomega"] = col["full"] * 0.6, col["full"] * 0.9, col["full"] * 0.55
+    col.to_csv(PATHS.processed / "collab_2015_2019.csv", index=False)
+    comp2 = run.comparison_origins(run.load_window("primary"), ["KEN", "ETH"], 2)
+    assert comp["comparator"].tolist() == comp2["comparator"].tolist()
+
+
+def test_case_study_rule(fixture_root):
+    import pandas as pd
+    from src.visualization.make import choose_case_studies
+    pd.DataFrame({"origin": ["KEN", "ETH", "GHA"], "jsd_raw": [0.2, 0.6, 0.4]}).to_csv(PATHS.tables / "alignment_primary.csv", index=False)
+    pd.DataFrame({"origin": ["KEN", "ETH", "GHA"], "jsd_raw": [0.25, 0.5, 0.45]}).to_csv(PATHS.tables / "alignment_primary_frac.csv", index=False)
+    assert choose_case_studies(["KEN", "ETH", "GHA"]) == ["ETH", "KEN"]

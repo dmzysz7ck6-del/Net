@@ -184,9 +184,19 @@ For each origin o:
   ISO3 code); Jensen–Shannon divergence in bits between the normalized profiles.
 - **Size-adjusted alignment:** Spearman ρ between `ln((W+1)/(E+1))` residual profiles of
   the two layers, where E is the layer's null expectation.
-  - Inference: a permutation p-value from 2,000 permutations of destination labels,
-    with BH adjustment across origins.
-  - Summary test: Wilcoxon signed-rank on the median across origins.
+  - Inference (plan v1.1): ρ is compared with a size-preserving simulation null.
+    - The origin's collaboration counts are drawn 2,000 times from
+      `NB2(E^C, α̂)`, with α̂ the maximum-likelihood dispersion of the whole
+      collaboration layer around E^C. The migration profile is held fixed.
+    - Reported: `ρ_excess = ρ − mean(ρ_null)`, a two-sided simulation p-value, and BH
+      across origins.
+    - Summary test: Wilcoxon signed-rank on `ρ_excess`.
+  - Why not a permutation test: permuting destination labels destroys size structure.
+    Zero cells give residuals `−ln(1+E)` that fall with size in both layers, so
+    permutation p-values are anti-conservative. In a null simulation they gave 45%
+    false positives at nominal 5%. They are still reported, labelled "not
+    size-calibrated".
+  - Sensitivity: rank-partial ρ controlling for `ln E^M` and `ln E^C`.
 - **Size-only divergence:** the JSD between the two layers' null expectations for o
   (what size alone implies), reported as `jsd_excess = JSD_obs − JSD_size`.
 - **Uncertainty:** collaboration counts are resampled as independent Poisson draws

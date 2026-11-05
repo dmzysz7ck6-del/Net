@@ -1,11 +1,18 @@
 # Data quality report
 
-Generated 2026-11-05T01:46:34+00:00 by `make quality` from the processed data and outputs. Every number below is computed. Nothing is hand-entered.
+Generated 2026-11-05T01:59:19+00:00 by `make quality` from the processed data and outputs. Every number below is computed. Nothing is hand-entered.
 
 
-## 0. Data access
+## 0. Data access (latest check)
 
-No access check recorded.
+| source         | status                 |
+|:---------------|:-----------------------|
+| OpenAlex API   | blocked (403 at proxy) |
+| UN DESA        | blocked (403 at proxy) |
+| Zenodo         | blocked (403 at proxy) |
+| World Bank API | blocked (403 at proxy) |
+| CEPII          | blocked (403 at proxy) |
+| Crossref       | blocked (403 at proxy) |
 
 
 ## 1. Provenance
@@ -26,6 +33,11 @@ _Not available: data not acquired._
 ## 4. OpenAlex co-authorship
 
 _Not available: data not acquired._
+
+
+## 4b. OpenAlex request log
+
+_No requests logged._
 
 
 ## 5. Country universe and exclusions

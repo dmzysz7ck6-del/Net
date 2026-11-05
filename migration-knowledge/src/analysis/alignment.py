@@ -68,7 +68,7 @@ def log_residuals(layer: Layer) -> np.ndarray:
 
 def origin_alignment(mig: Layer, col: Layer, origin: str, *, ks=(5, 10), rng: np.random.Generator,
                      n_perm: int = 2000, n_boot: int = 1000, R_mig=None, R_col=None,
-                     E_mig=None, E_col=None, mig_noise_sd: float = 0.0) -> dict:
+                     E_mig=None, E_col=None, mig_noise_sd: float = 0.0, null_alpha: float | None = None) -> dict:
     if mig.nodes != col.nodes:
         raise ValueError("layers must share the same ordered node list")
     nodes = mig.nodes
@@ -99,11 +99,29 @@ def origin_alignment(mig: Layer, col: Layer, origin: str, *, ks=(5, 10), rng: np
     rm, rc = R_mig[o, dest], R_col[o, dest]
     rho = spearman(rm, rc)
     out["spearman_resid"] = rho
+    out["partial_spearman_resid"] = partial_spearman_multi(rm, rc, np.column_stack([np.log1p(em), np.log1p(ec)]))
     if n_perm and not np.isnan(rho):
+        # (i) destination-label permutation (NOT size-calibrated; reported for reference)
         perm = np.array([spearman(rm, rng.permutation(rc)) for _ in range(n_perm)])
         out["p_perm_resid"] = float((np.sum(np.abs(perm) >= abs(rho)) + 1) / (n_perm + 1))
+        # (ii) size-preserving simulation null (primary, plan v1.1): collaboration
+        # counts drawn from NB2(E^C, alpha) around the independence expectation, with
+        # alpha the dispersion of the observed layer around E^C; migration held fixed.
+        # Zero cells give residuals -ln(1+E) that fall with destination size in both
+        # layers, so a positive rho arises even without shared bilateral affinity;
+        # this null reproduces that artefact and measures rho in excess of it.
+        if null_alpha and null_alpha > 0:
+            nb_n = 1.0 / null_alpha
+            draw = lambda: rng.negative_binomial(nb_n, nb_n / (nb_n + ec))
+        else:
+            draw = lambda: rng.poisson(ec)
+        sims = np.array([spearman(rm, np.log((draw() + 1.0) / (ec + 1.0))) for _ in range(n_perm)])
+        sims = sims[~np.isnan(sims)]
+        out["rho_null_mean"] = float(sims.mean()) if sims.size else np.nan
+        out["rho_excess"] = rho - out["rho_null_mean"]
+        out["p_sim_resid"] = float((np.sum(np.abs(sims - sims.mean()) >= abs(rho - sims.mean())) + 1) / (sims.size + 1)) if sims.size else np.nan
     else:
-        out["p_perm_resid"] = np.nan
+        out["p_perm_resid"] = out["p_sim_resid"] = out["rho_null_mean"] = out["rho_excess"] = np.nan
     # parametric bootstrap: Poisson resampling of collaboration counts;
     # migrant stocks are published estimates (fixed unless mig_noise_sd > 0)
     if n_boot:
@@ -123,12 +141,18 @@ def alignment_table(mig: Layer, col: Layer, origins: list[str], *, seed: int, ks
     rng = np.random.default_rng(seed)
     R_mig, E_mig = log_residuals(mig)
     R_col, E_col = log_residuals(col)
+    from .residuals import nb2_alpha
+    iu = np.triu_indices(len(col.nodes), 1)
+    null_alpha = nb2_alpha(col.W[iu], E_col[iu]) if n_perm else None
     rows = [origin_alignment(mig, col, o, ks=ks, rng=rng, n_perm=n_perm, n_boot=n_boot,
                              R_mig=R_mig, R_col=R_col, E_mig=E_mig, E_col=E_col,
-                             mig_noise_sd=mig_noise_sd) for o in origins]
+                             mig_noise_sd=mig_noise_sd, null_alpha=null_alpha) for o in origins]
     df = pd.DataFrame(rows)
+    df["null_alpha"] = null_alpha
     if "p_perm_resid" in df and df["p_perm_resid"].notna().any():
         df["q_perm_resid"] = bh_adjust(df["p_perm_resid"].to_numpy())
+    if "p_sim_resid" in df and df["p_sim_resid"].notna().any():
+        df["q_sim_resid"] = bh_adjust(df["p_sim_resid"].to_numpy())
     return df
 
 
@@ -163,18 +187,39 @@ def partial_spearman(x, y, z) -> tuple[float, float]:
     return r, p
 
 
+def partial_spearman_multi(x, y, Z) -> float:
+    """Spearman correlation of x and y after rank-residualizing both on the
+    columns of Z (sensitivity statistic for H1)."""
+    rx, ry = stats.rankdata(x), stats.rankdata(y)
+    RZ = np.column_stack([np.ones(len(rx))] + [stats.rankdata(z) for z in np.atleast_2d(Z.T)])
+    ex = rx - RZ @ np.linalg.lstsq(RZ, rx, rcond=None)[0]
+    ey = ry - RZ @ np.linalg.lstsq(RZ, ry, rcond=None)[0]
+    if ex.std() == 0 or ey.std() == 0:
+        return float("nan")
+    return float(np.corrcoef(ex, ey)[0, 1])
+
+
 def h1_test(table: pd.DataFrame) -> dict:
+    """H1 (plan v1.1): the median *excess* residual alignment (observed rho minus
+    the size-preserving simulation null mean) is tested against 0 (Wilcoxon);
+    per-origin significance uses the simulation p-values with BH. The raw
+    residual rho and the permutation p-values are reported for reference."""
     rho = table["spearman_resid"].dropna().to_numpy()
+    ex = table["rho_excess"].dropna().to_numpy() if "rho_excess" in table else np.array([])
     res = {"n_origins": int(rho.size), "median_rho_resid": float(np.median(rho)) if rho.size else np.nan,
            "iqr_lo": float(np.quantile(rho, 0.25)) if rho.size else np.nan,
-           "iqr_hi": float(np.quantile(rho, 0.75)) if rho.size else np.nan}
-    if rho.size >= 5:
-        w = stats.wilcoxon(rho, alternative="two-sided")
+           "iqr_hi": float(np.quantile(rho, 0.75)) if rho.size else np.nan,
+           "median_rho_excess": float(np.median(ex)) if ex.size else np.nan,
+           "median_rho_null": float(table["rho_null_mean"].median()) if "rho_null_mean" in table else np.nan}
+    if ex.size >= 5:
+        w = stats.wilcoxon(ex, alternative="two-sided")
         res.update({"wilcoxon_stat": float(w.statistic), "wilcoxon_p": float(w.pvalue)})
+    if "q_sim_resid" in table:
+        sig = table[(table["q_sim_resid"] < 0.05)]
+        res["share_sig_positive"] = float((sig["rho_excess"] > 0).sum() / max(1, ex.size))
+        res["share_sig_negative"] = float((sig["rho_excess"] < 0).sum() / max(1, ex.size))
     if "q_perm_resid" in table:
-        sig = table[(table["q_perm_resid"] < 0.05)]
-        res["share_sig_positive"] = float((sig["spearman_resid"] > 0).sum() / max(1, rho.size))
-        res["share_sig_negative"] = float((sig["spearman_resid"] < 0).sum() / max(1, rho.size))
+        res["share_sig_perm_reference"] = float((table["q_perm_resid"] < 0.05).sum() / max(1, rho.size))
     return res
 
 

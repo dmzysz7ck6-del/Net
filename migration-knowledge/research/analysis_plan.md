@@ -229,3 +229,41 @@ before seeing the data. They are not statistical tests.
   from the workbook are treated as zero but flagged as "unreported".
 * **Undirected outcome.** Directional claims (H4b) concern which side of a
   pair a move started from. They say nothing about direction of knowledge flow.
+
+---
+
+## Amendment v1.1 (2026-11-05, still before any data were acquired)
+
+**What changed.** The inference for H1. The statistic `ρ_o` is unchanged.
+
+**Why.** A simulation check of the v1.0 procedure (`tests/test_alignment.py::test_size_artefact_is_removed_by_simulation_null`)
+showed that the registered destination-permutation test is anti-conservative for this
+statistic. The two layers were simulated with **no** shared pair affinity.
+- With the `+1` pseudo-count, a zero cell's residual is `−ln(1+E)`, which falls with
+  destination size in both layers.
+- So `ρ_o` is positive even without shared structure: the median `ρ_o` was 0.24 in that
+  simulation.
+- Permuting destination labels destroys this size structure, so 45% of origins were
+  "significant" at p < 0.05.
+
+**New primary inference for H1.**
+- Null: collaboration counts for origin o are drawn from a negative binomial around the
+  independence expectation, `NB2(E^C_od, α̂)`, with the migration profile held fixed.
+  `α̂` is the dispersion of the observed collaboration layer around `E^C`, estimated by
+  maximum likelihood.
+- This null keeps each destination's size in both layers. It reproduces the zero-cell
+  artefact and treats the collaboration layer's own pair structure as independent of
+  migration.
+- The statistic is `ρ_excess,o = ρ_o − mean(ρ_null,o)`.
+- Per-origin p-values come from 2,000 null draws, with BH adjustment across origins.
+- Summary test: Wilcoxon signed-rank of `ρ_excess,o` across eligible origins against 0.
+- In the same simulation the new null gives a median `ρ_excess` of 0.01 and 0% of
+  origins with q < 0.05. With genuinely shared affinity it still detects alignment: every
+  origin in the detection test has `ρ_excess` > 0.2.
+
+**Unchanged.**
+- The decision thresholds in §7 now apply to the median `ρ_excess` instead of the median
+  `ρ_o`. Both values are always reported, together with the permutation p-values,
+  labelled "not size-calibrated".
+- A rank-partial version of `ρ_o`, controlling for `ln E^M` and `ln E^C`, is reported as
+  a sensitivity statistic.

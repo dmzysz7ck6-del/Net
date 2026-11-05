@@ -71,4 +71,11 @@ Newest entries at the bottom. Planned work is never described as completed.
   The code is written to fail loudly if any of them differ.
 
 ### Deviations from plan
-- None so far. The plan has not been modified since registration.
+1. **Plan v1.1 (2026-11-05, before any data were acquired): H1 inference changed.** A null
+   simulation showed the registered permutation test is anti-conservative: 45% false
+   positives at nominal 5%, caused by size-dependent pseudo-count residuals of zero cells.
+   - New primary: a size-preserving negative-binomial simulation null; the statistic is
+     the excess over it.
+   - Details are in `research/analysis_plan.md` (Amendment v1.1).
+   - The v1.0 statistic and p-values are still reported for transparency.
+   - SHA-256 of the amended plan (v1.1): `d09d48d457a216518d70e505eb7c065369b8eee02c4dbd1ba4cda2a6688ab7ec`.

@@ -43,5 +43,24 @@ def test_residual_alignment_detects_shared_pair_affinity():
     # with independent affinities the residual correlation should be near zero
     aff2 = rng.normal(0, 1, (n, n)); aff2 = (aff2 + aff2.T) / 2
     C2 = rng.poisson(base * np.exp(aff2)); C2 = np.triu(C2, 1); C2 = (C2 + C2.T).astype(float)
-    t2 = A.alignment_table(mig, Layer("c", nodes, C2, False, ""), nodes[:5], seed=1, n_perm=200, n_boot=50)
-    assert t2["spearman_resid"].abs().median() < 0.3
+    t2 = A.alignment_table(mig, Layer("c", nodes, C2, False, ""), nodes, seed=1, n_perm=200, n_boot=0)
+    assert abs(t2["spearman_resid"].median()) < 0.15     # signed median over all 30 origins
+    assert abs(t2["rho_excess"].median()) < 0.15
+    assert (t2["q_sim_resid"] < 0.05).mean() <= 0.1
+    assert (t["rho_excess"] > 0.2).all()
+
+
+def test_size_artefact_is_removed_by_simulation_null():
+    """Sparse layers with NO shared affinity: zero cells give size-dependent
+    residuals in both layers, so the raw residual rho is biased upward; the
+    size-preserving simulation null must absorb it."""
+    rng = np.random.default_rng(7)
+    n = 60
+    nodes = [f"C{i:02d}" for i in range(n)]
+    size = rng.lognormal(0, 1.5, n)
+    base = np.outer(size, size)
+    M = rng.poisson(0.3 * base * np.exp(rng.normal(0, 1, (n, n)))).astype(float); np.fill_diagonal(M, 0)
+    Cm = rng.poisson(0.3 * base * np.exp(rng.normal(0, 1, (n, n)))); Cm = np.triu(Cm, 1); Cm = (Cm + Cm.T).astype(float)
+    t = A.alignment_table(Layer("m", nodes, M, True, ""), Layer("c", nodes, Cm, False, ""), nodes[:20], seed=3, n_perm=300, n_boot=0)
+    assert t["spearman_resid"].median() > 0.1           # the artefact exists
+    assert abs(t["rho_excess"].median()) < 0.1          # and is removed
