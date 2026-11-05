@@ -1,0 +1,10 @@
+.env
+data/raw/**
+!data/raw/.gitkeep
+!data/raw/MANIFEST.jsonl
+data/interim/**
+!data/interim/.gitkeep
+__pycache__/
+.pytest_cache/
+*.part
+*.tmp

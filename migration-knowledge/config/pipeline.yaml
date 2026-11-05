@@ -1,0 +1,128 @@
+# Pipeline configuration. Every analytical choice that affects results lives here
+# so it is versioned with the code. Changes after the pre-registration commit
+# must be logged in research/progress.md under "Deviations from plan".
+
+project:
+  name: migration-knowledge
+  seed: 20261105
+  contact_env_var: OPENALEX_MAILTO      # e-mail for the OpenAlex polite pool (env only)
+  api_key_env_var: OPENALEX_API_KEY     # optional OpenAlex key (env only, never committed)
+
+sources:
+  undesa_ims:
+    landing: https://www.un.org/development/desa/pd/content/international-migrant-stock
+    # Destination-and-origin workbook of the 2024 revision.
+    url: https://www.un.org/development/desa/pd/sites/www.un.org.development.desa.pd/files/undesa_pd_2024_ims_stock_by_sex_destination_and_origin.xlsx
+    revision: "International Migrant Stock 2024"
+    license: "United Nations terms of use (https://www.un.org/en/about-us/terms-of-use)"
+  scholarly_migration:
+    article_doi: 10.1038/s41597-024-03655-9
+    zenodo_record: "11145735"
+    zenodo_api: https://zenodo.org/api/records/11145735
+    license: "per Zenodo record (recorded at download time)"
+  openalex:
+    base_url: https://api.openalex.org
+    docs: https://docs.openalex.org
+    license: CC0
+  wdi:
+    base_url: https://api.worldbank.org/v2
+    indicators:
+      population: SP.POP.TOTL
+      gdp_current_usd: NY.GDP.MKTP.CD
+      gdp_pc_ppp_const: NY.GDP.PCAP.PP.KD
+    license: CC BY 4.0
+  cepii_geodist:
+    landing: https://www.cepii.fr/CEPII/en/bdd_modele/bdd_modele_item.asp?id=6
+    dist_url: https://www.cepii.fr/distance/dist_cepii.zip
+    geo_url: https://www.cepii.fr/distance/geo_cepii.zip
+    license: "CEPII Etalab Open License 2.0 (recorded at download time)"
+
+# Time-aligned designs. "lagged" designs are the confirmatory ones.
+windows:
+  primary:          # confirmatory
+    label: "2015 stocks / 2010-14 mobility / 2015-19 coauthorship"
+    migrant_stock_year: 2015
+    mobility_years: [2010, 2014]
+    collab_years: [2015, 2019]
+    capacity_years: [2010, 2014]
+    covariate_year: 2015
+  earlier:          # temporal comparison
+    label: "2010 stocks / 2005-09 mobility / 2010-14 coauthorship"
+    migrant_stock_year: 2010
+    mobility_years: [2005, 2009]
+    collab_years: [2010, 2014]
+    capacity_years: [2005, 2009]
+    covariate_year: 2010
+  later:            # temporal comparison (mobility data end in 2020)
+    label: "2020 stocks / 2015-19 mobility / 2020-24 coauthorship"
+    migrant_stock_year: 2020
+    mobility_years: [2015, 2019]
+    collab_years: [2020, 2024]
+    capacity_years: [2015, 2019]
+    covariate_year: 2020
+  contemporaneous:  # exploratory only, NOT a lagged association
+    label: "2015 stocks / 2015-19 mobility / 2015-19 coauthorship"
+    migrant_stock_year: 2015
+    mobility_years: [2015, 2019]
+    collab_years: [2015, 2019]
+    capacity_years: [2015, 2019]
+    covariate_year: 2015
+
+openalex:
+  # Primary definition of a "peer-reviewed journal article".
+  work_filters:
+    type: article
+    primary_location.source.type: journal
+    is_retracted: "false"
+    is_paratext: "false"
+  per_page: 200
+  max_retries: 8
+  backoff_base_seconds: 1.5
+  requests_per_second: 5
+  # Works with more than this many distinct countries are kept in the primary
+  # count but dropped in the "no mega-collaborations" robustness check.
+  mega_country_threshold: 20
+
+countries:
+  # Universe rule (fixed before outcome inspection):
+  #  1. entity maps unambiguously to one ISO 3166-1 alpha-3 code in UN DESA,
+  #     OpenAlex and CEPII (or an explicit, documented crosswalk entry);
+  #  2. WDI population >= min_population in the window's covariate year
+  #     (entities absent from WDI, e.g. Taiwan, are kept and flagged);
+  #  3. at least one international co-authored article in the window.
+  min_population: 500000
+  pilot_origins: [SOM, ETH, KEN, GHA]
+  focus_origins: [SOM, ETH, KEN, UGA, TZA, RWA, GHA, NGA, SEN, ZAF]
+  horn_of_africa: [SOM, ETH, ERI, DJI]
+  east_africa: [KEN, UGA, TZA, RWA, BDI, SSD, SOM, ETH, ERI, DJI]
+  # Comparison origins: for each focus origin, the `comparators_per_origin`
+  # non-African countries closest in standardized (log population,
+  # log GDP per capita PPP) in the covariate year. Outcome-blind rule.
+  comparators_per_origin: 2
+
+alignment:
+  top_k: [5, 10]
+  # Minimum information for an origin to enter alignment statistics.
+  min_origin_intl_papers: 50
+  min_origin_emigrants: 10000
+  null_draws: 2000
+  bootstrap_draws: 1000
+
+gravity:
+  distance_var: distw          # population-weighted distance (CEPII); robustness: dist
+  language_var: comlang_off    # robustness: comlang_ethno
+  colonial_vars: [colony, comcol]
+  contiguity_var: contig
+  cv_folds: 10
+  cluster: dyadic              # Aronow-Samii-Assenova dyadic-robust variance
+
+residuals:
+  baseline_model: M2           # FE + geography/language/colonial + migration
+  fdr_q: 0.05
+  min_expected: 5.0            # minimum model-expected count to test a pair
+  min_log_ratio: 0.6931        # |ln((obs+0.5)/(exp+0.5))| >= ln 2
+  missing_link_min_expected: 10.0
+
+topology:
+  backbone_alpha: [0.01, 0.05, 0.10]
+  null_draws: 500
