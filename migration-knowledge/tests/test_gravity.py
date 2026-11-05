@@ -78,3 +78,47 @@ def test_nb_alpha_and_flags():
                                    "weaker_than_expected", "missing_link"}
     # few false positives under a correctly specified model
     assert (fl["category"].isin(["stronger_than_expected", "weaker_than_expected"])).mean() < 0.05
+
+
+def test_dyadic_cov_matches_bruteforce_formula():
+    """Covariate-block dyadic variance equals the explicit double sum over all
+    pairs of dyads that share a country, using FWL influence scores."""
+    d = synthetic_dyads(n=9, seed=4)
+    r = G.fit_ppml(d, "y", ["ldist", "lang", "lmig"])
+    X, names, A, countries = G.design(r.extra["dyads"], r.covariates, True, r.countries)
+    k = len(r.covariates)
+    Xb, Z = X[:, 1:1 + k], np.column_stack([X[:, :1], X[:, 1 + k:]])
+    e = r.extra["y"] - r.mu
+    Xt = G.fwl_residualize(Xb, Z, r.mu)
+    s = Xt * e[:, None]
+    dy = r.extra["dyads"]
+    meat = np.zeros((k, k))
+    for i in range(len(dy)):
+        for j in range(len(dy)):
+            if {dy.a[i], dy.b[i]} & {dy.a[j], dy.b[j]}:
+                meat += np.outer(s[i], s[j])
+    G_ = len(countries)
+    bread = np.linalg.inv(Xt.T @ (Xt * r.mu[:, None]))
+    V = bread @ (meat * G_ / (G_ - 1)) @ bread
+    if not r.extra["dyadic_cov_info"]["clipped"]:
+        assert np.allclose(V, r.cov.to_numpy(), rtol=1e-6, atol=1e-12)
+
+
+def test_dyadic_se_tracks_sampling_sd_under_node_dependence():
+    """With node-level dependence that fixed effects do not absorb, HC1 badly
+    understates the sampling SD; the dyadic SE should track it."""
+    rng = np.random.default_rng(11)
+    n, reps, beta = 40, 40, 0.4
+    bs, sd, sh = [], [], []
+    for _ in range(reps):
+        v = rng.normal(0, 1, n); w = 0.8 * v + rng.normal(0, 0.3, n); fe = rng.normal(0, 0.5, n)
+        I, J = np.triu_indices(n, 1)
+        x = v[I] * v[J] + rng.normal(0, 0.5, len(I))
+        mu = np.exp(1.5 + fe[I] + fe[J] + beta * x + 0.5 * w[I] * w[J] + rng.normal(0, 0.3, len(I)))
+        d = pd.DataFrame({"a": [f"C{i:02d}" for i in I], "b": [f"C{j:02d}" for j in J], "x": x, "y": rng.poisson(mu)})
+        res = G.fit_ppml(d, "y", ["x"])
+        bs.append(res.params["x"]); sd.append(np.sqrt(res.cov.loc["x", "x"])); sh.append(np.sqrt(res.cov_hc1.loc["x", "x"]))
+    emp = np.std(bs, ddof=1)
+    assert 0.65 < np.mean(sd) / emp < 1.35
+    assert np.mean(sd) > 1.3 * np.mean(sh)
+    assert min(sd) > 0

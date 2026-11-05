@@ -267,3 +267,58 @@ statistic. The two layers were simulated with **no** shared pair affinity.
   labelled "not size-calibrated".
 - A rank-partial version of `ρ_o`, controlling for `ln E^M` and `ln E^C`, is reported as
   a sensitivity statistic.
+
+## Amendment v1.2 (2026-11-05, still before any data were acquired)
+
+An adversarial code review, with each finding checked by simulation, found further
+defects in the registered procedures. All changes below were made before any data
+were seen.
+
+1. **H2 divergence measure.**
+   - *Problem.* The plug-in JSD is biased upward for sparse rows, and the bias shrinks as
+     an origin's paper count grows. Paper count tracks capacity, so sampling noise alone
+     produces the predicted negative correlation. In simulation, origins with identical
+     true divergence gave a Spearman correlation of −0.24 to −0.5 between JSD and paper
+     count.
+   - *Change.* H2 now uses the **rarefied JSD**: the mean JSD after subsampling each
+     origin's collaboration row, without replacement, to the same number of paper-pair
+     incidences (50, the minimum-information threshold), over 200 draws.
+   - The plug-in result is reported for reference. Point estimates of the raw JSD are
+     reported bias-corrected (`2ĵ − mean ĵ*`), with basic-bootstrap intervals from
+     paper-level resampling.
+2. **Minimum-information rule.** It is now applied to **distinct international articles**
+   in the window, as the plan's wording requires, rather than to pair incidences or
+   fractional weights. The eligible set is therefore identical for full and fractional
+   counting.
+3. **Fractional counting (R1).** The negative-binomial likelihood is undefined for
+   non-integer counts. Null and bootstrap draws for the fractional layer are now made in
+   whole papers, with the full-count layer's dispersion, and converted with each pair's
+   observed fractional/full ratio.
+4. **Universe rule, clause 2.** Entities absent from WDI are excluded (reason
+   `no_population_data`) unless listed in `countries.wdi_absent_allowlist`. That list
+   contains only Taiwan, for a documented reason. v1.0 would have admitted every
+   WDI-absent micro-territory.
+5. **E2 topology.**
+   - *Poisson nulls.* These make dispersion depend on the layer's unit (persons versus
+     papers), so z-scores were not comparable across layers. They are replaced by NB2
+     nulls with each layer's own estimated dispersion.
+   - *Participation.* Now reported as the unit-free deviation `P_obs − mean(P_null)`.
+   - *Betweenness.* Each country's backbone betweenness is calibrated against its
+     betweenness in 100 null networks.
+   - *Bridge rule.* A "collaboration-specific bridge" now requires, for every backbone α
+     and both counting methods:
+     1. positive co-authorship betweenness;
+     2. a calibrated score above 0.5;
+     3. a higher calibrated score than in migration.
+
+     This replaces the raw-percentile rule, which counted tied zero-betweenness nodes as
+     bridges.
+   - *Community AMI.* Null draws whose partition is a single community are excluded and
+     counted. sklearn scores two such partitions as AMI = 1.
+6. **Inference for H3/H4 (correction, not a design change).** The dyadic-robust variance
+   is now computed for the covariate coefficients from their FWL influence functions.
+   The full-matrix version is indefinite, because each country's score sum in the
+   fixed-effect directions is identically zero. If small samples still produce a non-PSD
+   matrix, variances are floored at their HC1 values and flagged. Two tests cover this:
+   one checks the estimator against a brute-force double sum, and one checks it against
+   the sampling SD under node-level dependence.

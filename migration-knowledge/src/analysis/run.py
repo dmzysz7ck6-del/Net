@@ -56,6 +56,7 @@ class WindowData:
     output: pd.DataFrame
     wdi: pd.DataFrame
     dest_types: pd.Series
+    intl_articles: pd.Series
 
 
 def _read(name: str) -> pd.DataFrame:
@@ -91,7 +92,8 @@ def load_window(name: str, *, min_population: float | None = None, mobility_sour
     }
     candidates = sorted(set.union(*sources.values()))
     uni = P.select_universe(candidates, wdi, col.rename(columns={collab_col: "full"}) if collab_col != "full" else col,
-                            w, min_population, sources)
+                            w, min_population, sources,
+                            wdi_absent_allowlist=tuple(cfg["countries"].get("wdi_absent_allowlist", [])))
     nodes = uni.loc[uni["included"], "iso3"].tolist()
     dyads = P.build_dyads(nodes, mig, mob, col, geo, out,
                           collab_cols=[c for c in ["full", "frac", "full_nomega", "frac_nomega"] if c in col])
@@ -105,8 +107,11 @@ def load_window(name: str, *, min_population: float | None = None, mobility_sour
     problems = P.validate_dyads(dyads)
     if problems:
         raise ValueError(f"dyad integrity problems in window {name}: {problems}")
+    PATHS.ensure()
+    P.missing_geography(dyads).to_csv(PATHS.tables / f"missing_geography_{name}.csv", index=False)
     types = mig.drop_duplicates("dest_iso3").set_index("dest_iso3")["dest_data_type"]
-    return WindowData(name, w, uni, nodes, dyads, mig, mob, mob_all, col, out, wdi, types)
+    intl = _read(f"collab_{cy[0]}_{cy[1]}_nodes.csv").set_index("iso3")["intl_articles"]
+    return WindowData(name, w, uni, nodes, dyads, mig, mob, mob_all, col, out, wdi, types, intl)
 
 
 def layers(wd: WindowData, collab_col: str = "full") -> dict[str, Layer]:
@@ -141,15 +146,21 @@ def run_alignment(wd: WindowData, collab_col: str = "full", tag: str = "", *, dr
     cfg = load_config()["alignment"]
     L = layers(wd, collab_col)
     mig, col = L["migration"], L["collaboration"]
+    col_full = layers(wd, "full")["collaboration"] if collab_col != "full" else None
     if drop_dest_types:
         bad = [d for d, t in wd.dest_types.items() if any(x in str(t).split() for x in drop_dest_types) and d in mig.index]
         keep = [n for n in mig.nodes if n not in bad]
         mig, col = mig.restrict(keep), col.restrict(keep)
+        col_full = col_full.restrict(keep) if col_full is not None else None
     em = mig.W.sum(1)
-    ic = col.W.sum(1)
-    eligible = [n for i, n in enumerate(mig.nodes) if ic[i] >= cfg["min_origin_intl_papers"] and em[i] >= cfg["min_origin_emigrants"]]
+    # minimum-information rule on distinct international articles in the window,
+    # identical for every counting method (not on pair incidences or weights)
+    ia = wd.intl_articles.reindex(mig.nodes).fillna(0).to_numpy()
+    eligible = [n for i, n in enumerate(mig.nodes) if ia[i] >= cfg["min_origin_intl_papers"] and em[i] >= cfg["min_origin_emigrants"]]
     tab = A.alignment_table(mig, col, eligible, seed=cfg_seed(), ks=tuple(cfg["top_k"]),
-                            n_perm=cfg["null_draws"], n_boot=cfg["bootstrap_draws"])
+                            n_perm=cfg["null_draws"], n_boot=cfg["bootstrap_draws"], col_full=col_full,
+                            rarefy_n=cfg.get("rarefy_n"))
+    tab["intl_articles"] = wd.intl_articles.reindex(tab["origin"]).to_numpy()
     out = wd.output.set_index("iso3")["articles"]
     tab["log_output"] = np.log(out.reindex(tab["origin"]).to_numpy().astype(float))
     year = wd.window["covariate_year"]
@@ -173,7 +184,7 @@ def run_alignment(wd: WindowData, collab_col: str = "full", tag: str = "", *, dr
 def run_gravity(wd: WindowData, y: str = "full", tag: str = "", models: dict[str, list[str]] | None = None,
                 cv: bool = True, dyads: pd.DataFrame | None = None) -> dict:
     cfg = load_config()["gravity"]
-    d = (wd.dyads if dyads is None else dyads).dropna(subset=["ln_distw"])
+    d = (wd.dyads if dyads is None else dyads).dropna(subset=[c for c in BASE if c in (wd.dyads if dyads is None else dyads)])
     models = models or MODELS
     results, tables = {}, []
     for name, cov in models.items():
@@ -225,32 +236,44 @@ def run_residuals(wd: WindowData, grav: dict, tag: str = "") -> pd.DataFrame:
 
 
 def run_topology(wd: WindowData, tag: str = "") -> dict:
+    """E2 (plan v1.2): unit-free, null-calibrated topology comparisons."""
+    from ..networks.nulls import expected, layer_alpha
     cfg = load_config()["topology"]
     cw = C.crosswalk().set_index("iso3")
     part = {n: cw.loc[n, "subregion"] for n in wd.nodes}
-    out = {}
     tables = []
+    alpha_full = None
     for col in ["full", "frac"]:
         L = layers(wd, col)
         named = {"migration": L["migration"], "scholars": L["scholars"], f"collab_{col}": L["collaboration"]}
         for lname, layer in named.items():
             if col == "frac" and lname in ("migration", "scholars"):
                 continue
-            pz = T.participation_z(layer, part, draws=cfg["null_draws"], seed=cfg_seed())
-            bb = T.backbone_betweenness(layer, cfg["backbone_alpha"])
-            tables.append(pz.merge(bb.drop(columns="layer"), on="iso3"))
+            a = None
+            if lname == "collab_full":
+                sym = layer.symmetrized()
+                alpha_full = layer_alpha(sym.W, expected(sym.W, False), False)
+                a = alpha_full
+            elif lname == "collab_frac":
+                a = alpha_full  # fractional weights: dispersion taken from the full-count layer
+            pz = T.participation_z(layer, part, draws=cfg["null_draws"], seed=cfg_seed(), alpha=a)
+            bb = T.backbone_betweenness(layer, cfg["backbone_alpha"], null_draws=cfg.get("betweenness_null_draws", 100),
+                                        seed=cfg_seed(), alpha=a)
+            tables.append(pz.merge(bb.drop(columns=["layer", "null_alpha"], errors="ignore"), on="iso3"))
     topo = pd.concat(tables, ignore_index=True)
     suffix = f"_{tag}" if tag else ""
     topo.to_csv(PATHS.tables / f"topology_{wd.name}{suffix}.csv", index=False)
     L = layers(wd, "full")
-    ami, parts = T.community_agreement(L, seed=cfg_seed(), draws=50)
+    ami, parts = T.community_agreement(L, seed=cfg_seed(), draws=cfg.get("community_null_draws", 100))
     ami.to_csv(PATHS.tables / f"communities_ami_{wd.name}{suffix}.csv", index=False)
     pd.DataFrame([{"iso3": n, **{k: parts[k].get(n) for k in parts}} for n in wd.nodes]).to_csv(
         PATHS.tables / f"communities_{wd.name}{suffix}.csv", index=False)
     T.layer_summary({**L, "migration_sym": L["migration"].symmetrized()}).to_csv(
         PATHS.tables / f"layer_summary_{wd.name}{suffix}.csv", index=False)
-    # collaboration-specific bridges: higher betweenness percentile in co-authorship than in
-    # migration under all backbone thresholds and both counting methods
+    # Collaboration-specific bridge (plan v1.2): for every backbone alpha and both
+    # counting methods, (i) positive betweenness in the co-authorship backbone,
+    # (ii) co-authorship betweenness above its own null median (calibrated score
+    # > 0.5), and (iii) calibrated score higher in co-authorship than in migration.
     alphas = cfg["backbone_alpha"]
     piv = {"migration": topo[topo["layer"] == "migration"].set_index("iso3"),
            "collab_full": topo[topo["layer"] == "collaboration_full"].set_index("iso3"),
@@ -259,16 +282,15 @@ def run_topology(wd: WindowData, tag: str = "") -> dict:
     for n in wd.nodes:
         conds = []
         for a in alphas:
-            c = f"betweenness_a{a}"
-            m = piv["migration"][c].rank(pct=True).get(n, np.nan)
+            m = piv["migration"][f"betweenness_calib_a{a}"].get(n, np.nan)
             for lname in ["collab_full", "collab_frac"]:
-                conds.append(piv[lname][c].rank(pct=True).get(n, np.nan) > m)
+                raw = piv[lname][f"betweenness_a{a}"].get(n, 0.0)
+                cal = piv[lname][f"betweenness_calib_a{a}"].get(n, np.nan)
+                conds.append(bool(raw > 0 and cal > 0.5 and cal > m))
         rows.append({"iso3": n, "collab_specific_bridge": bool(all(conds)), "share_conditions": float(np.mean(conds))})
     bridges = pd.DataFrame(rows)
     bridges.to_csv(PATHS.tables / f"bridges_{wd.name}{suffix}.csv", index=False)
-    out["ami"] = ami.to_dict("records")
-    out["n_collab_specific_bridges"] = int(bridges["collab_specific_bridge"].sum())
-    return out
+    return {"ami": ami.to_dict("records"), "n_collab_specific_bridges": int(bridges["collab_specific_bridge"].sum())}
 
 
 def run_window(name: str, *, robustness: bool = True) -> dict:
@@ -309,9 +331,10 @@ def run_window(name: str, *, robustness: bool = True) -> dict:
         rob["R7_gravity_pop5m"] = run_gravity(wd, "full", "pop5m", cv=False, dyads=sub)["summary"]
         r = grav["results"]["M2"]
         alpha = R.nb2_alpha(r.extra["y"], r.mu)
-        nb = pd.concat([G.fit_negbin(wd.dyads.dropna(subset=["ln_distw"]), "full", MODELS[m], alpha, m) for m in ("M2", "M3")])
+        gd = wd.dyads.dropna(subset=BASE)
+        nb = pd.concat([G.fit_negbin(gd, "full", MODELS[m], alpha, m) for m in ("M2", "M3")])
         nb.to_csv(PATHS.tables / f"gravity_negbin_{name}.csv", index=False)
-        jk = pd.concat([G.jackknife(wd.dyads.dropna(subset=["ln_distw"]), "full", MODELS["M3"], ["ln_mig", "ln_mob"], "M3")])
+        jk = pd.concat([G.jackknife(gd, "full", MODELS["M3"], ["ln_mig", "ln_mob"], "M3")])
         jk.to_csv(PATHS.tables / f"jackknife_{name}.csv", index=False)
         rob["R5_jackknife"] = {t: {"min": float(jk[t].min()), "max": float(jk[t].max()),
                                    "most_influential": jk.loc[jk[f"delta_{t}"].abs().idxmax(), "dropped"]}

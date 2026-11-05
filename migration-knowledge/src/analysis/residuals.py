@@ -37,13 +37,18 @@ def nb2_alpha(y: np.ndarray, mu: np.ndarray) -> float:
     largest-mean pairs (checked in tests/test_gravity.py)."""
     from scipy import optimize
     y = np.asarray(y, float)
+    if not np.allclose(y, np.round(y)):
+        raise ValueError("nb2_alpha needs integer counts (got non-integer values, e.g. fractional counting)")
     mu = np.maximum(np.asarray(mu, float), 1e-12)
 
     def nll(log_a: float) -> float:
         n, p = _nb(mu, float(np.exp(log_a)))
         return -float(stats.nbinom.logpmf(y, n, p).sum())
 
-    res = optimize.minimize_scalar(nll, bounds=(-14.0, 6.0), method="bounded")
+    lo, hi = -14.0, 6.0
+    res = optimize.minimize_scalar(nll, bounds=(lo, hi), method="bounded")
+    if res.x > hi - 1e-3:
+        raise ValueError(f"nb2_alpha hit its upper bound (alpha = {np.exp(hi):.0f}); dispersion is not identified")
     return float(np.exp(res.x))
 
 
@@ -59,7 +64,10 @@ def predictive(result: GravityResult, alpha: float, *, draws: int = 500, seed: i
     y = result.extra["y"]
     X, names, _, _ = design(dy, result.covariates, result.fe, result.countries)
     beta = result.params[names].to_numpy()
-    V = result.cov.loc[names, names].to_numpy()
+    # Parameter uncertainty for the simulated means uses the full HC1 covariance
+    # (fixed effects included). The dyadic-robust covariance exists only for the
+    # covariate block; NB2 noise dominates the predictive spread in any case.
+    V = result.cov_hc1.loc[names, names].to_numpy()
     rng = np.random.default_rng(seed)
     L = _safe_chol(V)
     F = np.zeros(len(y)); f = np.zeros(len(y))

@@ -42,13 +42,29 @@ def build_migration() -> pd.DataFrame:
 
 
 def build_scholarly() -> pd.DataFrame:
-    frames, reports = [], []
+    import hashlib
+    frames, reports, used = [], [], []
     for source in ("openalex", "scopus"):
         files = SCH.find_flow_files(PATHS.raw / "scholarly", source)
+        seen_hash, seen_keys = set(), None
+        src_frames = []
         for f in files:
+            h = hashlib.sha256(f.read_bytes()).hexdigest()
+            if h in seen_hash:  # identical copy (e.g. extracted from a zip next to the CSV)
+                continue
+            seen_hash.add(h)
             df, rep = SCH.parse_flows(f, source)
-            frames.append(df)
+            keys = set(map(tuple, df[["origin_iso3", "dest_iso3", "year"]].to_numpy()))
+            if seen_keys is not None and keys & seen_keys:
+                raise ValueError(f"{f.name} repeats corridor-years already read for source {source}; "
+                                 "choose exactly one bilateral flow file per source")
+            seen_keys = keys if seen_keys is None else seen_keys | keys
+            src_frames.append(df)
             reports.append(rep.as_frame().assign(file=f.name))
+            used.append({"source": source, "file": str(f.relative_to(PATHS.root)), "sha256": h, "rows": len(df),
+                         "columns": json.dumps(df.attrs.get("columns", {}))})
+        frames += src_frames
+    pd.DataFrame(used).to_csv(PATHS.tables / "scholarly_files_used.csv", index=False)
     if not frames:
         raise FileNotFoundError("no bilateral scholarly flow files found; run `make acquire`")
     out = pd.concat(frames, ignore_index=True)
@@ -68,11 +84,24 @@ def build_collab() -> None:
         kt["focal"] = C.to_iso3(kt["focal"], "iso2", rep)
         kt["partner"] = C.to_iso3(kt["partner"], "iso2", rep)
         kt = kt.dropna(subset=["focal", "partner"])
+        if "sum_check" in kt:
+            sc = kt.drop_duplicates(["focal", "k"])[["focal", "k", "k_total_works", "sum_check"]]
+            sc.to_csv(PATHS.tables / f"openalex_sum_check_{y0}_{y1}.csv", index=False)
+            # works-weighted mean deviation of sum(n_k(X,Y)) / (k N_k(X)) from 1
+            dev = float(np.average(np.abs(sc["sum_check"] - 1), weights=sc["k_total_works"])) if len(sc) else 0.0
+            (PATHS.tables / f"openalex_sum_check_{y0}_{y1}.json").write_text(json.dumps(
+                {"weighted_mean_abs_deviation": dev, "fractional_counts_valid": dev <= 0.01}))
         allk = OA.aggregate_k_table(kt)
         nomega = OA.aggregate_k_table(kt, max_countries=mega)[["a", "b", "full", "frac"]].rename(
             columns={"full": "full_nomega", "frac": "frac_nomega"})
         out = allk.merge(nomega, on=["a", "b"], how="left").fillna({"full_nomega": 0, "frac_nomega": 0})
         out.to_csv(PATHS.processed / f"collab_{y0}_{y1}.csv", index=False)
+        # distinct international articles per focal country in the window
+        # (sum over k >= 2 of the number of its works with exactly k countries)
+        if "k_total_works" in kt:
+            nodes = (kt[kt["k"] >= 2].drop_duplicates(["focal", "k"]).groupby("focal")["k_total_works"].sum()
+                     .rename("intl_articles").reset_index().rename(columns={"focal": "iso3"}))
+            nodes.to_csv(PATHS.processed / f"collab_{y0}_{y1}_nodes.csv", index=False)
         _save_report(rep, f"openalex_{y0}_{y1}")
     for f in sorted((PATHS.raw / "openalex").glob("output_*_*.csv")):
         y0, y1 = f.stem.split("_")[1:3]

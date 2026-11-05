@@ -79,3 +79,9 @@ Newest entries at the bottom. Planned work is never described as completed.
    - Details are in `research/analysis_plan.md` (Amendment v1.1).
    - The v1.0 statistic and p-values are still reported for transparency.
    - SHA-256 of the amended plan (v1.1): `d09d48d457a216518d70e505eb7c065369b8eee02c4dbd1ba4cda2a6688ab7ec`.
+2. **Plan v1.2 (2026-11-05, before any data were acquired).** These changes follow the
+   adversarial code review: rarefied JSD for H2; an article-based eligibility rule;
+   paper-level sampling for fractional counts; a WDI-absent allowlist (Taiwan only);
+   NB2 unit-free topology nulls with calibrated betweenness and a corrected bridge rule;
+   and the corrected FWL dyadic variance. Details are in `research/analysis_plan.md`
+   (Amendment v1.2). SHA-256 of plan v1.2: `98187b0bfd82174605c190d3eaff8cc5e108dc9ae4d0fb73337a6c0792c41330`.

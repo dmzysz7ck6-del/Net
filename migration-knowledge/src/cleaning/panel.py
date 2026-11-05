@@ -37,7 +37,8 @@ def check_alignment(window: dict, migration: pd.DataFrame, mobility: pd.DataFram
 
 
 def select_universe(candidates: list[str], wdi: pd.DataFrame, collab: pd.DataFrame, window: dict,
-                    min_population: float, in_all_sources: dict[str, set[str]]) -> pd.DataFrame:
+                    min_population: float, in_all_sources: dict[str, set[str]],
+                    wdi_absent_allowlist: tuple[str, ...] = ()) -> pd.DataFrame:
     year = window["covariate_year"]
     pop = wdi[wdi["year"] == year].set_index("iso3")["population"] if len(wdi) else pd.Series(dtype=float)
     intl = pd.concat([collab[["a", "full"]].rename(columns={"a": "iso3"}),
@@ -49,7 +50,10 @@ def select_universe(candidates: list[str], wdi: pd.DataFrame, collab: pd.DataFra
             if c not in members:
                 reasons.append(f"absent_from_{src}")
         p = pop.get(c, np.nan)
-        if not np.isnan(p) and p < min_population:
+        if np.isnan(p):
+            if c not in wdi_absent_allowlist:
+                reasons.append("no_population_data")
+        elif p < min_population:
             reasons.append("population_below_threshold")
         if intl.get(c, 0) <= 0:
             reasons.append("no_international_coauthorship")
@@ -111,8 +115,16 @@ def build_dyads(universe: list[str], migration: pd.DataFrame, mobility: pd.DataF
     return pairs
 
 
+def missing_geography(d: pd.DataFrame) -> pd.DataFrame:
+    """Pairs lacking any gravity covariate (e.g. successor pairs of split
+    GeoDist codes). They are excluded from gravity models and reported."""
+    cols = [v for v in ["ln_distw", "contig", "comlang_off", "colony", "comcol"] if v in d]
+    return d.loc[d[cols].isna().any(axis=1), ["a", "b"]]
+
+
 def validate_dyads(d: pd.DataFrame) -> list[str]:
-    """Regression-input integrity checks; returns a list of problems."""
+    """Regression-input integrity checks; returns a list of problems.
+    Missing geography is reported separately (``missing_geography``)."""
     problems = []
     if not (d["a"] < d["b"]).all():
         problems.append("pairs not canonical (a < b)")
@@ -124,9 +136,6 @@ def validate_dyads(d: pd.DataFrame) -> list[str]:
     for v in ["full", "mig_ab", "mig_ba", "mob_ab", "mob_ba"]:
         if v in d and (d[v] < 0).any():
             problems.append(f"negative values in {v}")
-    for v in ["ln_distw", "contig", "comlang_off", "colony", "comcol"]:
-        if v in d and d[v].isna().any():
-            problems.append(f"{int(d[v].isna().sum())} missing values in {v}")
     if "frac" in d and "full" in d and (d["frac"] > d["full"] + 1e-9).any():
         problems.append("fractional count exceeds full count")
     return problems

@@ -64,3 +64,25 @@ def test_size_artefact_is_removed_by_simulation_null():
     t = A.alignment_table(Layer("m", nodes, M, True, ""), Layer("c", nodes, Cm, False, ""), nodes[:20], seed=3, n_perm=300, n_boot=0)
     assert t["spearman_resid"].median() > 0.1           # the artefact exists
     assert abs(t["rho_excess"].median()) < 0.1          # and is removed
+
+
+def test_rarefied_jsd_removes_sample_size_bias():
+    """Every origin's collaboration is drawn from exactly its migration
+    distribution (true JSD = 0) but origins differ in paper counts: the plug-in
+    JSD falls with N (spurious support for H2); the rarefied JSD does not."""
+    from scipy import stats as st
+    rng = np.random.default_rng(5)
+    n = 80
+    nodes = [f"C{i:02d}" for i in range(n)]
+    sizes = np.exp(rng.uniform(np.log(60), np.log(20000), n)).astype(int)
+    M = np.zeros((n, n)); C = np.zeros((n, n))
+    for o in range(n):
+        q = rng.dirichlet(np.full(n, 0.5)); q[o] = 0; q /= q.sum()
+        M[o] = q * 1e6
+        C[o] = rng.multinomial(sizes[o], q)
+    mig, col = Layer("m", nodes, M, True, ""), Layer("c", nodes, C, False, "")
+    t = A.alignment_table(mig, col, nodes, seed=2, n_perm=0, n_boot=0, rarefy_n=50)
+    r_plugin = st.spearmanr(t["jsd_raw"], sizes).statistic
+    r_rare = st.spearmanr(t["jsd_rarefied"], sizes).statistic
+    assert r_plugin < -0.5
+    assert abs(r_rare) < 0.25

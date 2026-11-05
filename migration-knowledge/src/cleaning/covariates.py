@@ -57,6 +57,15 @@ def geodist_dyads(df: pd.DataFrame) -> tuple[pd.DataFrame, HarmonizationReport]:
     d["d"] = to_iso3(d["iso_d"], "cepii", rep)
     d = d.dropna(subset=["o", "d"])
     d = d[d["o"] != d["d"]]
+    # A split code's diagonal row (e.g. YUG-YUG) would otherwise become SRB-MNE with
+    # 'internal' distance and contig = 0. Such successor-successor pairs are dropped
+    # and reported; they are missing from GeoDist, not imputed.
+    from .countries import SPECIAL_CASES
+    succ_groups = [set(v["iso3"]) for (sch, _), v in SPECIAL_CASES.items() if sch == "cepii" and v["action"] == "split"]
+    bad = d.apply(lambda r: any(r["o"] in g and r["d"] in g for g in succ_groups) and bool(r["geo_imputed"]), axis=1) if len(d) else pd.Series(dtype=bool)
+    if len(d) and bad.any():
+        rep.excluded.update({f"{r.o}-{r.d}": "successor pair created from a split code's diagonal row" for r in d[bad].itertuples()})
+        d = d[~bad]
     # prefer original over imputed rows if both exist for a pair
     d = d.sort_values("geo_imputed").drop_duplicates(["o", "d"], keep="first")
     keep = ["o", "d", "geo_imputed"] + [v for v in GEO_VARS if v in d.columns]

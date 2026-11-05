@@ -45,9 +45,10 @@ def make_fixture(root, seed=0):
         for i in range(n):
             for j in range(i + 1, n):
                 rows.append({"a": min(ISO[i], ISO[j]), "b": max(ISO[i], ISO[j]), "full": float(Cm[i, j]),
-                             "frac": float(Cm[i, j]) * 0.6, "full_nomega": float(Cm[i, j]) * 0.9, "frac_nomega": float(Cm[i, j]) * 0.55})
+                             "frac": float(Cm[i, j]) * 0.6, "full_nomega": float(round(Cm[i, j] * 0.9)), "frac_nomega": float(Cm[i, j]) * 0.55})
         pd.DataFrame(rows).to_csv(proc / f"collab_{y0}_{y1}.csv", index=False)
         pd.DataFrame({"iso3": ISO, "articles": (size * 1e4).round(), "intl_articles": (size * 3e3).round()}).to_csv(proc / f"output_{y0}_{y1}.csv", index=False)
+        pd.DataFrame({"iso3": ISO, "intl_articles": (size * 3e3).round()}).to_csv(proc / f"collab_{y0}_{y1}_nodes.csv", index=False)
     wdi = pd.DataFrame([{"iso3": c, "year": y, "population": float(size[i] * 3e7), "gdp_pc_ppp_const": float(rng.lognormal(9, 1)),
                          "income_id": "HIC" if c in ("USA", "GBR", "FRA", "DEU", "CAN", "NLD", "SWE", "BEL", "ITA", "SAU", "ARE", "JPN") else "LMC"}
                         for i, c in enumerate(ISO) for y in range(2005, 2025)])
@@ -69,7 +70,7 @@ def fixture_root(tmp_path):
     cfg = load_config()
     saved = copy.deepcopy(cfg)
     cfg["alignment"].update({"null_draws": 50, "bootstrap_draws": 20, "min_origin_emigrants": 1, "min_origin_intl_papers": 1})
-    cfg["topology"].update({"null_draws": 10})
+    cfg["topology"].update({"null_draws": 10, "betweenness_null_draws": 5, "community_null_draws": 5})
     cfg["gravity"].update({"cv_folds": 3})
     make_fixture(tmp_path)
     PATHS.set_root(tmp_path)
@@ -106,7 +107,7 @@ def test_comparators_rule_is_outcome_blind_and_non_african(fixture_root):
     import pandas as pd
     col = pd.read_csv(PATHS.processed / "collab_2015_2019.csv")
     col["full"] = col["full"][::-1].to_numpy()
-    col["frac"], col["full_nomega"], col["frac_nomega"] = col["full"] * 0.6, col["full"] * 0.9, col["full"] * 0.55
+    col["frac"], col["full_nomega"], col["frac_nomega"] = col["full"] * 0.6, (col["full"] * 0.9).round(), col["full"] * 0.55
     col.to_csv(PATHS.processed / "collab_2015_2019.csv", index=False)
     comp2 = run.comparison_origins(run.load_window("primary"), ["KEN", "ETH"], 2)
     assert comp["comparator"].tolist() == comp2["comparator"].tolist()

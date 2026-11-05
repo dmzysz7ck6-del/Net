@@ -21,19 +21,28 @@ import pandas as pd
 
 from .countries import HarmonizationReport, to_iso3
 
-ORIGIN_PAT = [r"^(country_)?from(_country)?$", r"^origin", r"^iso[23]?_?from$", r"^from_iso", r"^source_country",
-              r"^country_origin", r"^orig", r"^departure"]
-DEST_PAT = [r"^(country_)?to(_country)?$", r"^dest", r"^iso[23]?_?to$", r"^to_iso", r"^target_country",
-            r"^country_destination", r"^arrival"]
+# Patterns in priority order (most specific first). A pattern matching two
+# columns is an error, never a silent first-come choice.
+ORIGIN_PAT = [r"^iso[23]?_?(code_)?(from|origin)$", r"^(from|origin)_iso[23]?(_code)?$", r"^(country_)?from(_country)?$",
+              r"^origin$", r"^country_origin$", r"^origin_country$", r"^source_country$", r"^departure(_country)?$"]
+DEST_PAT = [r"^iso[23]?_?(code_)?(to|dest|destination)$", r"^(to|dest|destination)_iso[23]?(_code)?$",
+            r"^(country_)?to(_country)?$", r"^dest(ination)?$", r"^country_dest(ination)?$",
+            r"^dest(ination)?_country$", r"^target_country$", r"^arrival(_country)?$"]
 YEAR_PAT = [r"^year$", r"^yr$", r"^time$", r"^period$"]
-COUNT_PAT = [r"^n_?migrations?$", r"^n_?migrants?$", r"^flows?$", r"^count$", r"^n$", r"^number", r"^moves?$",
-             r"^migrants?$", r"^value$", r"^n_scholars"]
+COUNT_PAT = [r"^n_?migrations?$", r"^n_?moves?$", r"^n_?migrants?$", r"^flows?$", r"^moves?$", r"^migrants?$",
+             r"^count$", r"^n$", r"^number_of_(migrations|moves|migrants)$"]
 
 
-def _match(cols: list[str], pats: list[str]) -> str | None:
-    hits = [c for c in cols for p in pats if re.search(p, c.lower())]
-    uniq = list(dict.fromkeys(hits))
-    return uniq[0] if uniq else None
+def _match(cols: list[str], pats: list[str], role: str = "") -> str | None:
+    """Return the column matching the highest-priority pattern that matches
+    anything; raise if that pattern matches more than one column."""
+    for p in pats:
+        hits = [c for c in cols if re.search(p, str(c).lower())]
+        if len(hits) == 1:
+            return hits[0]
+        if len(hits) > 1:
+            raise ValueError(f"ambiguous {role} column: pattern {p!r} matches {hits}")
+    return None
 
 
 def find_flow_files(root: Path, source: str) -> list[Path]:
@@ -75,11 +84,12 @@ def _names_to_iso3(values: pd.Series, rep: HarmonizationReport) -> list[str | No
 
 def parse_flows(path: Path, source: str) -> tuple[pd.DataFrame, HarmonizationReport]:
     if path.suffix.lower() == ".xlsx":
-        df = pd.read_excel(path)
+        df = pd.read_excel(path, keep_default_na=False, na_values=[""], dtype=object)
     else:
         df = pd.read_csv(path, sep=None, engine="python", keep_default_na=False, na_values=[""])
     cols = list(df.columns)
-    o, d, y, n = _match(cols, ORIGIN_PAT), _match(cols, DEST_PAT), _match(cols, YEAR_PAT), _match(cols, COUNT_PAT)
+    o, d = _match(cols, ORIGIN_PAT, "origin"), _match(cols, DEST_PAT, "destination")
+    y, n = _match(cols, YEAR_PAT, "year"), _match(cols, COUNT_PAT, "count")
     missing = [k for k, v in {"origin": o, "destination": d, "year": y, "count": n}.items() if v is None]
     if missing:
         raise ValueError(f"{path.name}: cannot identify {missing} columns among {cols}")
@@ -91,7 +101,14 @@ def parse_flows(path: Path, source: str) -> tuple[pd.DataFrame, HarmonizationRep
         oi, di = to_iso3(df[o], scheme, rep), to_iso3(df[d], scheme, rep)
     out = pd.DataFrame({"origin_iso3": oi, "dest_iso3": di, "year": pd.to_numeric(df[y], errors="coerce"),
                         "moves": pd.to_numeric(df[n], errors="coerce"), "source": source})
+    total = float(pd.to_numeric(df[n], errors="coerce").fillna(0).sum())
+    lost = float(out.loc[out["origin_iso3"].isna() | out["dest_iso3"].isna(), "moves"].fillna(0).sum())
+    if total > 0 and lost / total > 0.10:
+        raise ValueError(f"{path.name}: {lost / total:.0%} of moves have unmatched country codes "
+                         f"(scheme {scheme}); check the code columns")
     out = out.dropna(subset=["origin_iso3", "dest_iso3", "year"])
+    if out.empty:
+        raise ValueError(f"{path.name}: no rows left after harmonization")
     out = out[out["origin_iso3"] != out["dest_iso3"]]
     out["year"] = out["year"].astype(int)
     if (out["moves"] < 0).any():

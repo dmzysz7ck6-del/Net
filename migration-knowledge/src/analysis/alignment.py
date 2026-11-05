@@ -66,9 +66,47 @@ def log_residuals(layer: Layer) -> np.ndarray:
     return np.log((layer.W + 1.0) / (E + 1.0)), E
 
 
+class RowSampler:
+    """Draws an origin's collaboration row in whole-paper (full-count) units and
+    converts it to the analysed layer's units.
+
+    For full counting the ratio is 1. For fractional counting each pair's
+    observed fractional/full ratio is used (the global ratio where the full
+    count is 0), so sampling noise is generated at the level of papers, never
+    as Poisson noise on fractional totals."""
+
+    def __init__(self, col: Layer, col_full: Layer | None):
+        full = col_full.W if col_full is not None else col.W
+        if not np.allclose(full, np.round(full)):
+            raise ValueError("the full-count layer must be integer-valued")
+        self.full = np.round(full).astype(np.int64)
+        tot_f, tot = full.sum(), col.W.sum()
+        glob = tot / tot_f if tot_f > 0 else 1.0
+        self.ratio = np.where(full > 0, np.divide(col.W, full, out=np.zeros_like(col.W), where=full > 0), glob)
+
+    def poisson(self, o: int, dest: list[int], rng) -> np.ndarray:
+        return rng.poisson(self.full[o, dest]) * self.ratio[o, dest]
+
+    def nb_null(self, o: int, dest: list[int], E_full_row: np.ndarray, alpha: float | None, rng) -> np.ndarray:
+        if alpha and alpha > 0:
+            n = 1.0 / alpha
+            draw = rng.negative_binomial(n, n / (n + E_full_row))
+        else:
+            draw = rng.poisson(E_full_row)
+        return draw * self.ratio[o, dest]
+
+    def rarefy(self, o: int, dest: list[int], n: int, rng) -> np.ndarray | None:
+        colors = self.full[o, dest]
+        if colors.sum() < n:
+            return None
+        return rng.multivariate_hypergeometric(colors, n) * self.ratio[o, dest]
+
+
 def origin_alignment(mig: Layer, col: Layer, origin: str, *, ks=(5, 10), rng: np.random.Generator,
                      n_perm: int = 2000, n_boot: int = 1000, R_mig=None, R_col=None,
-                     E_mig=None, E_col=None, mig_noise_sd: float = 0.0, null_alpha: float | None = None) -> dict:
+                     E_mig=None, E_col=None, mig_noise_sd: float = 0.0, null_alpha: float | None = None,
+                     sampler: RowSampler | None = None, E_full=None, rarefy_n: int | None = None,
+                     n_rarefy: int = 200) -> dict:
     if mig.nodes != col.nodes:
         raise ValueError("layers must share the same ordered node list")
     nodes = mig.nodes
@@ -77,13 +115,12 @@ def origin_alignment(mig: Layer, col: Layer, origin: str, *, ks=(5, 10), rng: np
     labels = [nodes[i] for i in dest]
     m = mig.W[o, dest]
     c = col.W[o, dest]
+    sampler = sampler or RowSampler(col, None)
     out = {"origin": origin, "emigrants": float(m.sum()), "intl_collab": float(c.sum()),
            "n_dest_mig": int((m > 0).sum()), "n_dest_col": int((c > 0).sum()),
            "spearman_raw": spearman(m, c), "jsd_raw": jsd(m, c)}
     for k in ks:
         out[f"top{k}_overlap"] = topk_overlap(m, c, labels, k)
-    # share of collaboration going to the origin's top-10 migrant destinations,
-    # and share of emigrants living in its top-10 collaboration partners
     t10m, t10c = top_k(m, labels, 10), top_k(c, labels, 10)
     lab_idx = {lab: i for i, lab in enumerate(labels)}
     out["collab_share_in_top10_mig"] = float(c[[lab_idx[x] for x in t10m]].sum() / c.sum()) if c.sum() > 0 and t10m else np.nan
@@ -93,6 +130,8 @@ def origin_alignment(mig: Layer, col: Layer, origin: str, *, ks=(5, 10), rng: np
         R_mig, E_mig = log_residuals(mig)
     if R_col is None:
         R_col, E_col = log_residuals(col)
+    if E_full is None:
+        E_full = E_col
     em, ec = E_mig[o, dest], E_col[o, dest]
     out["jsd_size_only"] = jsd(em, ec)
     out["jsd_excess"] = out["jsd_raw"] - out["jsd_size_only"]
@@ -105,48 +144,65 @@ def origin_alignment(mig: Layer, col: Layer, origin: str, *, ks=(5, 10), rng: np
         perm = np.array([spearman(rm, rng.permutation(rc)) for _ in range(n_perm)])
         out["p_perm_resid"] = float((np.sum(np.abs(perm) >= abs(rho)) + 1) / (n_perm + 1))
         # (ii) size-preserving simulation null (primary, plan v1.1): collaboration
-        # counts drawn from NB2(E^C, alpha) around the independence expectation, with
-        # alpha the dispersion of the observed layer around E^C; migration held fixed.
-        # Zero cells give residuals -ln(1+E) that fall with destination size in both
-        # layers, so a positive rho arises even without shared bilateral affinity;
-        # this null reproduces that artefact and measures rho in excess of it.
-        if null_alpha and null_alpha > 0:
-            nb_n = 1.0 / null_alpha
-            draw = lambda: rng.negative_binomial(nb_n, nb_n / (nb_n + ec))
-        else:
-            draw = lambda: rng.poisson(ec)
-        sims = np.array([spearman(rm, np.log((draw() + 1.0) / (ec + 1.0))) for _ in range(n_perm)])
+        # papers drawn from NB2(E_full, alpha) around the independence expectation of
+        # the full-count layer (alpha = its ML dispersion around that expectation),
+        # converted to the analysed layer's units; migration held fixed. Zero cells
+        # give residuals -ln(1+E) that fall with destination size in both layers, so
+        # rho > 0 arises without shared affinity; this null reproduces that artefact.
+        efr = E_full[o, dest]
+        sims = np.array([spearman(rm, np.log((sampler.nb_null(o, dest, efr, null_alpha, rng) + 1.0) / (ec + 1.0)))
+                         for _ in range(n_perm)])
         sims = sims[~np.isnan(sims)]
         out["rho_null_mean"] = float(sims.mean()) if sims.size else np.nan
         out["rho_excess"] = rho - out["rho_null_mean"]
         out["p_sim_resid"] = float((np.sum(np.abs(sims - sims.mean()) >= abs(rho - sims.mean())) + 1) / (sims.size + 1)) if sims.size else np.nan
     else:
         out["p_perm_resid"] = out["p_sim_resid"] = out["rho_null_mean"] = out["rho_excess"] = np.nan
-    # parametric bootstrap: Poisson resampling of collaboration counts;
-    # migrant stocks are published estimates (fixed unless mig_noise_sd > 0)
+    # Plug-in JSD is biased upward for sparse rows, and the bias shrinks with the
+    # number of papers (i.e. with capacity). Two corrections (plan v1.2):
+    #  * rarefied JSD: mean JSD after subsampling every origin to the same number
+    #    of paper-pair incidences (used for H2, which compares origins);
+    #  * bias-corrected JSD with a basic-bootstrap interval (paper-level resampling).
+    if rarefy_n:
+        vals = [jsd(m, x) for x in (sampler.rarefy(o, dest, rarefy_n, rng) for _ in range(n_rarefy)) if x is not None]
+        out["jsd_rarefied"] = float(np.mean(vals)) if vals else np.nan
+        out["rarefy_n"] = rarefy_n
     if n_boot:
         js, rs = [], []
         for _ in range(n_boot):
-            cb = rng.poisson(c).astype(float)
+            cb = sampler.poisson(o, dest, rng)
             mb = m * np.exp(rng.normal(0, mig_noise_sd, size=m.shape)) if mig_noise_sd > 0 else m
             js.append(jsd(mb, cb))
             rs.append(spearman(mb, cb))
-        out["jsd_raw_lo"], out["jsd_raw_hi"] = np.nanquantile(js, [0.025, 0.975]).tolist()
-        out["spearman_raw_lo"], out["spearman_raw_hi"] = np.nanquantile(rs, [0.025, 0.975]).tolist()
+        js, rs = np.array(js), np.array(rs)
+        j = out["jsd_raw"]
+        out["jsd_bc"] = float(2 * j - np.nanmean(js))
+        q_lo, q_hi = np.nanquantile(js, [0.025, 0.975])
+        out["jsd_bc_lo"], out["jsd_bc_hi"] = float(2 * j - q_hi), float(2 * j - q_lo)
+        r = out["spearman_raw"]
+        s_lo, s_hi = np.nanquantile(rs, [0.025, 0.975])
+        out["spearman_raw_lo"], out["spearman_raw_hi"] = float(2 * r - s_hi), float(2 * r - s_lo)
     return out
 
 
 def alignment_table(mig: Layer, col: Layer, origins: list[str], *, seed: int, ks=(5, 10),
-                    n_perm: int = 2000, n_boot: int = 1000, mig_noise_sd: float = 0.0) -> pd.DataFrame:
+                    n_perm: int = 2000, n_boot: int = 1000, mig_noise_sd: float = 0.0,
+                    col_full: Layer | None = None, rarefy_n: int | None = None) -> pd.DataFrame:
+    """Per-origin alignment statistics. ``col_full`` is the full-count layer when
+    ``col`` is fractional (needed for paper-level sampling and the NB null)."""
     rng = np.random.default_rng(seed)
     R_mig, E_mig = log_residuals(mig)
     R_col, E_col = log_residuals(col)
+    full = col_full if col_full is not None else col
+    sampler = RowSampler(col, col_full)
+    E_full = E_col if col_full is None else log_residuals(col_full)[1]
     from .residuals import nb2_alpha
     iu = np.triu_indices(len(col.nodes), 1)
-    null_alpha = nb2_alpha(col.W[iu], E_col[iu]) if n_perm else None
+    null_alpha = nb2_alpha(full.W[iu], E_full[iu]) if n_perm else None
     rows = [origin_alignment(mig, col, o, ks=ks, rng=rng, n_perm=n_perm, n_boot=n_boot,
                              R_mig=R_mig, R_col=R_col, E_mig=E_mig, E_col=E_col,
-                             mig_noise_sd=mig_noise_sd, null_alpha=null_alpha) for o in origins]
+                             mig_noise_sd=mig_noise_sd, null_alpha=null_alpha, sampler=sampler,
+                             E_full=E_full, rarefy_n=rarefy_n) for o in origins]
     df = pd.DataFrame(rows)
     df["null_alpha"] = null_alpha
     if "p_perm_resid" in df and df["p_perm_resid"].notna().any():
@@ -223,11 +279,21 @@ def h1_test(table: pd.DataFrame) -> dict:
     return res
 
 
-def h2_test(table: pd.DataFrame, output_col: str = "log_output", control_col: str | None = "hi_income_share") -> dict:
-    d = table.dropna(subset=["jsd_raw", output_col])
-    r = stats.spearmanr(d["jsd_raw"], d[output_col])
-    res = {"n_origins": len(d), "spearman_jsd_output": float(r.statistic), "p": float(r.pvalue)}
+def h2_test(table: pd.DataFrame, output_col: str = "log_output", control_col: str | None = "hi_income_share",
+            jsd_col: str = "jsd_rarefied") -> dict:
+    """H2 (plan v1.2): the divergence measure is the *rarefied* JSD, so that
+    origins with more papers are not mechanically less divergent. The plug-in
+    JSD version is reported for reference."""
+    if jsd_col not in table:
+        jsd_col = "jsd_raw"
+    d = table.dropna(subset=[jsd_col, output_col])
+    r = stats.spearmanr(d[jsd_col], d[output_col])
+    res = {"n_origins": len(d), "jsd_measure": jsd_col, "spearman_jsd_output": float(r.statistic), "p": float(r.pvalue)}
+    if jsd_col != "jsd_raw":
+        dr = table.dropna(subset=["jsd_raw", output_col])
+        rr = stats.spearmanr(dr["jsd_raw"], dr[output_col])
+        res.update({"reference_plugin_spearman": float(rr.statistic), "reference_plugin_p": float(rr.pvalue)})
     if control_col and control_col in d and d[control_col].notna().all() and len(d) > 5:
-        pr, pp = partial_spearman(d["jsd_raw"].to_numpy(), d[output_col].to_numpy(), d[control_col].to_numpy())
+        pr, pp = partial_spearman(d[jsd_col].to_numpy(), d[output_col].to_numpy(), d[control_col].to_numpy())
         res.update({"partial_spearman": pr, "partial_p": pp})
     return res

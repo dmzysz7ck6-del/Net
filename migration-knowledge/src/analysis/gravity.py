@@ -13,9 +13,12 @@ confirmatory models (an interpretable no-FE "mass" model is also provided).
 
 Inference: dyadic-robust covariance (Fafchamps & Gubert 2007; Cameron & Miller
 2014; Aronow, Samii & Assenova 2015): scores of any two pairs that share a
-country may be correlated. Meat = sum_c S_c S_c' - sum_d s_d s_d' where S_c sums
-the scores of all pairs containing country c. A G/(G-1) small-sample factor is
-applied and negative eigenvalues (rare) are clipped to zero.
+country may be correlated. It is computed for the covariate coefficients from
+their influence functions after partialling out the intercept and fixed
+effects (FWL): Meat = sum_c S_c S_c' - sum_d s_d s_d' where S_c sums the
+influence scores of all pairs containing country c, with a G/(G-1) factor.
+(The full-matrix version is indefinite: by the first-order conditions every
+country's score sum in the fixed-effect directions is exactly zero.)
 """
 from __future__ import annotations
 
@@ -31,8 +34,8 @@ from scipy import stats
 class GravityResult:
     name: str
     params: pd.Series
-    cov: pd.DataFrame
-    cov_hc1: pd.DataFrame
+    cov: pd.DataFrame          # dyadic-robust, covariate coefficients only
+    cov_hc1: pd.DataFrame      # HC1, full parameter vector (intercept, covariates, FE)
     covariates: list[str]
     nobs: int
     countries: list[str]
@@ -97,9 +100,25 @@ def drop_all_zero_countries(dyads: pd.DataFrame, y: str) -> tuple[pd.DataFrame, 
         d = d[~d["a"].isin(zero) & ~d["b"].isin(zero)]
 
 
-def dyadic_cov(X: np.ndarray, resid: np.ndarray, mu: np.ndarray, A: np.ndarray) -> np.ndarray:
-    s = X * resid[:, None]
-    bread = np.linalg.pinv(X.T @ (X * mu[:, None]))
+def fwl_residualize(Xb: np.ndarray, Z: np.ndarray, mu: np.ndarray) -> np.ndarray:
+    """Residualize covariates on the nuisance columns Z (intercept + FE) with
+    weights mu (Frisch-Waugh-Lovell for the PPML score equations)."""
+    ZW = Z * mu[:, None]
+    coef = np.linalg.lstsq(ZW.T @ Z, ZW.T @ Xb, rcond=None)[0]
+    return Xb - Z @ coef
+
+
+def dyadic_cov(Xb: np.ndarray, Z: np.ndarray, resid: np.ndarray, mu: np.ndarray, A: np.ndarray) -> tuple[np.ndarray, dict]:
+    """Dyadic-robust covariance of the covariate coefficients only.
+
+    The influence function of beta-hat is (X~'WX~)^{-1} x~_d e_d with X~ the
+    covariates residualized on intercept + fixed effects. Using it avoids the
+    fixed-effect directions, whose cluster score sums are identically zero by
+    the first-order conditions (which makes the full-matrix 'meat' indefinite).
+    Meat = sum_c S_c S_c' - sum_d s_d s_d'; small-sample factor G/(G-1)."""
+    Xt = fwl_residualize(Xb, Z, mu)
+    s = Xt * resid[:, None]
+    bread = np.linalg.pinv(Xt.T @ (Xt * mu[:, None]))
     S = A.T @ s
     meat = S.T @ S - s.T @ s
     G = A.shape[1]
@@ -107,9 +126,19 @@ def dyadic_cov(X: np.ndarray, resid: np.ndarray, mu: np.ndarray, A: np.ndarray) 
     V = bread @ meat @ bread
     V = 0.5 * (V + V.T)
     w, Q = np.linalg.eigh(V)
+    info = {"min_eigenvalue": float(w.min()), "clipped": bool((w < 0).any()), "floored_at_hc1": False}
     if (w < 0).any():
+        # Not PSD (possible in small samples): clip negative eigenvalues, then floor
+        # each variance at its HC1 value so no SE collapses toward zero. Flagged.
         V = (Q * np.clip(w, 0, None)) @ Q.T
-    return V
+        s1 = Xt * resid[:, None]
+        n, k = Xt.shape
+        hc1 = np.diag(bread @ (s1.T @ s1) @ bread) * n / max(1, n - k)
+        add = np.clip(hc1 - np.diag(V), 0, None)
+        if (add > 0).any():
+            V = V + np.diag(add)
+            info["floored_at_hc1"] = True
+    return V, info
 
 
 def hc1_cov(X: np.ndarray, resid: np.ndarray, mu: np.ndarray) -> np.ndarray:
@@ -138,20 +167,31 @@ def fit_ppml(dyads: pd.DataFrame, y: str, covariates: list[str], *, fe: bool = T
         raise ValueError(f"{name}: design matrix rank {rank} < {X.shape[1]} columns after dropping constant covariates {const_cov}")
     yy = d[y].to_numpy(dtype=float)
     model = sm.GLM(yy, X, family=sm.families.Poisson())
+    if start_params is None:
+        # log-linear OLS start values make IRLS robust to very large counts
+        start_params = np.linalg.lstsq(X, np.log(yy + 0.5), rcond=None)[0]
     res = model.fit(method="IRLS", maxiter=maxiter, tol=tol, start_params=start_params)
+    if not res.converged:
+        res = model.fit(method="IRLS", maxiter=maxiter * 3, tol=tol)
     mu = res.fittedvalues
     resid = yy - mu
-    V = dyadic_cov(X, resid, mu, A)
+    k = len(covariates)
+    cov_idx = list(range(1, 1 + k))
+    nuis_idx = [0] + list(range(1 + k, X.shape[1]))
+    if k:
+        Vb, vinfo = dyadic_cov(X[:, cov_idx], X[:, nuis_idx], resid, mu, A)
+    else:
+        Vb, vinfo = np.zeros((0, 0)), {}
     V1 = hc1_cov(X, resid, mu)
     params = pd.Series(res.params, index=names)
     corr = np.corrcoef(yy, mu)[0, 1] if np.std(mu) > 0 else np.nan
-    return GravityResult(name=name, params=params, cov=pd.DataFrame(V, index=names, columns=names),
+    return GravityResult(name=name, params=params, cov=pd.DataFrame(Vb, index=covariates, columns=covariates),
                          cov_hc1=pd.DataFrame(V1, index=names, columns=names), covariates=covariates,
                          nobs=len(d), countries=countries, dropped_countries=dropped,
                          deviance=float(res.deviance), null_deviance=float(res.null_deviance),
                          pseudo_r2=float(corr ** 2), converged=bool(res.converged), mu=mu, fe=fe,
                          extra={"dyads": d[["a", "b"] + list(covariates)].reset_index(drop=True), "y": yy,
-                                "dropped_constant_covariates": const_cov})
+                                "dropped_constant_covariates": const_cov, "dyadic_cov_info": vinfo})
 
 
 def predict(result: GravityResult, dyads: pd.DataFrame) -> np.ndarray:

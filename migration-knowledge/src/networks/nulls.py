@@ -76,3 +76,38 @@ def poisson_draw(E: np.ndarray, directed: bool, rng: np.random.Generator) -> np.
     D = np.zeros_like(E)
     D[iu] = rng.poisson(E[iu])
     return D + D.T
+
+
+def layer_alpha(W: np.ndarray, E: np.ndarray, directed: bool) -> float:
+    """NB2 dispersion of a layer around its independence expectation
+    (maximum likelihood on rounded weights). Var = mu + alpha mu^2, so sqrt(alpha)
+    is a unit-free relative dispersion: unlike a Poisson null, an NB2 null gives
+    comparable noise for layers measured in persons and in papers."""
+    from ..analysis.residuals import nb2_alpha
+    n = W.shape[0]
+    if directed:
+        mask = ~np.eye(n, dtype=bool)
+        y, mu = W[mask], E[mask]
+    else:
+        iu = np.triu_indices(n, 1)
+        y, mu = W[iu], E[iu]
+    return nb2_alpha(np.round(y), mu)
+
+
+def nb_draw(E: np.ndarray, alpha: float, directed: bool, rng: np.random.Generator) -> np.ndarray:
+    """One random network with NB2(E, alpha) weights (symmetric if undirected)."""
+    k = 1.0 / alpha
+
+    def draw(mu):
+        mu = np.maximum(mu, 0.0)
+        return rng.negative_binomial(k, k / (k + mu)).astype(float)
+
+    if directed:
+        D = draw(E)
+        np.fill_diagonal(D, 0.0)
+        return D
+    n = E.shape[0]
+    iu = np.triu_indices(n, 1)
+    D = np.zeros_like(E)
+    D[iu] = draw(E[iu])
+    return D + D.T

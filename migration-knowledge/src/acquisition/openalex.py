@@ -82,16 +82,24 @@ class OpenAlex:
         """All groups for ``field`` (paginates with cursor when > per_page)."""
         groups: list[dict] = []
         cursor = "*"
+        expected = None
+        pages = 0
         while cursor:
             data = self._get("works", {"filter": _filter_string(filters), "group_by": field,
                                        "per_page": self.cfg["per_page"], "cursor": cursor})
             page = data.get("group_by") or []
-            groups.extend(page)
             meta = data.get("meta") or {}
-            expected = meta.get("groups_count")
+            if page and expected is None:
+                expected = meta.get("groups_count")  # from the first non-empty page only
+            groups.extend(page)
+            pages += 1
             cursor = meta.get("next_cursor")
             if not page:
                 break
+        # If groups_count turns out to be a per-page figure (<= per_page) on a
+        # multi-page result, completeness is instead established by the null cursor.
+        if expected is not None and pages > 1 and int(expected) <= self.cfg["per_page"] and len(groups) > int(expected):
+            expected = None
         if expected is not None and len(groups) != int(expected):
             raise RuntimeError(f"group_by {field} returned {len(groups)} groups but meta.groups_count={expected} "
                                f"(filters {filters}); refusing to continue with truncated groups")

@@ -42,21 +42,33 @@ def find_header(raw: pd.DataFrame) -> int:
 def build_columns(raw: pd.DataFrame, h: int) -> list[str]:
     header = [_norm(v) for v in raw.iloc[h].tolist()]
     # sex labels sit in a super-header row above the year columns (merged cells)
+    def sex_of(v: str) -> str | None:
+        if re.search(r"\bfemales?\b", v):
+            return "female"
+        if re.search(r"\bmales?\b", v):
+            return "male"
+        if re.search(r"both sexes|\btotal\b", v):
+            return "both"
+        return None
+
     sex_row = None
     for r in range(max(0, h - 3), h):
         vals = [_norm(v) for v in raw.iloc[r].tolist()]
-        if any(v in SEX_LABELS for v in vals):
+        if any(sex_of(v) for v in vals):
             sex_row = vals
     current = None
     names = []
     for j, v in enumerate(header):
-        if sex_row is not None and sex_row[j] in SEX_LABELS:
-            current = SEX_LABELS[sex_row[j]]
+        if sex_row is not None and sex_of(sex_row[j]):
+            current = sex_of(sex_row[j])
         m = re.fullmatch(r"(\d{4})(\.0)?", v)
         if m:
             names.append(f"{current or 'both'}_{m.group(1)}")
         else:
             names.append(v)
+    years = [n for n in names if re.fullmatch(r"(both|male|female)_\d{4}", n)]
+    if len(years) != len(set(years)):
+        raise ValueError("year columns are not unique after naming; sex super-header not recognized")
     return names
 
 
