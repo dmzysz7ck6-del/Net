@@ -96,6 +96,8 @@ countries:
   # TWN - not covered by WDI; population about 23 million (Taiwan's official statistics),
   # far above the threshold, and a large research producer.
   wdi_absent_allowlist: [TWN]
+  # refuse to analyse a "network" of fewer countries (e.g. a pilot extraction)
+  min_universe_size: 30
   pilot_origins: [SOM, ETH, KEN, GHA]
   focus_origins: [SOM, ETH, KEN, UGA, TZA, RWA, GHA, NGA, SEN, ZAF]
   horn_of_africa: [SOM, ETH, ERI, DJI]

@@ -85,9 +85,12 @@ def load_window(name: str, *, min_population: float | None = None, mobility_sour
     geo = _read("geo_dyads.csv")
     P.check_alignment(w, mig, mob, cy)
 
+    queried = set(_read(f"collab_{cy[0]}_{cy[1]}_nodes.csv")["iso3"])
     sources = {
         "undesa": set(mig["origin_iso3"]) | set(mig["dest_iso3"]),
-        "openalex": set(col["a"]) | set(col["b"]),
+        # only countries whose own OpenAlex query was run: a pair is observed only if
+        # at least one side was queried, so unqueried countries cannot enter the network
+        "openalex_queried": queried,
         "cepii": set(geo["a"]) | set(geo["b"]),
     }
     candidates = sorted(set.union(*sources.values()))
@@ -95,6 +98,9 @@ def load_window(name: str, *, min_population: float | None = None, mobility_sour
                             w, min_population, sources,
                             wdi_absent_allowlist=tuple(cfg["countries"].get("wdi_absent_allowlist", [])))
     nodes = uni.loc[uni["included"], "iso3"].tolist()
+    if len(nodes) < cfg["countries"].get("min_universe_size", 30):
+        raise ValueError(f"only {len(nodes)} countries have complete data for window {name}; "
+                         "pilot extractions cover a few focal countries and cannot be analysed as a full network")
     dyads = P.build_dyads(nodes, mig, mob, col, geo, out,
                           collab_cols=[c for c in ["full", "frac", "full_nomega", "frac_nomega"] if c in col])
     # Scopus mobility as a robustness variable when available
@@ -147,11 +153,12 @@ def run_alignment(wd: WindowData, collab_col: str = "full", tag: str = "", *, dr
     L = layers(wd, collab_col)
     mig, col = L["migration"], L["collaboration"]
     col_full = layers(wd, "full")["collaboration"] if collab_col != "full" else None
+    dest_keep = None
     if drop_dest_types:
-        bad = [d for d, t in wd.dest_types.items() if any(x in str(t).split() for x in drop_dest_types) and d in mig.index]
-        keep = [n for n in mig.nodes if n not in bad]
-        mig, col = mig.restrict(keep), col.restrict(keep)
-        col_full = col_full.restrict(keep) if col_full is not None else None
+        # R4: drop destinations whose own migrant data are citizenship-based or imputed.
+        # Only destination columns are dropped; every origin stays in the analysis.
+        bad = {d for d, t in wd.dest_types.items() if any(x in str(t).split() for x in drop_dest_types)}
+        dest_keep = {n for n in mig.nodes if n not in bad}
     em = mig.W.sum(1)
     # minimum-information rule on distinct international articles in the window,
     # identical for every counting method (not on pair incidences or weights)
@@ -159,7 +166,7 @@ def run_alignment(wd: WindowData, collab_col: str = "full", tag: str = "", *, dr
     eligible = [n for i, n in enumerate(mig.nodes) if ia[i] >= cfg["min_origin_intl_papers"] and em[i] >= cfg["min_origin_emigrants"]]
     tab = A.alignment_table(mig, col, eligible, seed=cfg_seed(), ks=tuple(cfg["top_k"]),
                             n_perm=cfg["null_draws"], n_boot=cfg["bootstrap_draws"], col_full=col_full,
-                            rarefy_n=cfg.get("rarefy_n"))
+                            rarefy_n=cfg.get("rarefy_n"), dest_keep=dest_keep)
     tab["intl_articles"] = wd.intl_articles.reindex(tab["origin"]).to_numpy()
     out = wd.output.set_index("iso3")["articles"]
     tab["log_output"] = np.log(out.reindex(tab["origin"]).to_numpy().astype(float))
@@ -177,15 +184,18 @@ def run_alignment(wd: WindowData, collab_col: str = "full", tag: str = "", *, dr
     tab["ssa"] = tab["origin"].map(cw["ssa"])
     suffix = f"_{tag}" if tag else ""
     tab.to_csv(PATHS.tables / f"alignment_{wd.name}{suffix}.csv", index=False)
-    res = {"h1": A.h1_test(tab), "h2": A.h2_test(tab), "n_eligible": len(eligible), "collab_col": collab_col}
+    res = {"h1": A.h1_test(tab), "h2": A.h2_test(tab), "n_eligible": len(eligible), "collab_col": collab_col,
+           "n_destinations_dropped": 0 if dest_keep is None else len(mig.nodes) - len(dest_keep)}
     return res
 
 
 def run_gravity(wd: WindowData, y: str = "full", tag: str = "", models: dict[str, list[str]] | None = None,
                 cv: bool = True, dyads: pd.DataFrame | None = None) -> dict:
     cfg = load_config()["gravity"]
-    d = (wd.dyads if dyads is None else dyads).dropna(subset=[c for c in BASE if c in (wd.dyads if dyads is None else dyads)])
     models = models or MODELS
+    src_d = wd.dyads if dyads is None else dyads
+    used = sorted({c for cov in models.values() for c in cov if c in src_d})
+    d = src_d.dropna(subset=used)
     results, tables = {}, []
     for name, cov in models.items():
         cov = [c for c in cov if c in d]
@@ -196,7 +206,11 @@ def run_gravity(wd: WindowData, y: str = "full", tag: str = "", models: dict[str
     suffix = f"_{tag}" if tag else ""
     tab.to_csv(PATHS.tables / f"gravity_{wd.name}{suffix}.csv", index=False)
     summary = {name: {"nobs": r.nobs, "pseudo_r2": r.pseudo_r2, "deviance": r.deviance, "converged": r.converged,
-                      "dropped": r.dropped_countries, "dropped_constant_covariates": r.extra["dropped_constant_covariates"]}
+                      "dropped": r.dropped_countries, "dropped_constant_covariates": r.extra["dropped_constant_covariates"],
+                      "dyadic_cov_info": r.extra.get("dyadic_cov_info", {}),
+                      "coefficients": {row.term: {"coef": row.coef, "se": row.se_dyadic, "ci_lo": row.ci_lo,
+                                                  "ci_hi": row.ci_hi, "p": row.p, "se_hc1": row.se_hc1}
+                                       for row in r.table().itertuples()}}
                for name, r in results.items()}
     if "M3_dir" in results:
         summary["wald_mob_up_eq_down"] = G.wald_equal(results["M3_dir"], "ln_mob_up", "ln_mob_down")
@@ -205,8 +219,9 @@ def run_gravity(wd: WindowData, y: str = "full", tag: str = "", models: dict[str
     if "M2" in results and "M3" in results:
         g2, g3 = results["M2"].params["ln_mig"], results["M3"].params["ln_mig"]
         summary["attenuation_ln_mig_M2_to_M3"] = float(1 - g3 / g2) if g2 != 0 else np.nan
-    summary["vif"] = G.vif(d, [c for c in BASE + ["ln_mig", "ln_mob"] if c in d]).to_dict("records")
-    summary["corr_ln_mig_ln_mob"] = float(np.corrcoef(d["ln_mig"], d["ln_mob"])[0, 1])
+    summary["vif"] = G.vif(d, [c for c in used if d[c].nunique() > 1]).to_dict("records")
+    if "ln_mig" in d and "ln_mob" in d:
+        summary["corr_ln_mig_ln_mob"] = float(np.corrcoef(d["ln_mig"], d["ln_mob"])[0, 1])
     if cv:
         cvm = {k: [c for c in v if c in d] for k, v in models.items() if k in ("M1", "M2", "M3", "M1_mob")}
         cvt = G.cross_validate(d, y, cvm, k=cfg["cv_folds"], seed=cfg_seed())
@@ -316,9 +331,9 @@ def run_window(name: str, *, robustness: bool = True) -> dict:
             rob["R1_gravity_frac"] = run_gravity(wd, "frac", "frac", cv=False)["summary"]
         if "full_nomega" in wd.dyads:
             rob["R2_gravity_nomega"] = run_gravity(wd, "full_nomega", "nomega", cv=False)["summary"]
-        rob["R3_gravity_dist_ethno"] = run_gravity(
-            wd.__class__(**{**wd.__dict__, "dyads": wd.dyads.assign(ln_distw=wd.dyads["ln_dist"], comlang_off=wd.dyads["comlang_ethno"])}),
-            "full", "dist_ethno", cv=False)["summary"]
+        base3 = ["ln_dist", "contig", "comlang_ethno", "colony", "comcol"]
+        rob["R3_gravity_dist_ethno"] = run_gravity(wd, "full", "dist_ethno", cv=False, models={
+            "M1_r3": base3, "M2_r3": base3 + ["ln_mig"], "M3_r3": base3 + ["ln_mig", "ln_mob"]})["summary"]
         rob["R4_alignment_birthplace_only"] = run_alignment(wd, "full", "birthplace", drop_dest_types=("C", "I"))
         if "ln_mob_scopus" in wd.dyads:
             m = {"M3_scopus": BASE + ["ln_mig", "ln_mob_scopus"], "M1_mob_scopus": BASE + ["ln_mob_scopus"]}
@@ -334,11 +349,18 @@ def run_window(name: str, *, robustness: bool = True) -> dict:
         gd = wd.dyads.dropna(subset=BASE)
         nb = pd.concat([G.fit_negbin(gd, "full", MODELS[m], alpha, m) for m in ("M2", "M3")])
         nb.to_csv(PATHS.tables / f"gravity_negbin_{name}.csv", index=False)
-        jk = pd.concat([G.jackknife(gd, "full", MODELS["M3"], ["ln_mig", "ln_mob"], "M3")])
+        jk2 = G.jackknife(gd, "full", MODELS["M2"], ["ln_mig"], "M2").assign(model="M2")
+        jk3 = G.jackknife(gd, "full", MODELS["M3"], ["ln_mig", "ln_mob"], "M3").assign(model="M3")
+        jk = pd.concat([jk2, jk3], ignore_index=True)
         jk.to_csv(PATHS.tables / f"jackknife_{name}.csv", index=False)
-        rob["R5_jackknife"] = {t: {"min": float(jk[t].min()), "max": float(jk[t].max()),
-                                   "most_influential": jk.loc[jk[f"delta_{t}"].abs().idxmax(), "dropped"]}
-                               for t in ["ln_mig", "ln_mob"]}
+        r5 = {}
+        for model, t, sub in [("M2", "ln_mig", jk2), ("M3", "ln_mig", jk3), ("M3", "ln_mob", jk3)]:
+            ok = sub.dropna(subset=[t]) if t in sub else sub.iloc[0:0]
+            r5[f"{model}_{t}"] = {"min": float(ok[t].min()) if len(ok) else np.nan,
+                                  "max": float(ok[t].max()) if len(ok) else np.nan,
+                                  "most_influential": ok.loc[ok[f"delta_{t}"].abs().idxmax(), "dropped"] if len(ok) else None,
+                                  "n_refits": len(sub), "n_failed": int(len(sub) - len(ok))}
+        rob["R5_jackknife"] = r5
         summary["robustness"] = rob
     with open(PATHS.models / f"summary_{name}.json", "w") as fh:
         json.dump(summary, fh, indent=2, default=lambda o: o.item() if hasattr(o, "item") else str(o))

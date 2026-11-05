@@ -106,12 +106,13 @@ def origin_alignment(mig: Layer, col: Layer, origin: str, *, ks=(5, 10), rng: np
                      n_perm: int = 2000, n_boot: int = 1000, R_mig=None, R_col=None,
                      E_mig=None, E_col=None, mig_noise_sd: float = 0.0, null_alpha: float | None = None,
                      sampler: RowSampler | None = None, E_full=None, rarefy_n: int | None = None,
-                     n_rarefy: int = 200) -> dict:
+                     n_rarefy: int = 200, dest_keep: set[str] | None = None) -> dict:
     if mig.nodes != col.nodes:
         raise ValueError("layers must share the same ordered node list")
     nodes = mig.nodes
     o = nodes.index(origin)
-    dest = [i for i in range(len(nodes)) if i != o]
+    # dest_keep (R4) drops destination columns only; the origin set is unchanged
+    dest = [i for i in range(len(nodes)) if i != o and (dest_keep is None or nodes[i] in dest_keep)]
     labels = [nodes[i] for i in dest]
     m = mig.W[o, dest]
     c = col.W[o, dest]
@@ -187,7 +188,8 @@ def origin_alignment(mig: Layer, col: Layer, origin: str, *, ks=(5, 10), rng: np
 
 def alignment_table(mig: Layer, col: Layer, origins: list[str], *, seed: int, ks=(5, 10),
                     n_perm: int = 2000, n_boot: int = 1000, mig_noise_sd: float = 0.0,
-                    col_full: Layer | None = None, rarefy_n: int | None = None) -> pd.DataFrame:
+                    col_full: Layer | None = None, rarefy_n: int | None = None,
+                    dest_keep: set[str] | None = None) -> pd.DataFrame:
     """Per-origin alignment statistics. ``col_full`` is the full-count layer when
     ``col`` is fractional (needed for paper-level sampling and the NB null)."""
     rng = np.random.default_rng(seed)
@@ -202,7 +204,7 @@ def alignment_table(mig: Layer, col: Layer, origins: list[str], *, seed: int, ks
     rows = [origin_alignment(mig, col, o, ks=ks, rng=rng, n_perm=n_perm, n_boot=n_boot,
                              R_mig=R_mig, R_col=R_col, E_mig=E_mig, E_col=E_col,
                              mig_noise_sd=mig_noise_sd, null_alpha=null_alpha, sampler=sampler,
-                             E_full=E_full, rarefy_n=rarefy_n) for o in origins]
+                             E_full=E_full, rarefy_n=rarefy_n, dest_keep=dest_keep) for o in origins]
     df = pd.DataFrame(rows)
     df["null_alpha"] = null_alpha
     if "p_perm_resid" in df and df["p_perm_resid"].notna().any():

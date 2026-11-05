@@ -38,6 +38,10 @@ def collect() -> dict:
     extra = PATHS.outputs / "derived_claims.json"
     if extra.exists():
         for k, v in json.loads(extra.read_text()).items():
+            if k in reg:
+                raise ValueError(f"derived claim {k!r} would overwrite a computed value")
+            if not isinstance(v, dict) or not v.get("source") or not (PATHS.root / v["source"]).exists():
+                raise ValueError(f"derived claim {k!r} must cite an existing generated source file")
             reg[k] = v
     (PATHS.outputs / "claims_registry.json").write_text(json.dumps(reg, indent=1, default=str))
     return reg
@@ -67,7 +71,13 @@ def render(template: Path, target: Path, registry: dict | None = None) -> Path:
 
 
 def verify(docs: list[Path]) -> list[str]:
+    """Fail on unresolved tokens, missing sources, or values that no longer
+    match the current outputs (stale numbers after a re-run)."""
     problems = []
+    try:
+        current = collect()
+    except ValueError as exc:
+        return [str(exc)]
     for d in docs:
         if not d.exists():
             continue
@@ -79,4 +89,8 @@ def verify(docs: list[Path]) -> list[str]:
             for c in json.loads(side.read_text()):
                 if not (PATHS.root / c["source"]).exists():
                     problems.append(f"{d}: claim {c['key']} cites missing source {c['source']}")
+                elif c["key"] not in current:
+                    problems.append(f"{d}: claim {c['key']} no longer exists in the outputs")
+                elif str(current[c["key"]]["value"]) != str(c["value"]):
+                    problems.append(f"{d}: claim {c['key']} is stale ({c['value']} in text, {current[c['key']]['value']} now)")
     return problems

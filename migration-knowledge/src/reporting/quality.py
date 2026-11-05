@@ -83,7 +83,8 @@ def section_scholarly() -> str:
 
 def section_openalex() -> str:
     out = ["## 4. OpenAlex co-authorship\n"]
-    files = sorted(PATHS.processed.glob("collab_*_*.csv"))
+    import re
+    files = sorted(f for f in PATHS.processed.glob("collab_*.csv") if re.fullmatch(r"collab_\d{4}_\d{4}", f.stem))
     if not files:
         return out[0] + "\n_Not available: data not acquired._\n"
     rows = []

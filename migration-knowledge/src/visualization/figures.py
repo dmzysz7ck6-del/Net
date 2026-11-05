@@ -128,7 +128,8 @@ def figure2_divergence(mat: pd.DataFrame, out_dir: Path, window_label: str, jsd:
     cb.set_label("collaboration share − migrant share (percentage points)", color=S.INK2)
     cb.outline.set_visible(False)
     S.headline(fig, title,
-               f"Red: destination hosts more of the origin's emigrants than of its co-authored papers; blue: the reverse · {window_label}")
+               f"Red: the destination's share of the origin's co-authored articles exceeds its share of the origin's emigrants; "
+               f"blue: the reverse · {window_label}")
     S.footnote(fig, "Shares are computed over the common country universe (measured, full counting). Rows sorted by Jensen–Shannon divergence "
                     "between the two distributions, rarefied to 50 paper-pair incidences so that origins with more papers are not mechanically ranked as less divergent. "
                     "Columns: destinations most important to these origins in either layer.\n" + S.SOURCE_NOTE)
@@ -144,8 +145,11 @@ def figure3_expected_observed(res: pd.DataFrame, out_dir: Path, window_label: st
     fig, ax = plt.subplots(figsize=(8.2, 7.6))
     x = d["expected"] + 1
     y = d["observed"] + 1
-    ctx = ~d["category"].isin(["stronger_than_expected", "weaker_than_expected"])
-    ax.scatter(x[ctx], y[ctx], s=6, color=S.CONTEXT, alpha=0.5, lw=0, label="within expectation or not testable")
+    ctx = ~d["category"].isin(["stronger_than_expected", "weaker_than_expected", "missing_link"])
+    ax.scatter(x[ctx], y[ctx], s=6, color=S.CONTEXT, alpha=0.5, lw=0, label="as expected or insufficient information")
+    ml = d["category"] == "missing_link"
+    ax.scatter(x[ml], y[ml], s=22, facecolor="none", edgecolor=S.WEAKER, linewidth=1.0, zorder=3,
+               label=f"missing link: expected ≥ 10, observed 0: {int(ml.sum())} pairs")
     for cat, col, lab in [("stronger_than_expected", S.STRONGER, "stronger than expected (q < 0.05, ≥2×)"),
                           ("weaker_than_expected", S.WEAKER, "weaker than expected (q < 0.05, ≤½×)")]:
         m = d["category"] == cat
@@ -163,7 +167,7 @@ def figure3_expected_observed(res: pd.DataFrame, out_dir: Path, window_label: st
     ax.set_xscale("log"); ax.set_yscale("log")
     ax.set_xlabel("Expected co-authored articles, model M2 (+1, log scale)")
     ax.set_ylabel("Observed co-authored articles (+1, log scale)")
-    flagged = d[~ctx].copy()
+    flagged = d[~ctx].copy()  # includes missing links
     flagged["inv"] = flagged["a"].isin(highlight) | flagged["b"].isin(highlight)
     lab = flagged[flagged["inv"]].reindex(flagged[flagged["inv"]]["pearson_resid_nb"].abs().sort_values(ascending=False).index).head(n_labels)
     for r in lab.itertuples():
@@ -221,13 +225,15 @@ def figure5_temporal(align: dict[str, pd.DataFrame], gravity: dict[str, pd.DataF
     labels = {"earlier": "2010 stock\n2010–14 papers", "primary": "2015 stock\n2015–19 papers", "later": "2020 stock\n2020–24 papers"}
     fig, axes = plt.subplots(1, 3, figsize=(13.5, 4.8))
     ax = axes[0]
-    data = [align[w]["spearman_resid"].dropna() for w in order]
+    col_al = "rho_excess" if all("rho_excess" in align[w] for w in order) else "spearman_resid"
+    data = [align[w][col_al].dropna() for w in order]
     ax.boxplot(data, widths=0.45, showfliers=False, medianprops={"color": S.INK}, boxprops={"color": S.INK2},
                whiskerprops={"color": S.INK2}, capprops={"color": S.INK2})
     ax.set_xticks(range(1, len(order) + 1), [labels[w] for w in order], fontsize=8)
     ax.axhline(0, color=S.AXIS, lw=0.8)
     ax.set_title("Size-adjusted alignment, all origins", loc="left")
-    ax.set_ylabel("Spearman ρ of residual profiles")
+    ax.set_ylabel("Residual ρ minus its size-preserving null (ρ_excess)" if col_al == "rho_excess"
+                  else "Residual ρ (NOT size-calibrated)")
     ax = axes[1]
     jcol = "jsd_rarefied" if all("jsd_rarefied" in align[w] for w in order) else "jsd_raw"
     for f in focus:

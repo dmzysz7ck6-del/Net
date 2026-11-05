@@ -72,6 +72,7 @@ def fixture_root(tmp_path):
     cfg["alignment"].update({"null_draws": 50, "bootstrap_draws": 20, "min_origin_emigrants": 1, "min_origin_intl_papers": 1})
     cfg["topology"].update({"null_draws": 10, "betweenness_null_draws": 5, "community_null_draws": 5})
     cfg["gravity"].update({"cv_folds": 3})
+    cfg["countries"].update({"min_universe_size": 10})
     make_fixture(tmp_path)
     PATHS.set_root(tmp_path)
     PATHS.ensure()
@@ -119,3 +120,31 @@ def test_case_study_rule(fixture_root):
     pd.DataFrame({"origin": ["KEN", "ETH", "GHA"], "jsd_raw": [0.2, 0.6, 0.4]}).to_csv(PATHS.tables / "alignment_primary.csv", index=False)
     pd.DataFrame({"origin": ["KEN", "ETH", "GHA"], "jsd_raw": [0.25, 0.5, 0.45]}).to_csv(PATHS.tables / "alignment_primary_frac.csv", index=False)
     assert choose_case_studies(["KEN", "ETH", "GHA"]) == ["ETH", "KEN"]
+
+
+def test_unqueried_countries_excluded_and_pilot_refused(fixture_root):
+    import pandas as pd
+    from src.analysis import run
+    nodes = pd.read_csv(PATHS.processed / "collab_2015_2019_nodes.csv")
+    nodes[nodes["iso3"] != "BRA"].to_csv(PATHS.processed / "collab_2015_2019_nodes.csv", index=False)
+    wd = run.load_window("primary")
+    assert "BRA" not in wd.nodes
+    assert "absent_from_openalex_queried" in wd.universe.set_index("iso3").loc["BRA", "reasons"]
+    nodes[nodes["iso3"].isin(["KEN", "ETH", "SOM", "GHA"])].to_csv(PATHS.processed / "collab_2015_2019_nodes.csv", index=False)
+    with pytest.raises(ValueError, match="pilot"):
+        run.load_window("primary")
+
+
+def test_r4_keeps_origins(fixture_root):
+    import pandas as pd
+    from src.analysis import run
+    m = pd.read_csv(PATHS.processed / "migration_stocks.csv")
+    m.loc[m["dest_iso3"].isin(["SAU", "ARE", "KEN"]), "dest_data_type"] = "C R"
+    m.to_csv(PATHS.processed / "migration_stocks.csv", index=False)
+    wd = run.load_window("primary")
+    base = run.run_alignment(wd, "full", "t_base")
+    r4 = run.run_alignment(wd, "full", "t_r4", drop_dest_types=("C", "I"))
+    a = pd.read_csv(PATHS.tables / "alignment_primary_t_base.csv")
+    b = pd.read_csv(PATHS.tables / "alignment_primary_t_r4.csv")
+    assert set(a["origin"]) == set(b["origin"]) and "KEN" in set(b["origin"])
+    assert r4["n_destinations_dropped"] == 3

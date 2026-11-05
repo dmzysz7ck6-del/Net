@@ -19,7 +19,7 @@ import requests
 
 from .provenance import utcnow
 
-SECRET_PARAMS = {"api_key", "apikey", "key", "token", "access_token"}
+SECRET_PARAMS = {"api_key", "apikey", "key", "token", "access_token", "mailto"}
 
 
 class AccessDenied(RuntimeError):
@@ -33,6 +33,17 @@ class PaymentRequired(RuntimeError):
 
 def _public(params: dict[str, Any] | None) -> dict[str, Any]:
     return {k: v for k, v in sorted((params or {}).items()) if k.lower() not in SECRET_PARAMS}
+
+
+def redact(text: str, secrets: dict[str, Any] | None) -> str:
+    """Remove secret values (and their URL-encoded forms) from a message."""
+    from urllib.parse import quote, quote_plus
+    out = str(text)
+    for v in (secrets or {}).values():
+        if v:
+            for form in {str(v), quote(str(v), safe=""), quote_plus(str(v))}:
+                out = out.replace(form, "***")
+    return out
 
 
 def cache_key(url: str, params: dict[str, Any] | None) -> str:
@@ -73,6 +84,7 @@ class CachedClient:
             fh.write(json.dumps({"ts": utcnow(), **entry}, sort_keys=True) + "\n")
 
     def _request(self, url: str, params: dict[str, Any] | None, stream: bool = False) -> requests.Response:
+        secrets = {k: v for k, v in (params or {}).items() if k.lower() in SECRET_PARAMS}
         last_exc: Exception | None = None
         for attempt in range(self.max_retries + 1):
             self._throttle()
@@ -98,13 +110,13 @@ class CachedClient:
                     self.stats["retries"] += 1
                     time.sleep(min(delay, 300))
                     continue
-                self._log(url=url, params=_public(params), status=resp.status_code, body=resp.text[:500])
-                resp.raise_for_status()
+                self._log(url=url, params=_public(params), status=resp.status_code, body=redact(resp.text[:500], secrets))
+                raise requests.HTTPError(redact(f"HTTP {resp.status_code} for {url}", secrets))
             delay = self.backoff_base ** (attempt + 1)
             self.stats["retries"] += 1
-            self._log(url=url, params=_public(params), error=repr(last_exc), retry_in=delay)
+            self._log(url=url, params=_public(params), error=redact(repr(last_exc), secrets), retry_in=delay)
             time.sleep(min(delay, 300))
-        raise RuntimeError(f"giving up on {url} after {self.max_retries} retries: {last_exc!r}")
+        raise RuntimeError(redact(f"giving up on {url} after {self.max_retries} retries: {last_exc!r}", secrets))
 
     # -- public API ----------------------------------------------------------
     def get_json(self, url: str, params: dict[str, Any] | None = None, *,

@@ -308,8 +308,15 @@ For each origin o:
   - Model expectations are ticks or lines.
   - Predictive ranges are shaded bands.
 - **Case studies (Figure 4):** chosen by a fixed rule. These are the focus origins with
-  the highest and lowest mean JSD percentile across all available windows and counting
-  methods.
+  the highest and lowest mean percentile of the **rarefied** JSD across all available
+  windows and counting methods. The rarefied measure is used so that sample size does
+  not drive the choice.
+- **Robustness R4:** drops only destination columns whose data are citizenship-based or
+  imputed. Every origin remains in the analysis.
+- **Completeness:** only countries whose own OpenAlex query was run enter the universe
+  (reason `absent_from_openalex_queried`). The analysis refuses to run on fewer than 30
+  countries (e.g. a pilot extraction), because unqueried pairs would otherwise enter as
+  false zeros.
 - **Titles:** default to neutral descriptions. Message titles are set only from computed
   results (`outputs/figure_titles.json`).
 

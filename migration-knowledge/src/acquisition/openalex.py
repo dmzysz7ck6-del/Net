@@ -64,11 +64,12 @@ class OpenAlex:
 
     # -- low level -----------------------------------------------------------
     def _get(self, path: str, params: dict) -> dict:
-        p = dict(params)
-        if self.mailto:
-            p["mailto"] = self.mailto
-        secret = {"api_key": self.api_key} if self.api_key else None
-        return self.client.get_json(f"{self.base}/{path}", p, secret_params=secret)
+        secret = {}
+        if self.api_key:
+            secret["api_key"] = self.api_key
+        if self.mailto:  # sent, but kept out of cache keys and logs
+            secret["mailto"] = self.mailto
+        return self.client.get_json(f"{self.base}/{path}", dict(params), secret_params=secret or None)
 
     def base_filters(self, years: tuple[int, int]) -> dict[str, str]:
         f = {k: str(v) for k, v in self.cfg["work_filters"].items()}
