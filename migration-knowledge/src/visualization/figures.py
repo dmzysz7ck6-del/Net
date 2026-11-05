@@ -116,7 +116,7 @@ def figure2_divergence(mat: pd.DataFrame, out_dir: Path, window_label: str, jsd:
     fig, ax = plt.subplots(figsize=(11, 0.42 * len(mat) + 2.6))
     im = ax.imshow(mat.to_numpy(), cmap=S.DIVERGING, vmin=-vmax, vmax=vmax, aspect="auto")
     ax.set_xticks(range(mat.shape[1]), mat.columns, rotation=0, fontsize=8)
-    ax.set_yticks(range(mat.shape[0]), [f"{C.name(o)}" + (f"  (JSD {jsd[o]:.2f})" if jsd is not None and o in jsd else "") for o in mat.index], fontsize=8.5)
+    ax.set_yticks(range(mat.shape[0]), [f"{C.name(o)}" + (f"  (JSD {jsd[o]:.2f})" if jsd is not None and o in jsd and np.isfinite(jsd[o]) else "") for o in mat.index], fontsize=8.5)
     ax.grid(False)
     ax.set_xticks(np.arange(-.5, mat.shape[1]), minor=True); ax.set_yticks(np.arange(-.5, mat.shape[0]), minor=True)
     ax.grid(which="minor", color=S.SURFACE, linewidth=2)
@@ -129,8 +129,9 @@ def figure2_divergence(mat: pd.DataFrame, out_dir: Path, window_label: str, jsd:
     cb.outline.set_visible(False)
     S.headline(fig, title,
                f"Red: destination hosts more of the origin's emigrants than of its co-authored papers; blue: the reverse · {window_label}")
-    S.footnote(fig, "Shares are computed over the common country universe; rows sorted by Jensen–Shannon divergence "
-                    "between the two distributions (measured, full counting). Columns: destinations most important to these origins in either layer.\n" + S.SOURCE_NOTE)
+    S.footnote(fig, "Shares are computed over the common country universe (measured, full counting). Rows sorted by Jensen–Shannon divergence "
+                    "between the two distributions, rarefied to 50 paper-pair incidences so that origins with more papers are not mechanically ranked as less divergent. "
+                    "Columns: destinations most important to these origins in either layer.\n" + S.SOURCE_NOTE)
     fig.subplots_adjust(top=0.86, bottom=0.12)
     return S.save(fig, out_dir, "fig2_divergence_heatmap")
 
@@ -228,15 +229,16 @@ def figure5_temporal(align: dict[str, pd.DataFrame], gravity: dict[str, pd.DataF
     ax.set_title("Size-adjusted alignment, all origins", loc="left")
     ax.set_ylabel("Spearman ρ of residual profiles")
     ax = axes[1]
+    jcol = "jsd_rarefied" if all("jsd_rarefied" in align[w] for w in order) else "jsd_raw"
     for f in focus:
-        vals = [align[w].set_index("origin")["jsd_raw"].get(f, np.nan) for w in order]
+        vals = [align[w].set_index("origin")[jcol].get(f, np.nan) for w in order]
         if np.all(np.isnan(vals)):
             continue
         ax.plot(range(1, len(order) + 1), vals, color=S.LAYER["migration"], lw=1.2, marker="o", ms=4, alpha=0.8)
         ax.annotate(f, (len(order), vals[-1]), xytext=(4, 0), textcoords="offset points", fontsize=7, color=S.INK2, va="center")
     ax.set_xticks(range(1, len(order) + 1), [labels[w] for w in order], fontsize=8)
     ax.set_title("Divergence for the ten focus origins", loc="left")
-    ax.set_ylabel("Jensen–Shannon divergence (0 = identical)")
+    ax.set_ylabel("Jensen–Shannon divergence, rarefied (0 = identical)" if jcol == "jsd_rarefied" else "Jensen–Shannon divergence (0 = identical)")
     ax = axes[2]
     for k, (term, col, lab) in enumerate([("ln_mig", S.LAYER["migration"], "migrant stock (M3)"),
                                           ("ln_mob", S.LAYER["scholars"], "scholarly moves (M3)")]):

@@ -2,8 +2,9 @@
 
 Case-study origins for Figure 4 are chosen by a fixed rule, not by eye: among
 the focus origins, the most and the least divergent (mean percentile of the
-raw Jensen-Shannon divergence across every available window and counting
-method). Figure titles are taken from ``outputs/figure_titles.json`` when
+rarefied Jensen-Shannon divergence across every available window and counting
+method; rarefied so that origins with more papers are not mechanically ranked
+as less divergent). Figure titles are taken from ``outputs/figure_titles.json`` when
 present, which is written only after results are known; otherwise neutral
 descriptive titles are used.
 """
@@ -29,8 +30,9 @@ def choose_case_studies(focus: list[str]) -> list[str]:
     tabs = [t for t in [_table(f"alignment_{w}{s}.csv") for w in ("earlier", "primary", "later") for s in ("", "_frac")] if t is not None]
     pct = []
     for t in tabs:
-        t = t.dropna(subset=["jsd_raw"])
-        pct.append(t.set_index("origin")["jsd_raw"].rank(pct=True))
+        col = "jsd_rarefied" if "jsd_rarefied" in t else "jsd_raw"
+        t = t.dropna(subset=[col])
+        pct.append(t.set_index("origin")[col].rank(pct=True))
     if not pct:
         return focus[:2]
     m = pd.concat(pct, axis=1).mean(axis=1).reindex(focus).dropna()
@@ -61,7 +63,8 @@ def make_figures(windows: list[str] | None = None) -> list[Path]:
     if comp is not None:
         origins += [c for c in comp["comparator"].dropna() if c in set(al["origin"]) and c not in origins]
     mat = F.divergence_matrix(L["migration"], L["collaboration"], origins)
-    out += F.figure2_divergence(mat, PATHS.figures, label, al.set_index("origin")["jsd_raw"],
+    jcol = "jsd_rarefied" if "jsd_rarefied" in al else "jsd_raw"
+    out += F.figure2_divergence(mat, PATHS.figures, label, al.set_index("origin")[jcol],
                                 **({"title": T["fig2"]} if "fig2" in T else {}))
     res = _table("residuals_primary.csv")
     out += F.figure3_expected_observed(res, PATHS.figures, label, focus, **({"title": T["fig3"]} if "fig3" in T else {}))
@@ -102,11 +105,13 @@ def interactive(res: pd.DataFrame, al: pd.DataFrame) -> list[Path]:
     paths.append(p)
     a = al.copy()
     a["country"] = a["origin"].map(C.name)
-    fig2 = px.scatter(a, x="log_output", y="jsd_raw", color="ssa", hover_name="country",
+    jcol = "jsd_rarefied" if "jsd_rarefied" in a else "jsd_raw"
+    fig2 = px.scatter(a, x="log_output", y=jcol, color="ssa", hover_name="country",
                       hover_data={"spearman_raw": ":.2f", "spearman_resid": ":.2f", "top10_overlap": ":.1f",
                                   "emigrants": ":,.0f", "intl_collab": ":,.0f"},
                       labels={"log_output": "ln research output (articles, capacity window)",
-                              "jsd_raw": "Jensen–Shannon divergence: migrants vs co-authorship", "ssa": "Sub-Saharan Africa"},
+                              jcol: "Jensen–Shannon divergence, migrants vs co-authorship (rarefied to 50 incidences)",
+                              "ssa": "Sub-Saharan Africa"},
                       title="Per-origin divergence between migrant destinations and co-authorship partners")
     fig2.update_layout(template="simple_white", font_family="system-ui, sans-serif")
     p2 = PATHS.figures / "interactive_alignment_by_origin.html"
